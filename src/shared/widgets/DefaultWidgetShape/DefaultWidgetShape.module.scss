@@ -1,4 +1,5 @@
 @import '../../../shared/styles/variables.scss';
+@import '../../../shared/styles/animations.scss';
 
 .wrapper {
     display: flex;
@@ -14,4 +15,8 @@
     box-shadow: $shadow-xs;
 
     overflow: hidden;
+
+    &.animated {
+        animation: appear 0.5s;
+    }
 }
