@@ -1,7 +1,7 @@
 import s from './ThemeSwitch.module.scss'
 import { useEffect, useState } from 'react'
 import { DefaultSwitch } from '../DefaultSwitch/DefaultSwitch'
-import { useTheme } from '../../context/theme/ThemeContext'
+import { useTheme } from '../../../context/theme/ThemeContext'
 
 
 export const ThemeSwitch = () => {

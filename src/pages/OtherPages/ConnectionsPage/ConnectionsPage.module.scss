@@ -1,0 +1,10 @@
+@import '../../../shared/styles/variables.scss';
+
+.connections {
+    background-color: var(--color-surface);
+    display: flex;
+    flex-direction: row;
+    gap: $spacing-md;
+    padding: $spacing-md;
+    border-radius: $border-radius-lg;
+}

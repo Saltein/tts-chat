@@ -1,0 +1,1 @@
+export { ConnectionCard } from '../entities/connection/ui/ConnectionCard/ConnectionCard'

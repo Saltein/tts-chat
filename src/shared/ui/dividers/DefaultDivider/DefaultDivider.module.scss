@@ -1,0 +1,13 @@
+@import '../../../styles/variables.scss';
+
+.wrapper {
+    background-color: var(--color-border);
+
+    &.h {
+        height: 1px;
+    }
+
+    &.v {
+        width: 1px;
+    }
+}

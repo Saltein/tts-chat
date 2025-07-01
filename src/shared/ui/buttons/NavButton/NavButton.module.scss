@@ -17,6 +17,14 @@
     &.current {
         background-color: var(--color-accent-transparent);
         gap: calc($spacing-md - 4px);
+
+        &.first {
+            margin-top: $spacing-md;
+        }
+
+        &.last {
+            margin-bottom: $spacing-md;
+        }
     }
 }
 

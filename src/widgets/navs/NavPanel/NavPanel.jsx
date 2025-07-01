@@ -1,19 +1,22 @@
-import { NavButton } from '../../../shared/ui'
-import { ThemeSwitch } from '../../../shared/switches/ThemeSwitch/ThemeSwitch'
+import { DefaultDivider, DefaultTitle, NavButton } from '../../../shared/ui'
+import { ThemeSwitch } from '../../../shared/ui/switches/ThemeSwitch/ThemeSwitch'
 import { DefaultWidgetShape } from '../../../shared/widgets/DefaultWidgetShape/DefaultWidgetShape'
 import s from './NavPanel.module.scss'
 
 export const NavPanel = () => {
     return (
-        <DefaultWidgetShape width={'256px'} height={'fit-content'} gap={'8px'}>
-            <span className={s.name}>TTS Chat</span>
+        <DefaultWidgetShape width={'256px'} height={'fit-content'} backgroundColor={'transparent'} padding={'0'}>
+            <DefaultTitle title={'TTS Chat'} />
             <div className={s.buttons}>
-                <NavButton title={'Мультичат'} index={0} link='/multi-chat'/>
-                <NavButton title={'Озвучка чата'} index={1} link='/tts'/>
-                <NavButton title={'Подключения'} index={2} link='/connections'/>
-                <NavButton title={'Настройки'} index={3} link='/settings'/>
+                <NavButton title={'Мультичат'} index={0} link='/multi-chat' position='first' />
+                <NavButton title={'Озвучка чата'} index={1} link='/tts' />
+                <NavButton title={'Подключения'} index={2} link='/connections' />
 
-                <ThemeSwitch />
+                <DefaultDivider direction='horizontal' />
+
+                <NavButton title={'Настройки'} index={3} link='/settings' position='last' />
+
+                {/* <ThemeSwitch /> */}
             </div>
         </DefaultWidgetShape>
     )

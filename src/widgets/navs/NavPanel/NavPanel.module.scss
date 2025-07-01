@@ -1,6 +1,9 @@
 @import '../../../shared/styles/variables.scss';
 
-.name {
-    font-size: $font-size-lg;
-    font-weight: 700;
+.buttons {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-surface);
+    padding: 0 $spacing-md 0 $spacing-md;
+    border-radius: $border-radius-lg;
 }
