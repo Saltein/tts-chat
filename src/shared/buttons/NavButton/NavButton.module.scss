@@ -1,0 +1,38 @@
+@import '../../styles/variables.scss';
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0;
+
+    height: 48px;
+    border-radius: $border-radius-md;
+
+    font-size: $font-size-xl;
+
+    &:hover {
+        gap: $spacing-xs;
+    }
+
+    &.current {
+        background-color: var(--color-accent-transparent);
+        gap: calc($spacing-md - 4px);
+    }
+}
+
+.accent {
+    position: relative;
+    left: -2px;
+    width: 0;
+    height: 0px;
+    background-color: transparent;
+    border-radius: 2px;
+    transition: $transition-medium;
+
+    &.current {
+        background-color: var(--color-accent);
+        transform: $transition-fast;
+        width: 4px;
+        height: 28px;
+    }
+}

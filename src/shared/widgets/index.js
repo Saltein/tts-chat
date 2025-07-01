@@ -1,0 +1,1 @@
+export { DefaultWidgetShape } from './DefaultWidgetShape/DefaultWidgetShape'

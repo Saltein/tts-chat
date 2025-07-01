@@ -1,0 +1,17 @@
+import s from './GlobalPage.module.scss'
+import { NavPanel } from '../../widgets/navs/NavPanel/NavPanel'
+import { ConnectionsPage } from '../OtherPages/ConnectionsPage/ConnectionsPage'
+import { Route, Routes } from 'react-router-dom'
+
+export const GlobalPage = () => {
+    return (
+        <div className={s.wrapper}>
+            <NavPanel />
+            <div className={s.pagePart}>
+                <Routes>
+                    <Route path='/connections' element={<ConnectionsPage />} />
+                </Routes>
+            </div>
+        </div>
+    )
+}

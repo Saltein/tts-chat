@@ -1,0 +1,15 @@
+@import '../../../shared/styles/variables.scss';
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+
+    margin: $spacing-md;
+    padding: $spacing-md;
+    border-radius: $spacing-md;
+
+    box-shadow: $shadow-xs;
+}
