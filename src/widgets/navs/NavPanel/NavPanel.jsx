@@ -8,9 +8,9 @@ export const NavPanel = () => {
         <DefaultWidgetShape width={'256px'} height={'fit-content'} backgroundColor={'transparent'} padding={'0'}>
             <DefaultTitle title={'TTS Chat'} />
             <div className={s.buttons}>
-                <NavButton title={'Мультичат'} index={0} link='/multi-chat' position='first' />
-                <NavButton title={'Озвучка чата'} index={1} link='/tts' />
-                <NavButton title={'Подключения'} index={2} link='/connections' />
+                <NavButton title={'Подключения'} index={0} link='/connections' position='first' />
+                <NavButton title={'Мультичат'} index={1} link='/multi-chat' />
+                <NavButton title={'Озвучка чата'} index={2} link='/tts' />
 
                 <DefaultDivider direction='horizontal' />
 

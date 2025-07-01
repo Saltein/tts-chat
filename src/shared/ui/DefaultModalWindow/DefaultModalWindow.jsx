@@ -12,7 +12,7 @@ export const DefaultModalWindow = ({ children, onClose }) => {
 
     return createPortal(
         <div className={s.background} onClick={handleClick}>
-            <DefaultWidgetShape animated>
+            <DefaultWidgetShape animated gap={'8px'}>
                 {children}
             </DefaultWidgetShape>
         </div>,

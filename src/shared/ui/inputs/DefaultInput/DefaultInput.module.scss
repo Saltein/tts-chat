@@ -1,0 +1,69 @@
+@import '../../../styles/variables.scss';
+
+.wrapper {
+    position: relative;
+    display: flex;
+}
+
+.input {
+    all: unset;
+    background-color: var(--color-items);
+    height: 48px;
+    width: 512px;
+    padding: 0 $spacing-md;
+    border: 1px solid var(--color-border);
+    border-radius: $border-radius-md;
+    font-size: $font-size-lg;
+}
+
+.info {
+    position: absolute;
+    top: calc(50% - 12px);
+    right: calc($spacing-md - 4px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 24px;
+    height: 24px;
+    border-radius: $border-radius-lg;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+
+    &:hover {
+        animation: infoLoading 1s;
+        background-color: var(--color-accent);
+    }
+}
+
+.info_text {
+    transform: translateX(-100%) translateY(-40%);
+    position: fixed;
+    z-index: 2000;
+    animation: appear 0.5s;
+}
+
+@keyframes appear {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%) translateY(-40%) scale(0.2);
+    }
+
+    40% {
+        opacity: 1;
+        transform: translateX(-100%) translateY(-40%) scale(1.1);
+    }
+
+    60% {
+        transform: translateX(-100%) translateY(-40%) scale(0.98);
+    }
+
+    80% {
+        transform: translateX(-100%) translateY(-40%) scale(1.01);
+    }
+
+    100% {
+        transform: translateX(-100%) translateY(-40%) scale(1);
+    }
+}

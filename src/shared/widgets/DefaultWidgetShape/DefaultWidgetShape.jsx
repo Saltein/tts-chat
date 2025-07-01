@@ -1,6 +1,6 @@
 import s from './DefaultWidgetShape.module.scss'
 
-export const DefaultWidgetShape = ({ children, width, height, padding, paddingLeft, gap, marginLeft, backgroundColor, animated = false }) => {
+export const DefaultWidgetShape = ({ children, width, height, padding, paddingLeft, gap, marginLeft, backgroundColor, animated = false, shadow }) => {
     const styles = {
         width: width && width,
         height: height && height,
@@ -9,6 +9,7 @@ export const DefaultWidgetShape = ({ children, width, height, padding, paddingLe
         gap: gap && gap,
         marginLeft: marginLeft && marginLeft,
         backgroundColor: backgroundColor && backgroundColor,
+        boxShadow: shadow && `0 ${shadow}px ${shadow * 1.5}px rgba(0, 0, 0, 0.15)`
     }
 
     return (
