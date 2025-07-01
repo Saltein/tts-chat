@@ -1,0 +1,35 @@
+@import '../../../styles/variables.scss';
+
+.wrapper {
+    position: relative;
+    display: flex;
+    background-color: var(--color-surface);
+    flex: 1;
+    margin: $spacing-xs;
+    border-radius: $border-radius-xl;
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    transition: $transition-slow background $transition-medium;
+    box-shadow: inset 1px 1px 2px rgba($color: #000000, $alpha: 0.1);
+
+    &.on {
+        background-color: var(--color-yellow);
+        box-shadow: inset 1px 2px 2px rgba($color: #000000, $alpha: 0.3);
+    }
+
+    &.on .switch {
+        background-color: var(--color-red);
+        left: calc(100% - 40%);
+    }
+}
+
+.switch {
+    position: relative;
+    background-color: var(--color-red);
+    flex: 1;
+    border-radius: $border-radius-md;
+    left: -60%;
+    margin: $spacing-sm;
+    transition: $transition-slow;
+    box-shadow: inset -1px -2px 2px rgba($color: #000000, $alpha: 0.3);
+}

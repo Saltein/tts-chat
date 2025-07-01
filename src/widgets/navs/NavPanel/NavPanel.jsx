@@ -16,7 +16,7 @@ export const NavPanel = () => {
 
                 <NavButton title={'Настройки'} index={3} link='/settings' position='last' />
 
-                {/* <ThemeSwitch /> */}
+                <ThemeSwitch />
             </div>
         </DefaultWidgetShape>
     )
