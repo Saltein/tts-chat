@@ -1,4 +1,4 @@
-import { NavButton } from '../../../shared/buttons/NavButton/NavButton'
+import { NavButton } from '../../../shared/ui'
 import { ThemeSwitch } from '../../../shared/switches/ThemeSwitch/ThemeSwitch'
 import { DefaultWidgetShape } from '../../../shared/widgets/DefaultWidgetShape/DefaultWidgetShape'
 import s from './NavPanel.module.scss'

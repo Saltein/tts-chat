@@ -1,6 +1,6 @@
-import { useDispatch, useSelector } from 'react-redux'
 import s from './NavButton.module.scss'
-import { selectNavPanelCurrentPageID, setNavPanelCurrentPageID } from '../../../widgets/navs/NavPanel/model/slice'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectNavPanelCurrentPageID, setNavPanelCurrentPageID } from '../../../../widgets/navs/NavPanel/model/slice'
 import { useNavigate } from 'react-router-dom'
 
 export const NavButton = ({ title, index = 0, link = '/' }) => {
