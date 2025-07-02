@@ -2,7 +2,7 @@ import { DefaultWidgetShape } from '../../widgets/DefaultWidgetShape/DefaultWidg
 import s from './DefaultModalWindow.module.scss'
 import { createPortal } from 'react-dom'
 
-export const DefaultModalWindow = ({ children, onClose }) => {
+export const DefaultModalWindow = ({ children, onClose, backgroundColor, padding }) => {
     const handleClick = (e) => {
         if (e.target === e.currentTarget) {
             e.stopPropagation()
@@ -12,7 +12,7 @@ export const DefaultModalWindow = ({ children, onClose }) => {
 
     return createPortal(
         <div className={s.background} onClick={handleClick}>
-            <DefaultWidgetShape animated gap={'8px'}>
+            <DefaultWidgetShape animated gap={'8px'} backgroundColor={backgroundColor && backgroundColor} padding={padding && padding}>
                 {children}
             </DefaultWidgetShape>
         </div>,

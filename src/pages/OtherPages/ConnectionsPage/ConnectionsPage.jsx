@@ -5,20 +5,28 @@ import { ReactComponent as TwitchIcon } from '../../../shared/assets/icons/twitc
 import { ReactComponent as YoutubeIcon } from '../../../shared/assets/icons/youtube-logo.svg'
 import { ReactComponent as VkVideoIcon } from '../../../shared/assets/icons/vk-video-logo.svg'
 import { DefaultTitle } from '../../../shared/ui'
+import { setAllTwitchData } from '../../../entities/connection/model/slice'
+import { useDispatch } from 'react-redux'
 
 export const ConnectionsPage = () => {
     const twitchInputs = [
         {
+            name: 'channelName',
             placeholder: 'Название вашего канала',
-            info: 'Название вашего канала на twitch'
+            info: 'Название вашего канала на twitch',
+            type: 'text',
         },
         {
+            name: 'chatChannelName',
             placeholder: 'Название канала чата',
-            info: 'Название канала, чат которого нужно прослушивать'
+            info: 'Название канала, чат которого нужно прослушивать',
+            type: 'text',
         },
         {
+            name: 'accessToken',
             placeholder: 'Access token',
-            info: <span>Access Token с сайта <a className={s.href} href='https://twitchtokengenerator.com/'>twitchtokengenerator.com</a> (Bot Chat Token)</span>
+            info: <span>Access Token с сайта <a className={s.href} href='https://twitchtokengenerator.com/'>twitchtokengenerator.com</a> (Bot Chat Token)</span>,
+            type: 'password',
         },
     ]
 
@@ -27,7 +35,7 @@ export const ConnectionsPage = () => {
             <DefaultWidgetShape marginLeft={'0'} backgroundColor={'transparent'} padding={'0'}>
                 <DefaultTitle title={'Подключения'} />
                 <div className={s.connections}>
-                    <ConnectionCard IconComponent={TwitchIcon} inputs={twitchInputs} />
+                    <ConnectionCard IconComponent={TwitchIcon} inputs={twitchInputs} title={'Twitch'} dispatcher={setAllTwitchData} />
                     <ConnectionCard IconComponent={YoutubeIcon} />
                     <ConnectionCard IconComponent={VkVideoIcon} />
                 </div>

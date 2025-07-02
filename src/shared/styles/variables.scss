@@ -13,15 +13,15 @@ $text-color: var(--color-text);
 
 :root {
 
-    --color-yellow: #facc15;
-    --color-red: #A30B37;
-    // Брендинг — основные фирменные цвета приложения
-    --color-primary: #A30B37; // Основной цвет (например, кнопки, ссылки, активные элементы)
-    --color-primary-transparent: #A30B3755; // Основной цвет (например, кнопки, ссылки, активные элементы)
-    --color-primary-hover: #770828; // Ховер-состояние для основного цвета
-    --color-accent: #facc15; // Дополнительный акцентный цвет (например, выделение важных элементов)
-    --color-accent-transparent: #facc1555; // Дополнительный акцентный цвет (например, выделение важных элементов)
-    --color-accent-hover: #ffe16b;
+    --color-yellow: #f97316;
+    --color-red: #10b981;
+
+    --color-primary: #10b981;
+    --color-primary-transparent: #10b98155;
+    --color-primary-hover: #059669;
+    --color-accent: #f97316;
+    --color-accent-transparent: #f9731655;
+    --color-accent-hover: #ea580c;
 
     --color-extra-transparent: #30D5C8AA;
 
@@ -38,7 +38,7 @@ $text-color: var(--color-text);
     --color-muted: #6b7280; // Вторичный/приглушённый текст (например, описание, метки)
     --color-muted-transparent: #11182788; // Вторичный/приглушённый текст (например, описание, метки)
     --color-placeholder: #9ca3af; // Цвет плейсхолдеров в инпутах
-    --color-disabled: #d1d5db; // Цвет текста и элементов в отключённом состоянии
+    --color-disabled: #dbd6d1; // Цвет текста и элементов в отключённом состоянии
 
     // Статусы — цвета для отображения состояния
     --color-success: #22c55e; // Успешные действия, подтверждения
@@ -64,13 +64,12 @@ $text-color: var(--color-text);
 }
 
 [data-theme="dark"] {
-    // Брендинг — основные фирменные цвета приложения
-    --color-primary: #facc15; // Основной цвет (например, кнопки, ссылки, активные элементы)
-    --color-primary-transparent: #facc1555; // Основной цвет (например, кнопки, ссылки, активные элементы)
-    --color-primary-hover: #ffe16b; // Ховер-состояние для основного цвета
-    --color-accent: #A30B37; // Дополнительный акцентный цвет (например, выделение важных элементов)
-    --color-accent-transparent: #A30B3755; // Дополнительный акцентный цвет (например, выделение важных элементов)
-    --color-accent-hover: #770828;
+    --color-primary: #f97316;
+    --color-primary-transparent: #f9731655;
+    --color-primary-hover: #ea580c;
+    --color-accent: #10b981;
+    --color-accent-transparent: #10b98155;
+    --color-accent-hover: #059669;
 
     // Базовые цвета — фон и обрамление
     --color-background: #121212; // Темный фон страницы
@@ -85,7 +84,7 @@ $text-color: var(--color-text);
     --color-muted-transparent: #f3f4f688; // Приглушённый текст
     --color-muted: #9ca3af; // Приглушённый текст
     --color-placeholder: #6b7280; // Плейсхолдеры
-    --color-disabled: #4b5563; // Отключённые элементы
+    --color-disabled: #4b635d; // Отключённые элементы
 
     // Статусы — те же цвета, подходят и для тёмной темы
     --color-success: #22c55e;
@@ -202,6 +201,7 @@ $shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.2); // оверлеи, тултипы
 $transition-fast: 100ms ease-in-out; // быстрый отклик на hover
 $transition-medium: 150ms ease-in-out; // стандартная анимация
 $transition-slow: 300ms ease-in-out; // плавное появление, модалки
+$transition-very-slow: 600ms ease-in-out; // плавное появление, модалки
 
 
 // ================================
