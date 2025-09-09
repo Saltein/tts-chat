@@ -1,0 +1,9 @@
+@import '../../../styles/variables.scss';
+
+.text {
+    text-align: center;
+
+    span, b {
+        color: var(--color-error)
+    }
+}

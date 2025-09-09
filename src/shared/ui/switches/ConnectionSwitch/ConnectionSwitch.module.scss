@@ -1,4 +1,5 @@
 @import '../../../styles/variables.scss';
+@import '../../../styles/animations.scss';
 
 .wrapper {
     position: relative;
@@ -22,7 +23,28 @@
         left: calc(100% - 30% - 2 * $spacing-sm);
     }
 
-    &.loading .switch{
+    &.loading {
+        animation: blink 0.2s infinite;
+        background: linear-gradient(90deg,
+                var(--color-surface),
+                var(--color-surface),
+                var(--color-surface),
+                var(--color-surface),
+                var(--color-surface),
+                var(--color-accent-transparent),
+                var(--color-surface),
+                var(--color-surface),
+                var(--color-surface),
+                var(--color-surface),
+                var(--color-surface),
+                var(--color-surface),
+                var(--color-surface),
+                );
+        background-size: 200% 100%;
+        animation: gradientWave 2s ease-in-out infinite;
+    }
+
+    &.loading .switch {
         flex: 1;
         transition: $transition-slow;
     }

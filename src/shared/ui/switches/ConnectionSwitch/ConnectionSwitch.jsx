@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import s from './ConnectionSwitch.module.scss'
 
-export const ConnectionSwitch = () => {
+export const ConnectionSwitch = ({serviceName = ''}) => {
     const [isSwitchOn, setIsSwitchOn] = useState(false)
     const [isSwitchLoading, setIsSwitchLoading] = useState(false)
 
@@ -14,7 +14,7 @@ export const ConnectionSwitch = () => {
             setTimeout(() => {
                 setIsSwitchOn(!isSwitchOn)
                 setIsSwitchLoading(false)
-            }, 2000)
+            }, 4000)
         }
     }
 

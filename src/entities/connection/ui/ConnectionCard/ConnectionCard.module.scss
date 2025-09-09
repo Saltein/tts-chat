@@ -12,6 +12,15 @@
     cursor: pointer;
 }
 
+.wrapper:hover {
+    transform: scale(1.03);
+    box-shadow: $shadow-md;
+
+    .icon {
+        transform: scale(1.1);
+    }
+}
+
 .icon {
     padding: $spacing-md;
     width: 100%;

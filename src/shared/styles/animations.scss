@@ -238,7 +238,19 @@
     0% {
         background-color: var(--color-surface);
     }
+
     100% {
         background-color: var(--color-accent);
+    }
+}
+
+
+@keyframes gradientWave {
+    0% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: -100% 0;
     }
 }

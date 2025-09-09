@@ -12,14 +12,14 @@ export const ConnectionsPage = () => {
     const twitchInputs = [
         {
             name: 'channelName',
-            placeholder: 'Название вашего канала',
-            info: 'Название вашего канала на twitch',
+            placeholder: 'Название бота',
+            info: 'Название вашего бота или второго аккаунта twitch, который будет читать чат',
             type: 'text',
         },
         {
             name: 'chatChannelName',
-            placeholder: 'Название канала чата',
-            info: 'Название канала, чат которого нужно прослушивать',
+            placeholder: 'Название канала',
+            info: 'Название канала twitch, чат которого нужно прослушивать',
             type: 'text',
         },
         {
@@ -30,12 +30,21 @@ export const ConnectionsPage = () => {
         },
     ]
 
+    const onMistakeTwitch = (botName, channelName) => {
+        if (botName === channelName) {
+            return <span>Имя <b>бота</b> и имя <b>канала</b> не должны совпадать</span>
+        }
+        else {
+            return ''
+        }
+    }
+
     return (
         <div className={s.wrapper}>
             <DefaultWidgetShape marginLeft={'0'} backgroundColor={'transparent'} padding={'0'}>
                 <DefaultTitle title={'Подключения'} />
                 <div className={s.connections}>
-                    <ConnectionCard IconComponent={TwitchIcon} inputs={twitchInputs} title={'Twitch'} dispatcher={setAllTwitchData} />
+                    <ConnectionCard IconComponent={TwitchIcon} inputs={twitchInputs} title={'Twitch'} dispatcher={setAllTwitchData} onMistake={onMistakeTwitch}/>
                     <ConnectionCard IconComponent={YoutubeIcon} />
                     <ConnectionCard IconComponent={VkVideoIcon} />
                 </div>
