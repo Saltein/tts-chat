@@ -4,9 +4,7 @@ import { DefaultWidgetShape } from '../../../shared/widgets/DefaultWidgetShape/D
 import { ReactComponent as TwitchIcon } from '../../../shared/assets/icons/twitch-logo.svg'
 import { ReactComponent as YoutubeIcon } from '../../../shared/assets/icons/youtube-logo.svg'
 import { ReactComponent as VkVideoIcon } from '../../../shared/assets/icons/vk-video-logo.svg'
-import { DefaultTitle } from '../../../shared/ui'
 import { setAllTwitchData } from '../../../entities/connection/model/slice'
-import { useDispatch } from 'react-redux'
 
 export const ConnectionsPage = () => {
     const twitchInputs = [
@@ -41,8 +39,7 @@ export const ConnectionsPage = () => {
 
     return (
         <div className={s.wrapper}>
-            <DefaultWidgetShape marginLeft={'0'} backgroundColor={'transparent'} padding={'0'}>
-                <DefaultTitle title={'Подключения'} />
+            <DefaultWidgetShape marginLeft={'0'} backgroundColor={'transparent'} padding={'0'} title='Подключения'>
                 <div className={s.connections}>
                     <ConnectionCard IconComponent={TwitchIcon} inputs={twitchInputs} title={'Twitch'} dispatcher={setAllTwitchData} onMistake={onMistakeTwitch}/>
                     <ConnectionCard IconComponent={YoutubeIcon} />

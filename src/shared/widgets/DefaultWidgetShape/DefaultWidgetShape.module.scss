@@ -20,3 +20,11 @@
         animation: appear 0.5s;
     }
 }
+
+.mainBlock {
+    background-color: var(--color-surface);
+    flex-direction: row;
+    gap: $spacing-md;
+    padding: 0 $spacing-md;
+    border-radius: $border-radius-lg;
+}

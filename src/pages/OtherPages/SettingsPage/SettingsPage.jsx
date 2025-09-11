@@ -5,8 +5,8 @@ import s from './SettingsPage.module.scss'
 export const SettingsPage = () => {
     return (
         <div className={s.wrapper}>
-            <DefaultWidgetShape marginLeft={'0'} backgroundColor={'transparent'} padding={'16px'}>
-                <span>Темная тема</span><ThemeSwitch />
+            <DefaultWidgetShape marginLeft={'0'} backgroundColor={'transparent'} padding={'0'} paddingBlock={'16px'} title='Настройки'>
+                Темная тема<ThemeSwitch />
             </DefaultWidgetShape>
         </div>
     )

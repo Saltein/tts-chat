@@ -1,17 +1,34 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSelector, createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     twitch: {
         channelName: '',
         chatChannelName: '',
         accessToken: '',
+        chatMessages: [],
     },
 }
 
-const savedTwitch = localStorage.getItem('twitchConnection')
-if (savedTwitch) {
-    initialState.twitch = JSON.parse(savedTwitch)
+let savedTwitch
+try {
+    savedTwitch = JSON.parse(localStorage.getItem('twitchConnection'))
+} catch {
+    savedTwitch = null
 }
+
+if (savedTwitch) initialState.twitch = savedTwitch
+
+
+
+if (savedTwitch) {
+    initialState.twitch = {
+        channelName: savedTwitch.channelName || '',
+        chatChannelName: savedTwitch.chatChannelName || '',
+        accessToken: savedTwitch.accessToken || '',
+        chatMessages: savedTwitch.chatMessages || [],
+    }
+}
+
 
 const saveToLocalStorage = (twitch) => {
     localStorage.setItem('twitchConnection', JSON.stringify(twitch))
@@ -38,11 +55,26 @@ const connectionSlice = createSlice({
             state.twitch.chatChannelName = action.payload.chatChannelName
             state.twitch.accessToken = action.payload.accessToken
             saveToLocalStorage(state.twitch)
+        },
+
+        setNewTwitchMessage: (state, action) => {
+            state.twitch.chatMessages.push(action.payload)
         }
     },
 })
 
-export const { setTwitchChannelName, setTwitchChatChannelName, setTwitchAccessToken, setAllTwitchData } = connectionSlice.actions
+export const {
+    setTwitchChannelName,
+    setTwitchChatChannelName,
+    setTwitchAccessToken,
+    setAllTwitchData,
+    setNewTwitchMessage
+} = connectionSlice.actions
 export default connectionSlice.reducer
 
 export const selectTwitchConnectionData = (state) => state.connection.twitch
+export const selectTwitchChatMessages = (state) => state.connection?.twitch?.chatMessages || []
+export const selectLast50TwitchMessages = createSelector(
+    [selectTwitchChatMessages],
+    (messages) => messages.slice(-50)
+)

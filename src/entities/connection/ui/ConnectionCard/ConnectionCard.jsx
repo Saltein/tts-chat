@@ -26,7 +26,6 @@ export const ConnectionCard = ({ IconComponent, inputs = [], title, dispatcher, 
         setIsModalOpen(false)
     }
 
-
     useEffect(() => {
         if (title === 'Twitch') {
             setWarningText(onMistake(formData.channelName, formData.chatChannelName))

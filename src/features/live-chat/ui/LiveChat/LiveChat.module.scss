@@ -1,0 +1,11 @@
+@import '../../../../shared/styles/variables.scss';
+
+.wrapper {
+    height: 720px;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+    align-items: flex-start;
+    justify-content: flex-end;
+    overflow-y: hidden;
+}
