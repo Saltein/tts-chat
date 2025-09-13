@@ -1,0 +1,44 @@
+@import '../../../styles/variables.scss';
+
+.wrapper {
+    position: relative;
+    box-sizing: content-box;
+    display: flex;
+    height: 48px;
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: inset 4px 4px 8px rgba($color: #000000, $alpha: 0.1);
+    align-items: center;
+}
+
+.slider {
+    position: relative;
+    height: 100%;
+    width: 105%;
+    background: var(--color-accent-transparent);
+    border-radius: 24px;
+    border-right: 2px solid var(--color-accent);
+
+    display: flex;
+    justify-content: end;
+}
+
+.slider_circle {
+    position: relative;
+    right: -1px;
+    background: radial-gradient(circle 64px at left, transparent, transparent, var(--color-accent-transparent), var(--color-accent));
+    height: 48px;
+    width: 56px;
+    border-radius: 0 24px 24px 0;
+}
+
+.value {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    font-size: 48px;
+    color: #888888;
+    font-weight: 1000;
+}

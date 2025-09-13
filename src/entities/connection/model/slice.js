@@ -18,8 +18,6 @@ try {
 
 if (savedTwitch) initialState.twitch = savedTwitch
 
-
-
 if (savedTwitch) {
     initialState.twitch = {
         channelName: savedTwitch.channelName || '',
@@ -30,8 +28,8 @@ if (savedTwitch) {
 }
 
 
-const saveToLocalStorage = (twitch) => {
-    localStorage.setItem('twitchConnection', JSON.stringify(twitch))
+const saveToLocalStorage = (obj) => {
+    localStorage.setItem('twitchConnection', JSON.stringify(obj))
 }
 
 const connectionSlice = createSlice({
@@ -77,4 +75,8 @@ export const selectTwitchChatMessages = (state) => state.connection?.twitch?.cha
 export const selectLast50TwitchMessages = createSelector(
     [selectTwitchChatMessages],
     (messages) => messages.slice(-50)
+)
+export const selectLastTwitchMessage = createSelector(
+    [selectTwitchChatMessages],
+    (messages) => messages.slice(-1)
 )

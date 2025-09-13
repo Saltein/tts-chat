@@ -6,8 +6,12 @@ export const DefaultWidgetShape = ({
     width,
     height,
     padding,
+    paddingTop,
+    paddingBottom,
     paddingLeft,
-    gap, margin,
+    paddingRight,
+    gap,
+    margin,
     marginLeft,
     marginRight,
     marginTop,
@@ -22,12 +26,18 @@ export const DefaultWidgetShape = ({
     paddingRightBlock,
     paddingBlock,
     justifyTitle,
+    noTitle = false,
+    backgroundColorBlock,
+    noBlock = false,
 }) => {
     const wrapperStyles = {
         width: width && width,
         height: height && height,
         paddingLeft: paddingLeft && paddingLeft,
-        padding: padding && padding,
+        paddingTop: paddingTop ?? undefined,
+        ...(padding && !(paddingTop || paddingBottom || paddingLeft || paddingRight)
+            ? { padding }
+            : {}),
         gap: gap && gap,
         marginTop: marginTop ?? undefined,
         marginBottom: marginBottom ?? undefined,
@@ -40,7 +50,14 @@ export const DefaultWidgetShape = ({
         boxShadow: shadow && `0 ${shadow}px ${shadow * 1.5}px rgba(0, 0, 0, 0.15)`,
     }
 
+    if (paddingTop || paddingBottom || paddingLeft || paddingRight) {
+        wrapperStyles.padding = undefined;
+    } else if (padding) {
+        wrapperStyles.padding = padding;
+    }
+
     const blockStyles = {
+        backgroundColor: backgroundColorBlock ?? undefined,
         paddingTop: paddingTopBlock ?? undefined,
         paddingBottom: paddingBottomBlock ?? undefined,
         paddingLeft: paddingLeftBlock ?? undefined,
@@ -56,10 +73,19 @@ export const DefaultWidgetShape = ({
 
     return (
         <div className={`${s.wrapper} ${animated ? s.animated : ''}`} style={wrapperStyles}>
-            <DefaultTitle title={title} titleStyles={titleStyles} />
-            <div className={s.mainBlock} style={blockStyles}>
-                {children}
-            </div>
+            {!noTitle && <DefaultTitle title={title} titleStyles={titleStyles} />}
+
+            {noBlock ?
+                <>
+                    {children}
+                </>
+                :
+                <div className={s.mainBlock} style={blockStyles}>
+                    {children}
+                </div>
+            }
+
+
         </div>
     )
 }
