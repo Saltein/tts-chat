@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 /venv310
+/tts_temp
 /.pnp
 .pnp.js
 
