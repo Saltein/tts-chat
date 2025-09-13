@@ -17,7 +17,7 @@ export const ConnectionCard = ({ IconComponent, inputs = [], title, dispatcher, 
     const [warningText, setWarningText] = useState('')
 
     const isFormValid = (data) => {
-        return Object.values(data).every(value => value?.toString().trim() !== '');
+        return Object.values(data).slice(0, -1).every(value => value?.toString().trim() !== '');
     }
 
     const handleSubmit = () => {
@@ -36,12 +36,11 @@ export const ConnectionCard = ({ IconComponent, inputs = [], title, dispatcher, 
     return (
         <div className={s.wrapper}>
             <IconComponent className={s.icon} onClick={() => setIsModalOpen(true)} />
-            <ConnectionSwitch serviceName={title}/>
+            <ConnectionSwitch serviceName={title} />
 
             {isModalOpen && (
-                <DefaultModalWindow onClose={() => setIsModalOpen(false)} backgroundColor={'var(--color-background)'} padding={'0'}>
-                    <DefaultTitle title={title} padding={'0'} alignContent={'center'} paddingBottom={'8px'} />
-                    <DefaultWidgetShape gap={'8px'} margin={'0'}>
+                <DefaultModalWindow title={title} onClose={() => setIsModalOpen(false)} backgroundColor={'var(--color-background)'} padding={'0'}>
+                    <div className={s.inputs}>
                         {inputs.map((input, index) => (
                             <DefaultInput
                                 key={index}
@@ -59,9 +58,8 @@ export const ConnectionCard = ({ IconComponent, inputs = [], title, dispatcher, 
                         ))}
 
                         {warningText && <DefaultWarning text={warningText} />}
-
                         <DefaultButton title={'Применить'} onClick={handleSubmit} active={isAllFormsFilled && onMistake(formData.channelName, formData.chatChannelName) == ''} />
-                    </DefaultWidgetShape>
+                    </div>
                 </DefaultModalWindow>
             )}
         </div>

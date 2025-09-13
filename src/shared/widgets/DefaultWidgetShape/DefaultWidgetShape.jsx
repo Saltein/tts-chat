@@ -21,6 +21,7 @@ export const DefaultWidgetShape = ({
     paddingLeftBlock,
     paddingRightBlock,
     paddingBlock,
+    justifyTitle,
 }) => {
     const wrapperStyles = {
         width: width && width,
@@ -36,7 +37,7 @@ export const DefaultWidgetShape = ({
             ? { margin }
             : {}),
         backgroundColor: backgroundColor && backgroundColor,
-        boxShadow: shadow && `0 ${shadow}px ${shadow * 1.5}px rgba(0, 0, 0, 0.15)`
+        boxShadow: shadow && `0 ${shadow}px ${shadow * 1.5}px rgba(0, 0, 0, 0.15)`,
     }
 
     const blockStyles = {
@@ -49,9 +50,13 @@ export const DefaultWidgetShape = ({
             : {}),
     }
 
+    const titleStyles = {
+        textAlign: justifyTitle,
+    }
+
     return (
         <div className={`${s.wrapper} ${animated ? s.animated : ''}`} style={wrapperStyles}>
-            <DefaultTitle title={title} />
+            <DefaultTitle title={title} titleStyles={titleStyles} />
             <div className={s.mainBlock} style={blockStyles}>
                 {children}
             </div>
