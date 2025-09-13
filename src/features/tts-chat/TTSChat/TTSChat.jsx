@@ -3,6 +3,7 @@ import { selectSpeechVolume } from '../model/slice'
 import s from './TTSChat.module.scss'
 import { useSelector } from 'react-redux'
 import { selectLastTwitchMessage } from '../../../entities/connection/model/slice'
+import { transliterateMessage } from '../../live-chat/lib/transliteration'
 
 export const TTSChat = () => {
     const currentValue = useSelector(selectSpeechVolume) / 100
@@ -13,12 +14,13 @@ export const TTSChat = () => {
 
     const handleSpeak = async () => {
         if (message) {
+            if (message?.tags['reply-parent-user-login']) return
             try {
                 const res = await fetch("http://localhost:5001/speak", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        text: message?.message,
+                        text: transliterateMessage(message?.message),
                         speaker: "random"
                     }),
                 })

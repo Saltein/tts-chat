@@ -45,8 +45,6 @@ export const ConnectionsPage = () => {
                     <ConnectionCard IconComponent={TwitchIcon} inputs={twitchInputs} title={'Twitch'} dispatcher={setAllTwitchData} onMistake={onMistakeTwitch}/>
                     <ConnectionCard IconComponent={YoutubeIcon} />
                     <ConnectionCard IconComponent={VkVideoIcon} />
-                    
-                    <TTSButton />
                 </div>
             </DefaultWidgetShape>
         </div>

@@ -41,10 +41,10 @@ export const ConnectionSwitch = ({ serviceName = "" }) => {
 
 
                     client.on("message", (channel, tags, message, self) => {
-                        console.log(`[${tags["display-name"]}]: ${message}`)
+                        // console.log(`[${tags["display-name"]}]: ${message}`)
                         // console.log('channel: ', channel)
-                        // console.log('tags: ', tags)
-                        // console.log('message: ', message)
+                        console.log('tags: ', tags)
+                        console.log('message: ', message)
                         // console.log('self: ', self)
                         dispatch(setNewTwitchMessage({
                             channel: channel,
@@ -74,7 +74,7 @@ export const ConnectionSwitch = ({ serviceName = "" }) => {
 
     return (
         <div
-            className={`${s.wrapper} ${isSwitchLoading ? s.loading : ""} ${isSwitchOn ? s.on : "" }`}
+            className={`${s.wrapper} ${isSwitchLoading ? s.loading : ""} ${isSwitchOn ? s.on : ""}`}
             onClick={handleConnect}
         >
             <div className={s.switch} />
