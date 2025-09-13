@@ -5,6 +5,7 @@ import { ReactComponent as TwitchIcon } from '../../../shared/assets/icons/twitc
 import { ReactComponent as YoutubeIcon } from '../../../shared/assets/icons/youtube-logo.svg'
 import { ReactComponent as VkVideoIcon } from '../../../shared/assets/icons/vk-video-logo.svg'
 import { setAllTwitchData } from '../../../entities/connection/model/slice'
+import { TTSButton } from '../../../shared/ui/buttons/TTSButton/TTSButton'
 
 export const ConnectionsPage = () => {
     const twitchInputs = [
@@ -44,6 +45,8 @@ export const ConnectionsPage = () => {
                     <ConnectionCard IconComponent={TwitchIcon} inputs={twitchInputs} title={'Twitch'} dispatcher={setAllTwitchData} onMistake={onMistakeTwitch}/>
                     <ConnectionCard IconComponent={YoutubeIcon} />
                     <ConnectionCard IconComponent={VkVideoIcon} />
+                    
+                    <TTSButton />
                 </div>
             </DefaultWidgetShape>
         </div>
