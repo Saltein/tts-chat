@@ -1,1 +1,6 @@
 @import '../../../shared/styles/variables.scss';
+
+.settingsBlock {
+    display: flex;
+    gap: $spacing-md;
+}

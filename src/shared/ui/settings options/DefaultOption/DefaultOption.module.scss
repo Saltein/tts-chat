@@ -1,0 +1,18 @@
+@import '../../../styles/variables.scss';
+
+.wrapper {
+    border: 1px solid var(--color-border);
+    height: 48px;
+    min-width: 384px;
+    background-color: var(--color-items);
+    border-radius: $border-radius-lg;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-md;
+}
+
+.name {
+    
+}

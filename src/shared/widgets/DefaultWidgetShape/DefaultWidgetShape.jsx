@@ -29,6 +29,8 @@ export const DefaultWidgetShape = ({
     noTitle = false,
     backgroundColorBlock,
     noBlock = false,
+    flexDirection,
+    display,
 }) => {
     const wrapperStyles = {
         width: width && width,
@@ -65,6 +67,8 @@ export const DefaultWidgetShape = ({
         ...(padding && !(paddingTopBlock || paddingBottomBlock || paddingLeftBlock || paddingRightBlock)
             ? { paddingBlock }
             : {}),
+        flexDirection: flexDirection ?? undefined,
+        display: display ?? undefined,
     }
 
     const titleStyles = {
