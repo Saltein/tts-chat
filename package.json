@@ -8,6 +8,9 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^13.2.1",
+    "compose": "^0.1.2",
+    "doker": "^0.0.8",
+    "nginx": "^1.1.0",
     "number-to-words-ru": "^2.4.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -20,9 +23,7 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "concurrently \"npm run start-react\" \"npm run start-tts\"",
-    "start-react": "react-scripts start",
-    "start-tts": "python server.py",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
