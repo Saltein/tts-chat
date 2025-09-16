@@ -2,12 +2,13 @@ import { useState, useRef } from "react"
 import s from "./ConnectionSwitch.module.scss"
 import { useDispatch, useSelector } from "react-redux"
 import { connectTwitchChat } from "../../../../features/live-chat/lib/twitchClient"
-import { selectTwitchConnectionData, setNewTwitchMessage } from "../../../../entities/connection/model/slice"
+import { selectTwitchConnectionData, selectTwitchConnectionStatus, setNewTwitchMessage, setTwitchConnectionStatus } from "../../../../entities/connection/model/slice"
 
 export const ConnectionSwitch = ({ serviceName = "" }) => {
     const dispatch = useDispatch()
-
-    const [isSwitchOn, setIsSwitchOn] = useState(false)
+    
+    const twitchConnectionStatus = useSelector(selectTwitchConnectionStatus)
+    const [isSwitchOn, setIsSwitchOn] = useState(serviceName === 'Twitch' && twitchConnectionStatus)
     const [isSwitchLoading, setIsSwitchLoading] = useState(false)
     const { accessToken, channelName, chatChannelName } = useSelector(
         selectTwitchConnectionData
@@ -20,9 +21,11 @@ export const ConnectionSwitch = ({ serviceName = "" }) => {
             // Выключение
             if (clientRef.current) {
                 clientRef.current.disconnect()
+                console.log('DISCONNECTED')
                 clientRef.current = null
             }
             setIsSwitchOn(false)
+            dispatch(setTwitchConnectionStatus(false))
             setIsSwitchLoading(false)
         } else {
             // Включение
@@ -57,12 +60,14 @@ export const ConnectionSwitch = ({ serviceName = "" }) => {
                     // Когда подключение успешно → включаем свитч
                     client.on("connected", () => {
                         setIsSwitchOn(true)
+                        dispatch(setTwitchConnectionStatus(true))
                         setIsSwitchLoading(false)
                     })
 
                     // Если вдруг отключились → выключаем свитч
                     client.on("disconnected", () => {
                         setIsSwitchOn(false)
+                        dispatch(setTwitchConnectionStatus(false))
                         setIsSwitchLoading(false)
                     })
                 } else {

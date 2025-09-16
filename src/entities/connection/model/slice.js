@@ -6,6 +6,7 @@ const initialState = {
         chatChannelName: '',
         accessToken: '',
         chatMessages: [],
+        connectionStatus: false,
     },
 }
 
@@ -57,7 +58,11 @@ const connectionSlice = createSlice({
 
         setNewTwitchMessage: (state, action) => {
             state.twitch.chatMessages.push(action.payload)
-        }
+        },
+
+        setTwitchConnectionStatus: (state, action) => {
+            state.twitch.connectionStatus = action.payload
+        },
     },
 })
 
@@ -66,7 +71,8 @@ export const {
     setTwitchChatChannelName,
     setTwitchAccessToken,
     setAllTwitchData,
-    setNewTwitchMessage
+    setNewTwitchMessage,
+    setTwitchConnectionStatus,
 } = connectionSlice.actions
 export default connectionSlice.reducer
 
@@ -80,3 +86,4 @@ export const selectLastTwitchMessage = createSelector(
     [selectTwitchChatMessages],
     (messages) => messages.slice(-1)
 )
+export const selectTwitchConnectionStatus = (state) => state.connection.twitch.connectionStatus

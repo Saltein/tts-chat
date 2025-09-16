@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { ConnectionSwitch, DefaultButton, DefaultInput, DefaultTitle, DefaultWarning } from '../../../../shared/ui'
 import { DefaultModalWindow } from '../../../../shared/ui/DefaultModalWindow/DefaultModalWindow'
 import s from './ConnectionCard.module.scss'
-import { DefaultWidgetShape } from '../../../../shared/widgets/DefaultWidgetShape/DefaultWidgetShape';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectTwitchConnectionData } from '../../model/slice';
 
