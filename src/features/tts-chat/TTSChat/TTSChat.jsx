@@ -16,7 +16,7 @@ export const TTSChat = () => {
         if (message) {
             if (message?.tags['reply-parent-user-login']) return
             try {
-                const res = await fetch("/speak", { // ПОМЕНЯТЬ НА ПРОДАКШЕНЕ
+                const res = await fetch("/api/speak", { // ПОМЕНЯТЬ НА ПРОДАКШЕНЕ НА /api/speak
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
