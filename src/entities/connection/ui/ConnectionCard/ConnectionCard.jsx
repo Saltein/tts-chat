@@ -26,10 +26,8 @@ export const ConnectionCard = ({ IconComponent, inputs = [], title, dispatcher, 
     }
 
     useEffect(() => {
-        if (title === 'Twitch') {
-            setWarningText(onMistake(formData.channelName, formData.chatChannelName))
-        }
         setIsAllFormsFilled(isFormValid(formData))
+        console.log('formData', formData)
     }, [formData])
 
     return (
@@ -57,7 +55,7 @@ export const ConnectionCard = ({ IconComponent, inputs = [], title, dispatcher, 
                         ))}
 
                         {warningText && <DefaultWarning text={warningText} />}
-                        <DefaultButton title={'Применить'} onClick={handleSubmit} active={isAllFormsFilled && onMistake(formData.channelName, formData.chatChannelName) == ''} />
+                        <DefaultButton title={'Применить'} onClick={handleSubmit} active={isAllFormsFilled } />
                     </div>
                 </DefaultModalWindow>
             )}

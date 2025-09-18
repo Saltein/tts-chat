@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { selectSpeechVolume } from '../model/slice'
+import { selectSpeechVolume, selectTwitchTTSOn } from '../model/slice'
 import s from './TTSChat.module.scss'
 import { useSelector } from 'react-redux'
 import { selectLastTwitchMessage } from '../../../entities/connection/model/slice'
@@ -8,6 +8,7 @@ import { transliterateMessage } from '../../live-chat/lib/transliteration'
 export const TTSChat = () => {
     const currentValue = useSelector(selectSpeechVolume) / 100
     const message = useSelector(selectLastTwitchMessage)[0]
+    const isTwitchTTSOn = useSelector(selectTwitchTTSOn)
 
     const [audioUrl, setAudioUrl] = useState(null)
     const audioRef = useRef(null);
@@ -16,7 +17,7 @@ export const TTSChat = () => {
         if (message) {
             if (message?.tags['reply-parent-user-login']) return
             try {
-                const res = await fetch("/api/speak", { // ПОМЕНЯТЬ НА ПРОДАКШЕНЕ НА /api/speak
+                const res = await fetch("http://localhost:5001/api/speak", { // ПОМЕНЯТЬ НА ПРОДАКШЕНЕ НА /api/speak
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -52,13 +53,15 @@ export const TTSChat = () => {
 
     return (
         <div className={s.wrapper}>
-            <audio
-                ref={audioRef}
-                controls
-                autoPlay
-                src={audioUrl}
-                style={{ width: "100%" }}
-            />
+            {isTwitchTTSOn &&
+                <audio
+                    ref={audioRef}
+                    controls
+                    autoPlay
+                    src={audioUrl}
+                    style={{ width: "100%" }}
+                />
+            }
         </div>
     )
 }

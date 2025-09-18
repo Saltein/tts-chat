@@ -2,9 +2,7 @@ import { createSelector, createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     twitch: {
-        channelName: '',
         chatChannelName: '',
-        accessToken: '',
         chatMessages: [],
         connectionStatus: false,
     },
@@ -37,22 +35,8 @@ const connectionSlice = createSlice({
     name: 'connection',
     initialState,
     reducers: {
-        setTwitchChannelName: (state, action) => {
-            state.twitch.channelName = action.payload
-            saveToLocalStorage(state.twitch)
-        },
         setTwitchChatChannelName: (state, action) => {
             state.twitch.chatChannelName = action.payload
-            saveToLocalStorage(state.twitch)
-        },
-        setTwitchAccessToken: (state, action) => {
-            state.twitch.accessToken = action.payload
-            saveToLocalStorage(state.twitch)
-        },
-        setAllTwitchData: (state, action) => {
-            state.twitch.channelName = action.payload.channelName
-            state.twitch.chatChannelName = action.payload.chatChannelName
-            state.twitch.accessToken = action.payload.accessToken
             saveToLocalStorage(state.twitch)
         },
 
@@ -67,16 +51,13 @@ const connectionSlice = createSlice({
 })
 
 export const {
-    setTwitchChannelName,
     setTwitchChatChannelName,
-    setTwitchAccessToken,
-    setAllTwitchData,
     setNewTwitchMessage,
     setTwitchConnectionStatus,
 } = connectionSlice.actions
 export default connectionSlice.reducer
 
-export const selectTwitchConnectionData = (state) => state.connection.twitch
+export const selectTwitchConnectionData = (state) => state.connection.twitch.chatChannelName
 export const selectTwitchChatMessages = (state) => state.connection?.twitch?.chatMessages || []
 export const selectLast50TwitchMessages = createSelector(
     [selectTwitchChatMessages],

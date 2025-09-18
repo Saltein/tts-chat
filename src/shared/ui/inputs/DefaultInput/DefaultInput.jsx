@@ -29,7 +29,7 @@ export const DefaultInput = ({ placeholder = '', info, type = 'text', value, onC
 
     return (
         <div className={s.wrapper}>
-            <input className={s.input} placeholder={placeholder} type={type} value={value} onChange={onChange}/>
+            <input className={s.input} placeholder={placeholder} type={type} value={value} onChange={onChange} />
 
             <div
                 ref={hintRef}
@@ -51,7 +51,9 @@ export const DefaultInput = ({ placeholder = '', info, type = 'text', value, onC
                                 zIndex: 9999
                             }}
                         >
-                            <DefaultWidgetShape shadow={5}>{info}</DefaultWidgetShape>
+                            <DefaultWidgetShape shadow={5} noTitle noBlock width={'max-content'}>
+                                {info}
+                            </DefaultWidgetShape>
                         </div>,
                         document.body
                     )}

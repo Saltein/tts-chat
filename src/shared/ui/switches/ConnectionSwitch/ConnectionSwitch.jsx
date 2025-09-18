@@ -1,16 +1,19 @@
 import { useState, useRef } from "react"
 import s from "./ConnectionSwitch.module.scss"
 import { useDispatch, useSelector } from "react-redux"
-import { connectTwitchChat } from "../../../../features/live-chat/lib/twitchClient"
 import { selectTwitchConnectionData, selectTwitchConnectionStatus, setNewTwitchMessage, setTwitchConnectionStatus } from "../../../../entities/connection/model/slice"
+import { connectTwitchClient, disconnectTwitchClient } from "../../../../features/live-chat/lib/twitchClientSingleton"
 
 export const ConnectionSwitch = ({ serviceName = "" }) => {
     const dispatch = useDispatch()
-    
+
+    const twitchBotName = process.env.REACT_APP_TWITCH_BOT_NAME
+    const twitchBotToken = process.env.REACT_APP_TWITCH_BOT_TOKEN
+
     const twitchConnectionStatus = useSelector(selectTwitchConnectionStatus)
     const [isSwitchOn, setIsSwitchOn] = useState(serviceName === 'Twitch' && twitchConnectionStatus)
     const [isSwitchLoading, setIsSwitchLoading] = useState(false)
-    const { accessToken, channelName, chatChannelName } = useSelector(
+    const { chatChannelName } = useSelector(
         selectTwitchConnectionData
     )
 
@@ -18,12 +21,7 @@ export const ConnectionSwitch = ({ serviceName = "" }) => {
 
     const handleConnect = () => {
         if (isSwitchOn) {
-            // Выключение
-            if (clientRef.current) {
-                clientRef.current.disconnect()
-                console.log('DISCONNECTED')
-                clientRef.current = null
-            }
+            disconnectTwitchClient()
             setIsSwitchOn(false)
             dispatch(setTwitchConnectionStatus(false))
             setIsSwitchLoading(false)
@@ -31,12 +29,13 @@ export const ConnectionSwitch = ({ serviceName = "" }) => {
             // Включение
             if (serviceName === "Twitch") {
                 setIsSwitchLoading(true)
+                dispatch(setTwitchConnectionStatus(true))
 
                 // Подключение к Twitch
-                const client = connectTwitchChat({
-                    token: accessToken,
-                    botNick: channelName,
-                    channel: chatChannelName || channelName,
+                const client = connectTwitchClient({
+                    token: twitchBotToken,
+                    botNick: twitchBotName,
+                    channel: chatChannelName,
                 })
 
                 if (client) {
@@ -60,7 +59,6 @@ export const ConnectionSwitch = ({ serviceName = "" }) => {
                     // Когда подключение успешно → включаем свитч
                     client.on("connected", () => {
                         setIsSwitchOn(true)
-                        dispatch(setTwitchConnectionStatus(true))
                         setIsSwitchLoading(false)
                     })
 
