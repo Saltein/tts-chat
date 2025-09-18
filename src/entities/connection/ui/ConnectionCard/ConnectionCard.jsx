@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ConnectionSwitch, DefaultButton, DefaultInput, DefaultTitle, DefaultWarning } from '../../../../shared/ui'
+import { ConnectionSwitch, DefaultButton, DefaultInput, DefaultWarning } from '../../../../shared/ui'
 import { DefaultModalWindow } from '../../../../shared/ui/DefaultModalWindow/DefaultModalWindow'
 import s from './ConnectionCard.module.scss'
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,11 +24,6 @@ export const ConnectionCard = ({ IconComponent, inputs = [], title, dispatcher, 
         console.log('Отправляем данные:', formData)
         setIsModalOpen(false)
     }
-
-    useEffect(() => {
-        setIsAllFormsFilled(isFormValid(formData))
-        console.log('formData', formData)
-    }, [formData])
 
     return (
         <div className={s.wrapper}>
@@ -55,7 +50,7 @@ export const ConnectionCard = ({ IconComponent, inputs = [], title, dispatcher, 
                         ))}
 
                         {warningText && <DefaultWarning text={warningText} />}
-                        <DefaultButton title={'Применить'} onClick={handleSubmit} active={isAllFormsFilled } />
+                        <DefaultButton title={'Применить'} onClick={handleSubmit} active={formData?.chatChannelName ? true : false} />
                     </div>
                 </DefaultModalWindow>
             )}

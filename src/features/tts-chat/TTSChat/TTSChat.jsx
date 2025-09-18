@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { selectSpeechVolume, selectTwitchTTSOn } from '../model/slice'
+import { selectSpeechVolume, selectTwitchTTSOn, selectTwitchVoice } from '../model/slice'
 import s from './TTSChat.module.scss'
 import { useSelector } from 'react-redux'
 import { selectLastTwitchMessage } from '../../../entities/connection/model/slice'
@@ -9,6 +9,7 @@ export const TTSChat = () => {
     const currentValue = useSelector(selectSpeechVolume) / 100
     const message = useSelector(selectLastTwitchMessage)[0]
     const isTwitchTTSOn = useSelector(selectTwitchTTSOn)
+    const twitchVoice = useSelector(selectTwitchVoice)
 
     const [audioUrl, setAudioUrl] = useState(null)
     const audioRef = useRef(null);
@@ -17,12 +18,13 @@ export const TTSChat = () => {
         if (message) {
             if (message?.tags['reply-parent-user-login']) return
             try {
+                console.log('twitchVoice', twitchVoice)
                 const res = await fetch("http://localhost:5001/api/speak", { // ПОМЕНЯТЬ НА ПРОДАКШЕНЕ НА /api/speak
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         text: transliterateMessage(message?.message),
-                        speaker: "random"
+                        speaker: twitchVoice
                     }),
                 })
 

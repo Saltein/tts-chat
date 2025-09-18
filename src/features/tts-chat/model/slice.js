@@ -6,6 +6,7 @@ let initialState = {
     },
     twitch: {
         ttsOn: 'false',
+        voice: 'random',
     }
 }
 
@@ -23,6 +24,7 @@ if (savedSettings) {
         },
         twitch: {
             ttsOn: savedSettings.twitch?.ttsOn || 'false',
+            voice: savedSettings.twitch?.voice || 'random',
         },
     };
 }
@@ -42,15 +44,21 @@ const ttsSettingsSlice = createSlice({
         setTwitchTTSOn: (state, action) => {
             state.twitch.ttsOn = action.payload
             saveToLocalStorage(state)
+        },
+        setTwitchVoice: (state, action) => {
+            state.twitch.voice = action.payload
+            saveToLocalStorage(state)
         }
     }
 })
 
 export const {
     setSpeechVolume,
-    setTwitchTTSOn
+    setTwitchTTSOn,
+    setTwitchVoice
 } = ttsSettingsSlice.actions
 export default ttsSettingsSlice.reducer
 
-export const selectSpeechVolume = (state) => state.ttsSettings.common.speechVolume;
-export const selectTwitchTTSOn = (state) => state.ttsSettings.twitch.ttsOn;
+export const selectSpeechVolume = (state) => state.ttsSettings.common.speechVolume
+export const selectTwitchTTSOn = (state) => state.ttsSettings.twitch.ttsOn
+export const selectTwitchVoice = (state) => state.ttsSettings.twitch.voice

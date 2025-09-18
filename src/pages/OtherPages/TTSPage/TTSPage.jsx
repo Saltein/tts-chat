@@ -1,19 +1,46 @@
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectSpeechVolume, selectTwitchTTSOn, setSpeechVolume, setTwitchTTSOn } from '../../../features/tts-chat/model/slice'
-import { DefaultOption, DefaultSlider, DefaultSwitch, DefaultTitle } from '../../../shared/ui'
-import { TTSButton } from '../../../shared/ui/buttons/TTSButton/TTSButton'
+import { selectSpeechVolume, selectTwitchTTSOn, selectTwitchVoice, setSpeechVolume, setTwitchTTSOn } from '../../../features/tts-chat/model/slice'
+import { DefaultOption, DefaultSelectList, DefaultSlider, DefaultSwitch } from '../../../shared/ui'
 import { DefaultWidgetShape } from '../../../shared/widgets/DefaultWidgetShape/DefaultWidgetShape'
 import s from './TTSPage.module.scss'
 
 export const TTSPage = () => {
     const dispatch = useDispatch()
     const isTwitchTTSOn = useSelector(selectTwitchTTSOn)
+    const twitchVoice = useSelector(selectTwitchVoice)
+
+    const [optionList, setOptionList] = useState([])
 
     const handleSwitch = () => {
         if (isTwitchTTSOn) {
             dispatch(setTwitchTTSOn(false))
         } else { dispatch(setTwitchTTSOn(true)) }
     }
+
+    useEffect(() => {
+        const fetchSpeakers = async () => {
+            try {
+                const res = await fetch("http://localhost:5001/api/speakers")
+                if (!res.ok) {
+                    const error = await res.json()
+                    console.error("Ошибка TTS:", error)
+                    return
+                }
+                const data = await res.json()
+                setOptionList(data.speakers)
+            } catch (err) {
+                console.error("Ошибка запроса к TTS серверу:", err)
+            }
+        }
+
+        fetchSpeakers()
+
+        // Если нужно очистить что-то при размонтировании:
+        return () => {
+            // cleanup, если есть
+        };
+    }, []);
 
     return (
         <div className={s.wrapper}>
@@ -42,7 +69,7 @@ export const TTSPage = () => {
                         justifyTitle={'center'}
                         backgroundColor={'var(--color-items)'}
                     >
-
+                        <DefaultSelectList currentSelection={twitchVoice} options={optionList} />
                     </DefaultWidgetShape>
                 </div>
             </DefaultWidgetShape>
