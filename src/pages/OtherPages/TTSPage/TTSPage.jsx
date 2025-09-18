@@ -21,7 +21,7 @@ export const TTSPage = () => {
     useEffect(() => {
         const fetchSpeakers = async () => {
             try {
-                const res = await fetch("http://localhost:5001/api/speakers")
+                const res = await fetch("http://localhost:5001/api/speakers") // НА ПРОДАКШЕНЕ ОСТАВИТЬ /api/speakers
                 if (!res.ok) {
                     const error = await res.json()
                     console.error("Ошибка TTS:", error)
