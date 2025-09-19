@@ -12,6 +12,7 @@ export const NavPanel = () => {
             <NavButton title={'Подключения'} index={0} link='/connections' position='first' />
             <NavButton title={'Мультичат'} index={1} link='/live-chat' />
             <NavButton title={'Озвучка чата'} index={2} link='/tts' />
+            <NavButton title={'Виджет'} index={4} link='/widget/chat' />
 
             {(currentPageID !== 2 && currentPageID !== 3)
                 && <DefaultDivider direction='horizontal' />}
