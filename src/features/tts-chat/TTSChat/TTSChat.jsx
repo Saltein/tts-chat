@@ -21,7 +21,7 @@ export const TTSChat = ({ volume, twitchVoiceProp }) => {
             if (message?.tags['reply-parent-user-login']) return
             try {
                 console.log('twitchVoice', twitchVoice)
-                const res = await fetch("http://localhost:5001/api/speak", { // ПОМЕНЯТЬ НА ПРОДАКШЕНЕ НА /api/speak
+                const res = await fetch("/api/speak", { // ПОМЕНЯТЬ НА ПРОДАКШЕНЕ НА /api/speak
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
