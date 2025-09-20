@@ -12,6 +12,8 @@
     transition: background-color $transition-medium, transform $transition-medium;
     cursor: pointer;
     background-color: var(--color-accent);
+    font-size: 1rem;
+    font-weight: 600;
 
     &.disabled {
         background-color: var(--color-disabled);

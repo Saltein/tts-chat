@@ -3,7 +3,7 @@ import s from './DefaultInput.module.scss'
 import { DefaultWidgetShape } from '../../../widgets/DefaultWidgetShape/DefaultWidgetShape'
 import { createPortal } from 'react-dom'
 
-export const DefaultInput = ({ placeholder = '', info, type = 'text', value, onChange }) => {
+export const DefaultInput = ({ placeholder = '', info, type = 'text', value, onChange, width }) => {
     const [visible, setVisible] = useState(false)
     const [position, setPosition] = useState({ top: 0, left: 0 })
     const timerRef = useRef(null)
@@ -27,10 +27,13 @@ export const DefaultInput = ({ placeholder = '', info, type = 'text', value, onC
         setVisible(false)
     }, [])
 
-    return (
-        <div className={s.wrapper}>
-            <input className={s.input} placeholder={placeholder} type={type} value={value} onChange={onChange} />
+    const inputStyles = {
+        width: width ?? undefined
+    }
 
+    return (
+        <div className={s.wrapper} >
+            <input className={s.input} placeholder={placeholder} type={type} value={value} onChange={onChange} style={inputStyles} />
             <div
                 ref={hintRef}
                 className={s.info}

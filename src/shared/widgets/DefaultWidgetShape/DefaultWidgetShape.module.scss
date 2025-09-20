@@ -22,6 +22,7 @@
 }
 
 .mainBlock {
+    height: 100%;
     background-color: var(--color-surface);
     flex-direction: row;
     gap: $spacing-md;

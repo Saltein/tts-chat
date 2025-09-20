@@ -6,19 +6,23 @@ import { SettingsPage } from '../OtherPages'
 import { LiveChatPage } from '../OtherPages/LiveChatPage/LiveChatPage'
 import { TTSPage } from '../OtherPages/TTSPage/TTSPage'
 import { TTSChat } from '../../features/tts-chat/TTSChat/TTSChat'
+import { Header } from '../../widgets/Header/Header'
 
 export const GlobalPage = () => {
     return (
-        <div className={s.wrapper}>
-            <NavPanel />
-            <TTSChat />
-            <div className={s.pagePart}>
-                <Routes>
-                    <Route path='/connections' element={<ConnectionsPage />} />
-                    <Route path='/live-chat' element={<LiveChatPage />} />
-                    <Route path='/settings' element={<SettingsPage />} />
-                    <Route path='/tts' element={<TTSPage />} />
-                </Routes>
+        <div className={`${s.wrapper} ${s.forHeader}`}>
+            <Header />
+            <div className={s.wrapper}>
+                <NavPanel />
+                <TTSChat />
+                <div className={s.pagePart}>
+                    <Routes>
+                        <Route path='/connections' element={<ConnectionsPage />} />
+                        <Route path='/live-chat' element={<LiveChatPage />} />
+                        <Route path='/settings' element={<SettingsPage />} />
+                        <Route path='/tts' element={<TTSPage />} />
+                    </Routes>
+                </div>
             </div>
         </div>
     )

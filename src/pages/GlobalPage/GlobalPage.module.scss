@@ -2,9 +2,17 @@
 
 .wrapper {
     display: flex;
-    height: 100%;
+    height: calc(100% - 64px);
     max-width: $breakpoint-xl;
+    width: 100%;
     margin: 0 auto;
+
+    &.forHeader {
+        max-width: none;
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+    }
 }
 
 .pagePart {

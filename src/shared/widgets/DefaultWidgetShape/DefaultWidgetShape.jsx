@@ -31,6 +31,8 @@ export const DefaultWidgetShape = ({
     noBlock = false,
     flexDirection,
     display,
+    flex,
+    overflowBlock,
 }) => {
     const wrapperStyles = {
         width: width && width,
@@ -50,6 +52,7 @@ export const DefaultWidgetShape = ({
             : {}),
         backgroundColor: backgroundColor && backgroundColor,
         boxShadow: shadow && `0 ${shadow}px ${shadow * 1.5}px rgba(0, 0, 0, 0.15)`,
+        flex: flex ?? undefined,
     }
 
     if (paddingTop || paddingBottom || paddingLeft || paddingRight) {
@@ -69,6 +72,7 @@ export const DefaultWidgetShape = ({
             : {}),
         flexDirection: flexDirection ?? undefined,
         display: display ?? undefined,
+        overflow: overflowBlock ?? undefined,
     }
 
     const titleStyles = {

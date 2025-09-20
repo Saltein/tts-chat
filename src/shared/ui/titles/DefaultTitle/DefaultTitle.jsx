@@ -13,6 +13,6 @@ export const DefaultTitle = ({ title, margin, padding, paddingLeft, paddingRight
     }
 
     return (
-        <span className={s.title} style={styles}>{title}</span>
+        <h2 className={s.title} style={styles}>{title}</h2>
     )
 }

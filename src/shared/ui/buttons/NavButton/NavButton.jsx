@@ -21,7 +21,9 @@ export const NavButton = ({ title, index = 0, link = '/', position = '' }) => {
             onClick={handleClick}
         >
             <div className={`${s.accent} ${currentPageID === index ? s.current : ''}`} />
-            {title}
+            <h3>
+                {title}
+            </h3>
         </div>
     )
 }

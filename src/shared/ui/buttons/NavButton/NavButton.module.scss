@@ -8,7 +8,10 @@
     height: 48px;
     border-radius: $border-radius-md;
 
-    font-size: $font-size-xl;
+    & h3 {
+        font-size: $font-size-xl;
+        font-weight: normal;
+    }
 
     &:hover {
         gap: $spacing-xs;

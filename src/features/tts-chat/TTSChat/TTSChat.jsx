@@ -5,11 +5,13 @@ import { useSelector } from 'react-redux'
 import { selectLastTwitchMessage } from '../../../entities/connection/model/slice'
 import { transliterateMessage } from '../../live-chat/lib/transliteration'
 
-export const TTSChat = () => {
-    const currentValue = useSelector(selectSpeechVolume) / 100
+export const TTSChat = ({ volume, twitchVoiceProp }) => {
+    let currentVolume = useSelector(selectSpeechVolume) / 100
+    if (volume) currentVolume = volume
     const message = useSelector(selectLastTwitchMessage)[0]
     const isTwitchTTSOn = useSelector(selectTwitchTTSOn)
-    const twitchVoice = useSelector(selectTwitchVoice)
+    let twitchVoice = useSelector(selectTwitchVoice)
+    if (twitchVoiceProp) twitchVoice = twitchVoiceProp
 
     const [audioUrl, setAudioUrl] = useState(null)
     const audioRef = useRef(null);
@@ -45,9 +47,9 @@ export const TTSChat = () => {
 
     useEffect(() => {
         if (audioRef.current) {
-            audioRef.current.volume = currentValue;
+            audioRef.current.volume = currentVolume;
         }
-    }, [currentValue, audioUrl]);
+    }, [currentVolume, audioUrl]);
 
     useEffect(() => {
         handleSpeak()
