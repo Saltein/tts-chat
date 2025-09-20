@@ -10,6 +10,8 @@ export const TTSPage = () => {
     const isTwitchTTSOn = useSelector(selectTwitchTTSOn)
     const twitchVoice = useSelector(selectTwitchVoice)
 
+    const baseUrl = process.env.REACT_APP_BASE_URL_API || ''
+
     const [optionList, setOptionList] = useState([])
 
     const handleSwitch = () => {
@@ -21,7 +23,7 @@ export const TTSPage = () => {
     useEffect(() => {
         const fetchSpeakers = async () => {
             try {
-                const res = await fetch("/api/speakers") // НА ПРОДАКШЕНЕ ОСТАВИТЬ /api/speakers
+                const res = await fetch(`${baseUrl}/api/speakers`)
                 if (!res.ok) {
                     const error = await res.json()
                     console.error("Ошибка TTS:", error)

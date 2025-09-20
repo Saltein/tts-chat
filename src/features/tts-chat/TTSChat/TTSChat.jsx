@@ -13,6 +13,8 @@ export const TTSChat = ({ volume, twitchVoiceProp }) => {
     let twitchVoice = useSelector(selectTwitchVoice)
     if (twitchVoiceProp) twitchVoice = twitchVoiceProp
 
+    const baseUrl = process.env.REACT_APP_BASE_URL_API || ''
+
     const [audioUrl, setAudioUrl] = useState(null)
     const audioRef = useRef(null);
 
@@ -21,7 +23,7 @@ export const TTSChat = ({ volume, twitchVoiceProp }) => {
             if (message?.tags['reply-parent-user-login']) return
             try {
                 console.log('twitchVoice', twitchVoice)
-                const res = await fetch("/api/speak", { // ПОМЕНЯТЬ НА ПРОДАКШЕНЕ НА /api/speak
+                const res = await fetch(`${baseUrl}/api/speak`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({

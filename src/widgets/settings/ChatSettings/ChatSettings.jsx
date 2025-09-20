@@ -15,9 +15,11 @@ export const ChatSettings = () => {
     const twitchConnectionStatus = useSelector(selectTwitchConnectionStatus)
     const twitchVoice = useSelector(selectTwitchVoice)
 
+    const baseUrl = process.env.REACT_APP_BASE_URL_WIDGET || ''
+
     useEffect(() => {
-        setLink(`http://localhost:3000/widget/chat?twitchChatChannelName=${twitchChatChannelName}&volume=${volume}&twitchConnectionStatus=${twitchConnectionStatus}&twitchVoice=${twitchVoice}&theme=${currentTheme}`)
-    }, [])
+        setLink(`${baseUrl}/widget/chat?twitchChatChannelName=${twitchChatChannelName}&volume=${volume}&twitchConnectionStatus=${twitchConnectionStatus}&twitchVoice=${twitchVoice}&theme=${currentTheme}`)
+    }, [baseUrl, twitchChatChannelName, volume, twitchConnectionStatus, twitchVoice, currentTheme])
 
     const handleCopy = async () => {
         try {
