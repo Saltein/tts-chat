@@ -48,14 +48,16 @@ const ttsSettingsSlice = createSlice({
         setTwitchVoice: (state, action) => {
             state.twitch.voice = action.payload
             saveToLocalStorage(state)
-        }
+        },
+        resetSettings: () => initialState,
     }
 })
 
 export const {
     setSpeechVolume,
     setTwitchTTSOn,
-    setTwitchVoice
+    setTwitchVoice,
+    resetSettings,
 } = ttsSettingsSlice.actions
 export default ttsSettingsSlice.reducer
 

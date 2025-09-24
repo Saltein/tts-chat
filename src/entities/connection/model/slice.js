@@ -47,6 +47,8 @@ const connectionSlice = createSlice({
         setTwitchConnectionStatus: (state, action) => {
             state.twitch.connectionStatus = action.payload
         },
+
+        resetConnection: () => initialState
     },
 })
 
@@ -54,6 +56,7 @@ export const {
     setTwitchChatChannelName,
     setNewTwitchMessage,
     setTwitchConnectionStatus,
+    resetConnection,
 } = connectionSlice.actions
 export default connectionSlice.reducer
 
