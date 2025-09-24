@@ -3,11 +3,15 @@ import { createSelector, createSlice } from '@reduxjs/toolkit'
 const initialState = {
     twitch: {
         chatChannelName: '',
-        chatMessages: [],
         connectionStatus: false,
     },
+    youtube: {
+        connectionStatus: false,
+    },
+    messages: [] // общий массив сообщений
 }
 
+// Загружаем Twitch из localStorage
 let savedTwitch
 try {
     savedTwitch = JSON.parse(localStorage.getItem('twitchConnection'))
@@ -15,37 +19,47 @@ try {
     savedTwitch = null
 }
 
-if (savedTwitch) initialState.twitch = savedTwitch
-
 if (savedTwitch) {
     initialState.twitch = {
-        channelName: savedTwitch.channelName || '',
         chatChannelName: savedTwitch.chatChannelName || '',
-        accessToken: savedTwitch.accessToken || '',
-        chatMessages: savedTwitch.chatMessages || [],
+        connectionStatus: savedTwitch.connectionStatus || false,
     }
+    initialState.messages = savedTwitch.chatMessages?.map(msg => ({ ...msg, service: 'twitch' })) || []
 }
 
-
-const saveToLocalStorage = (obj) => {
-    localStorage.setItem('twitchConnection', JSON.stringify(obj))
+// Сохраняем Twitch в localStorage (вместе с сообщениями)
+const saveTwitchToLocalStorage = (twitch, messages) => {
+    localStorage.setItem('twitchConnection', JSON.stringify({
+        ...twitch,
+        chatMessages: messages.filter(msg => msg.service === 'twitch')
+    }))
 }
 
 const connectionSlice = createSlice({
     name: 'connection',
     initialState,
     reducers: {
+        // Twitch
         setTwitchChatChannelName: (state, action) => {
             state.twitch.chatChannelName = action.payload
-            saveToLocalStorage(state.twitch)
+            saveTwitchToLocalStorage(state.twitch, state.messages)
         },
-
-        setNewTwitchMessage: (state, action) => {
-            state.twitch.chatMessages.push(action.payload)
-        },
-
         setTwitchConnectionStatus: (state, action) => {
             state.twitch.connectionStatus = action.payload
+        },
+        setNewTwitchMessage: (state, action) => {
+            const message = { ...action.payload, service: 'twitch' }
+            state.messages.push(message)
+            saveTwitchToLocalStorage(state.twitch, state.messages)
+        },
+
+        // YouTube
+        setYoutubeConnectionStatus: (state, action) => {
+            state.youtube.connectionStatus = action.payload
+        },
+        setNewYoutubeMessage: (state, action) => {
+            const message = { ...action.payload, service: 'youtube' }
+            state.messages.push(message)
         },
 
         resetConnection: () => initialState
@@ -54,20 +68,45 @@ const connectionSlice = createSlice({
 
 export const {
     setTwitchChatChannelName,
-    setNewTwitchMessage,
     setTwitchConnectionStatus,
+    setNewTwitchMessage,
+    setYoutubeConnectionStatus,
+    setNewYoutubeMessage,
     resetConnection,
 } = connectionSlice.actions
+
 export default connectionSlice.reducer
 
+// Селекторы
 export const selectTwitchConnectionData = (state) => state.connection.twitch.chatChannelName
-export const selectTwitchChatMessages = (state) => state.connection?.twitch?.chatMessages || []
-export const selectLast50TwitchMessages = createSelector(
-    [selectTwitchChatMessages],
+export const selectTwitchConnectionStatus = (state) => state.connection.twitch.connectionStatus
+
+export const selectYoutubeConnectionStatus = (state) => state.connection.youtube.connectionStatus
+
+export const selectMessages = (state) => state.connection.messages
+export const selectLast50Messages = createSelector(
+    [selectMessages],
     (messages) => messages.slice(-50)
 )
-export const selectLastTwitchMessage = createSelector(
-    [selectTwitchChatMessages],
+export const selectLastMessage = createSelector(
+    [selectMessages],
     (messages) => messages.slice(-1)
 )
-export const selectTwitchConnectionStatus = (state) => state.connection.twitch.connectionStatus
+
+// Селекторы по сервису
+export const selectTwitchMessages = createSelector(
+    [selectMessages],
+    (messages) => messages.filter(msg => msg.service === 'twitch')
+)
+export const selectYoutubeMessages = createSelector(
+    [selectMessages],
+    (messages) => messages.filter(msg => msg.service === 'youtube')
+)
+export const selectLast50TwitchMessages = createSelector(
+    [selectTwitchMessages],
+    (messages) => messages.slice(-50)
+)
+export const selectLast50YoutubeMessages = createSelector(
+    [selectYoutubeMessages],
+    (messages) => messages.slice(-50)
+)
