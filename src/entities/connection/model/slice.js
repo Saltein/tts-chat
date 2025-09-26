@@ -6,6 +6,7 @@ const initialState = {
         connectionStatus: false,
     },
     youtube: {
+        youtubeVideoId: '',
         connectionStatus: false,
     },
     messages: [] // общий массив сообщений
@@ -27,11 +28,15 @@ if (savedTwitch) {
     initialState.messages = savedTwitch.chatMessages?.map(msg => ({ ...msg, service: 'twitch' })) || []
 }
 
-// Сохраняем Twitch в localStorage (вместе с сообщениями)
-const saveTwitchToLocalStorage = (twitch, messages) => {
+// Сохраняем localStorage
+const saveTwitchToLocalStorage = (twitch) => {
     localStorage.setItem('twitchConnection', JSON.stringify({
-        ...twitch,
-        chatMessages: messages.filter(msg => msg.service === 'twitch')
+        ...twitch
+    }))
+}
+const saveYoutubeToLocalStorage = (youtube) => {
+    localStorage.setItem('youtubeConnection', JSON.stringify({
+        ...youtube
     }))
 }
 
@@ -42,7 +47,7 @@ const connectionSlice = createSlice({
         // Twitch
         setTwitchChatChannelName: (state, action) => {
             state.twitch.chatChannelName = action.payload
-            saveTwitchToLocalStorage(state.twitch, state.messages)
+            saveTwitchToLocalStorage(state.twitch)
         },
         setTwitchConnectionStatus: (state, action) => {
             state.twitch.connectionStatus = action.payload
@@ -50,10 +55,13 @@ const connectionSlice = createSlice({
         setNewTwitchMessage: (state, action) => {
             const message = { ...action.payload, service: 'twitch' }
             state.messages.push(message)
-            saveTwitchToLocalStorage(state.twitch, state.messages)
         },
 
         // YouTube
+        setYoutubeVideoId: (state, action) => {
+            state.youtube.youtubeVideoId = action.payload
+            saveYoutubeToLocalStorage(state.youtube)
+        },
         setYoutubeConnectionStatus: (state, action) => {
             state.youtube.connectionStatus = action.payload
         },
@@ -70,6 +78,7 @@ export const {
     setTwitchChatChannelName,
     setTwitchConnectionStatus,
     setNewTwitchMessage,
+    setYoutubeVideoId,
     setYoutubeConnectionStatus,
     setNewYoutubeMessage,
     resetConnection,
@@ -81,6 +90,7 @@ export default connectionSlice.reducer
 export const selectTwitchConnectionData = (state) => state.connection.twitch.chatChannelName
 export const selectTwitchConnectionStatus = (state) => state.connection.twitch.connectionStatus
 
+export const selectYoutubeConnectionData = (state) => state.connection.youtube.youtubeVideoId
 export const selectYoutubeConnectionStatus = (state) => state.connection.youtube.connectionStatus
 
 export const selectMessages = (state) => state.connection.messages

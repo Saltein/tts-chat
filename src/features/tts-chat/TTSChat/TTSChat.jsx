@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from 'react'
 import { selectSpeechVolume, selectTwitchTTSOn, selectTwitchVoice } from '../model/slice'
 import s from './TTSChat.module.scss'
 import { useSelector } from 'react-redux'
-import { selectLastTwitchMessage } from '../../../entities/connection/model/slice'
+import { selectLastMessage } from '../../../entities/connection/model/slice'
 import { transliterateMessage } from '../../live-chat/lib/transliteration'
 
 export const TTSChat = ({ volume, twitchVoiceProp }) => {
     let currentVolume = useSelector(selectSpeechVolume) / 100
     if (volume) currentVolume = volume
-    const message = useSelector(selectLastTwitchMessage)[0]
+    const message = useSelector(selectLastMessage)[0]
     const isTwitchTTSOn = useSelector(selectTwitchTTSOn)
     let twitchVoice = useSelector(selectTwitchVoice)
     if (twitchVoiceProp) twitchVoice = twitchVoiceProp
@@ -19,8 +19,11 @@ export const TTSChat = ({ volume, twitchVoiceProp }) => {
     const audioRef = useRef(null);
 
     const handleSpeak = async () => {
+
         if (message) {
-            if (message?.tags['reply-parent-user-login']) return
+            if (message?.service === 'twitch') {
+                if (message?.tags['reply-parent-user-login']) return
+            }
             try {
                 console.log('twitchVoice', twitchVoice)
                 const res = await fetch(`${baseUrl}/api/speak`, {

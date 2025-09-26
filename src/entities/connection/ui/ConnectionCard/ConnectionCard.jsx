@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ConnectionSwitch, DefaultButton, DefaultInput, DefaultWarning } from '../../../../shared/ui'
 import { DefaultModalWindow } from '../../../../shared/ui/DefaultModalWindow/DefaultModalWindow'
 import s from './ConnectionCard.module.scss'
@@ -11,13 +11,8 @@ export const ConnectionCard = ({ IconComponent, inputs = [], title, dispatcher, 
 
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [formData, setFormData] = useState(data)
-    const [isAllFormsFilled, setIsAllFormsFilled] = useState(false)
 
     const [warningText, setWarningText] = useState('')
-
-    const isFormValid = (data) => {
-        return Object.values(data).slice(0, -1).every(value => value?.toString().trim() !== '');
-    }
 
     const handleSubmit = () => {
         dispatch(dispatcher(formData))
@@ -50,7 +45,7 @@ export const ConnectionCard = ({ IconComponent, inputs = [], title, dispatcher, 
                         ))}
 
                         {warningText && <DefaultWarning text={warningText} />}
-                        <DefaultButton title={'Применить'} onClick={handleSubmit} active={formData?.chatChannelName ? true : false} />
+                        <DefaultButton title={'Применить'} onClick={handleSubmit} active={Object.values(formData)[0] || false} />
                     </div>
                 </DefaultModalWindow>
             )}
