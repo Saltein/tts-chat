@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import s from './LiveChat.module.scss'
-import { selectLast50TwitchMessages } from '../../../../entities/connection/model/slice'
+import { selectLast50Messages } from '../../../../entities/connection/model/slice'
 import { ChatMessage } from '../ChatMessage/ChatMessage'
 
 export const LiveChat = ({ backgroundColor, isWidget }) => {
-    const messages = useSelector(selectLast50TwitchMessages)
+    const messages = useSelector(selectLast50Messages)
     const chatEndRef = useRef(null)
 
     const styles = {

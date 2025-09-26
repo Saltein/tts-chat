@@ -9,6 +9,10 @@ const initialState = {
         youtubeVideoId: '',
         connectionStatus: false,
     },
+    vk: {
+        vkChannelId: '',
+        connectionStatus: false,
+    },
     messages: [] // общий массив сообщений
 }
 
@@ -37,6 +41,11 @@ const saveTwitchToLocalStorage = (twitch) => {
 const saveYoutubeToLocalStorage = (youtube) => {
     localStorage.setItem('youtubeConnection', JSON.stringify({
         ...youtube
+    }))
+}
+const saveVkToLocalStorage = (vk) => {
+    localStorage.setItem('vkConnection', JSON.stringify({
+        ...vk
     }))
 }
 
@@ -70,6 +79,19 @@ const connectionSlice = createSlice({
             state.messages.push(message)
         },
 
+        // VK
+        setVkChannelId: (state, action) => {
+            state.vk.vkChannelId = action.payload
+            saveVkToLocalStorage(state.vk)
+        },
+        setVkConnectionStatus: (state, action) => {
+            state.vk.connectionStatus = action.payload
+        },
+        setNewVkMessage: (state, action) => {
+            const message = { ...action.payload, service: 'vk' }
+            state.messages.push(message)
+        },
+
         resetConnection: () => initialState
     },
 })
@@ -81,6 +103,9 @@ export const {
     setYoutubeVideoId,
     setYoutubeConnectionStatus,
     setNewYoutubeMessage,
+    setVkChannelId,
+    setVkConnectionStatus,
+    setNewVkMessage,
     resetConnection,
 } = connectionSlice.actions
 
@@ -92,6 +117,11 @@ export const selectTwitchConnectionStatus = (state) => state.connection.twitch.c
 
 export const selectYoutubeConnectionData = (state) => state.connection.youtube.youtubeVideoId
 export const selectYoutubeConnectionStatus = (state) => state.connection.youtube.connectionStatus
+
+export const selectVkConnectionData = (state) => state.connection.vk.vkChannelId
+export const selectVkConnectionStatus = (state) => state.connection.vk.connectionStatus
+
+
 
 export const selectMessages = (state) => state.connection.messages
 export const selectLast50Messages = createSelector(

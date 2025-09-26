@@ -42,7 +42,7 @@ export const ConnectionsPage = () => {
                 <div className={s.connections}>
                     <ConnectionCard IconComponent={TwitchIcon} inputs={twitchInputs} title={'Twitch'} dispatcher={setTwitchChatChannelName} />
                     <ConnectionCard IconComponent={YoutubeIcon} inputs={youtubeInputs} title={'YouTube'} dispatcher={setYoutubeVideoId} isActive={false} />
-                    <ConnectionCard IconComponent={VkVideoIcon} />
+                    <ConnectionCard IconComponent={VkVideoIcon} title={'VK Видео Live'} />
                 </div>
             </DefaultWidgetShape>
         </div>
