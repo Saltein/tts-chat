@@ -1,0 +1,61 @@
+@import '../../styles/variables.scss';
+
+.info {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 48px;
+    z-index: 1000;
+
+    &:hover .info_circle {
+        animation: infoLoading 1s;
+        background-color: var(--color-accent);
+    }
+}
+
+.info_circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 24px;
+    height: 24px;
+    border-radius: $border-radius-lg;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+}
+
+.info_text {
+    transform: translateX(-100%) translateY(-20%);
+    position: fixed;
+    z-index: 2000;
+    animation: appear 0.5s;
+}
+
+@keyframes appear {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%) translateY(-20%) scale(0.2);
+    }
+
+    40% {
+        opacity: 1;
+        transform: translateX(-100%) translateY(-20%) scale(1.1);
+    }
+
+    60% {
+        transform: translateX(-100%) translateY(-20%) scale(0.98);
+    }
+
+    80% {
+        transform: translateX(-100%) translateY(-20%) scale(1.01);
+    }
+
+    100% {
+        transform: translateX(-100%) translateY(-20%) scale(1);
+    }
+}

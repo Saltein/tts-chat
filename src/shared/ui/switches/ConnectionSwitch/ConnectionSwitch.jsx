@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { selectTwitchConnectionData, selectTwitchConnectionStatus, setNewTwitchMessage, setTwitchConnectionStatus } from "../../../../entities/connection/model/slice"
 import { connectTwitchClient, disconnectTwitchClient } from "../../../../features/live-chat/lib/twitchClientSingleton"
 
-export const ConnectionSwitch = ({ serviceName = "" }) => {
+export const ConnectionSwitch = ({ serviceName = "", isActive = true }) => {
     const dispatch = useDispatch()
 
     const twitchBotName = process.env.REACT_APP_TWITCH_BOT_NAME
@@ -78,7 +78,7 @@ export const ConnectionSwitch = ({ serviceName = "" }) => {
     return (
         <div
             className={`${s.wrapper} ${isSwitchLoading ? s.loading : ""} ${isSwitchOn ? s.on : ""}`}
-            onClick={handleConnect}
+            onClick={isActive ? handleConnect : () => {}}
         >
             <div className={s.switch} />
         </div>

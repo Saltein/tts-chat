@@ -1,5 +1,9 @@
 @import '../../../../shared/styles/variables.scss';
 
+.wrapperOfWrapper {
+    position: relative;
+}
+
 .wrapper {
     display: flex;
     flex-direction: column;
@@ -9,12 +13,16 @@
     width: 120px;
     border: 1px solid var(--color-border);
     box-shadow: $shadow-xs;
-    cursor: pointer;
 }
 
-.wrapper:hover {
+.inactive {
+    opacity: 0.3;
+}
+
+.active:hover {
     transform: scale(1.03);
     box-shadow: $shadow-md;
+    cursor: pointer;
 
     .icon {
         transform: scale(1.1);

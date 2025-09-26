@@ -41,7 +41,7 @@ export const ConnectionsPage = () => {
             <DefaultWidgetShape marginLeft={'0'} backgroundColor={'transparent'} padding={'0'} title='Подключения'>
                 <div className={s.connections}>
                     <ConnectionCard IconComponent={TwitchIcon} inputs={twitchInputs} title={'Twitch'} dispatcher={setTwitchChatChannelName} />
-                    <ConnectionCard IconComponent={YoutubeIcon} inputs={youtubeInputs} title={'YouTube'} dispatcher={setYoutubeVideoId} />
+                    <ConnectionCard IconComponent={YoutubeIcon} inputs={youtubeInputs} title={'YouTube'} dispatcher={setYoutubeVideoId} isActive={false} />
                     <ConnectionCard IconComponent={VkVideoIcon} />
                 </div>
             </DefaultWidgetShape>
