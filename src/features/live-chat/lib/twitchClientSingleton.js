@@ -1,3 +1,4 @@
+// twitchClientSingleton.js
 import { connectTwitchChat } from './twitchClient'
 let client = null;
 

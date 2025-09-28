@@ -7,6 +7,7 @@ import { LiveChatPage } from '../OtherPages/LiveChatPage/LiveChatPage'
 import { TTSPage } from '../OtherPages/TTSPage/TTSPage'
 import { TTSChat } from '../../features/tts-chat/TTSChat/TTSChat'
 import { Header } from '../../widgets/Header/Header'
+import { OAuth2Callback } from '../../features/auth/ui/GoogleLoginButton/OAuth2Callback/OAuth2Callback'
 
 export const GlobalPage = () => {
     return (
@@ -21,6 +22,7 @@ export const GlobalPage = () => {
                         <Route path='/live-chat' element={<LiveChatPage />} />
                         <Route path='/settings' element={<SettingsPage />} />
                         <Route path='/tts' element={<TTSPage />} />
+                        <Route path="/oauth2callback" element={<OAuth2Callback />} />
                     </Routes>
                 </div>
             </div>

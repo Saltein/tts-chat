@@ -1,3 +1,4 @@
+// twitchClient.js
 import tmi from "tmi.js"
 
 export function connectTwitchChat({ token, botNick, channel }) {

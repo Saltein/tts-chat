@@ -7,10 +7,12 @@ const initialState = {
     },
     youtube: {
         youtubeVideoId: '',
+        youtubeAccessToken: '',
         connectionStatus: false,
     },
     vk: {
         vkChannelId: '',
+        vkAccessToken: '',
         connectionStatus: false,
     },
     messages: [] // общий массив сообщений
@@ -29,7 +31,22 @@ if (savedTwitch) {
         chatChannelName: savedTwitch.chatChannelName || '',
         connectionStatus: savedTwitch.connectionStatus || false,
     }
-    initialState.messages = savedTwitch.chatMessages?.map(msg => ({ ...msg, service: 'twitch' })) || []
+}
+
+// Загружаем YouTube из localStorage
+let savedYoutube
+try {
+    savedYoutube = JSON.parse(localStorage.getItem('youtubeConnection'))
+} catch {
+    savedYoutube = null
+}
+
+if (savedYoutube) {
+    initialState.youtube = {
+        youtubeVideoId: savedYoutube.youtubeVideoId || '',
+        youtubeAccessToken: savedYoutube.youtubeAccessToken || '',
+        connectionStatus: savedYoutube.connectionStatus || false,
+    }
 }
 
 // Сохраняем localStorage
@@ -71,6 +88,10 @@ const connectionSlice = createSlice({
             state.youtube.youtubeVideoId = action.payload
             saveYoutubeToLocalStorage(state.youtube)
         },
+        setYoutubeAccessToken: (state, action) => {
+            state.youtube.youtubeAccessToken = action.payload
+            saveYoutubeToLocalStorage(state.youtube)
+        },
         setYoutubeConnectionStatus: (state, action) => {
             state.youtube.connectionStatus = action.payload
         },
@@ -82,6 +103,10 @@ const connectionSlice = createSlice({
         // VK
         setVkChannelId: (state, action) => {
             state.vk.vkChannelId = action.payload
+            saveVkToLocalStorage(state.vk)
+        },
+        setVkAccessToken: (state, action) => {
+            state.vk.vkAccessToken = action.payload
             saveVkToLocalStorage(state.vk)
         },
         setVkConnectionStatus: (state, action) => {
@@ -101,9 +126,11 @@ export const {
     setTwitchConnectionStatus,
     setNewTwitchMessage,
     setYoutubeVideoId,
+    setYoutubeAccessToken,
     setYoutubeConnectionStatus,
     setNewYoutubeMessage,
     setVkChannelId,
+    setVkAccessToken,
     setVkConnectionStatus,
     setNewVkMessage,
     resetConnection,
@@ -115,10 +142,12 @@ export default connectionSlice.reducer
 export const selectTwitchConnectionData = (state) => state.connection.twitch.chatChannelName
 export const selectTwitchConnectionStatus = (state) => state.connection.twitch.connectionStatus
 
-export const selectYoutubeConnectionData = (state) => state.connection.youtube.youtubeVideoId
+export const selectYoutubeVideoId = (state) => state.connection.youtube.youtubeVideoId
+export const selectYoutubeAccessToken = (state) => state.connection.youtube.youtubeAccessToken
 export const selectYoutubeConnectionStatus = (state) => state.connection.youtube.connectionStatus
 
-export const selectVkConnectionData = (state) => state.connection.vk.vkChannelId
+export const selectVkChannelId = (state) => state.connection.vk.vkChannelId
+export const selectVkAccessToken = (state) => state.connection.vk.vkAccessToken
 export const selectVkConnectionStatus = (state) => state.connection.vk.connectionStatus
 
 

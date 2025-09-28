@@ -1,14 +1,29 @@
 import s from './DefaultButton.module.scss'
 
-export const DefaultButton = ({ title, onClick, height = '48px', width, active = true }) => {
+export const DefaultButton = ({
+    title,
+    onClick,
+    height = '48px',
+    width,
+    active = true,
+    color,
+    borderRadius,
+    flex
+}) => {
+
+    const styles = {
+        height: height ?? undefined,
+        width: width ?? undefined,
+        backgroundColor: active ? color : undefined,
+        borderRadius: borderRadius ?? undefined,
+        flex: flex ?? undefined
+    }
+
     return (
         <div
+            style={styles}
             className={`${s.wrapper} ${!active ? s.disabled : ''}`}
-            onClick={active ? onClick : () => {}}
-            style={{
-                height: height,
-                width: width,
-            }}
+            onClick={active ? onClick : () => { }}
         >
             {active &&
                 <div className={s.shine}>

@@ -76,6 +76,8 @@ export function connectVkPlayChat({ channelId, token }) {
                 console.log("✅ Подписка на информацию о канале успешна");
             }
 
+            console.log(msg)
+
             // Обрабатываем входящие сообщения чата
             if (msg.push?.channel?.startsWith('channel-chat')) {
                 const chatMsg = msg.push.pub.data.data;
