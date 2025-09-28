@@ -74,6 +74,7 @@ export const ConnectionSwitch = ({ serviceName = "", isActive = true }) => {
             if (serviceName === "Twitch") {
                 setIsSwitchLoading(true);
                 dispatch(setTwitchConnectionStatus(true));
+                console.warn('twitchBotToken на сайте', twitchBotToken)
 
                 const client = connectTwitchClient({
                     token: twitchBotToken,

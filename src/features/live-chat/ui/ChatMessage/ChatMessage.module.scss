@@ -7,6 +7,11 @@
     border-radius: $border-radius-md;
     background-color: var(--color-items);
     line-height: $spacing-lg;
+    transition: opacity 1s ease;
+}
+
+.wrapper.fade-out {
+    opacity: 0;
 }
 
 .name {

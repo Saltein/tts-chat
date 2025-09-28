@@ -4,9 +4,10 @@ import s from './ChatWidget.module.scss'
 import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { connectTwitchClient } from '../../../features/live-chat/lib/twitchClientSingleton'
-import { setNewTwitchMessage } from '../../../entities/connection/model/slice'
+import { setNewTwitchMessage, setNewYoutubeMessage } from '../../../entities/connection/model/slice'
 import { TTSChat } from '../../../features/tts-chat/TTSChat/TTSChat'
 import { useTheme } from '../../../shared/context/theme/ThemeContext'
+import { connectYouTubeClient } from '../../../features/live-chat/lib/youtube/youtubeClientSingleton'
 
 export const ChatWidget = () => {
     const twitchBotName = process.env.REACT_APP_TWITCH_BOT_NAME
@@ -17,14 +18,20 @@ export const ChatWidget = () => {
     const dispatch = useDispatch()
     const { theme, setTheme } = useTheme()
 
-    const twitchChatChannelName = searchParams.get('twitchChatChannelName') || ''
     const voiceVolume = searchParams.get('volume') || 1
-    const twitchConnectionStatus = searchParams.get('twitchConnectionStatus') || false
     const twitchVoice = searchParams.get('twitchVoice') || 'random'
     const targetTheme = searchParams.get('theme') || 'dark'
 
-    const handleConnect = () => {
+    const twitchChatChannelName = searchParams.get('twitchChatChannelName') || ''
+    const twitchConnectionStatus = searchParams.get('twitchConnectionStatus') === 'true' || false
+
+    const youtubeVideoId = searchParams.get('youtubeVideoId') || ''
+    const youtubeAccessToken = searchParams.get('youtubeAccessToken') || ''
+    const youtubeConnectionStatus = searchParams.get('youtubeConnectionStatus') === 'true' || false
+
+    const handleTwitchConnect = () => {
         if (twitchConnectionStatus) {
+            console.warn('twitchBotToken в виджете', { twitchBotToken, twitchBotName, twitchChatChannelName })
             const client = connectTwitchClient({
                 token: twitchBotToken,
                 botNick: twitchBotName,
@@ -45,10 +52,40 @@ export const ChatWidget = () => {
         }
     }
 
+    const handleYouTubeConnect = async () => {
+        if (youtubeConnectionStatus && youtubeVideoId && youtubeAccessToken) {
+            try {
+                const callbacks = {
+                    onChatMessage: (msg) => {
+                        dispatch(setNewYoutubeMessage(msg))
+                    },
+                    onConnected: () => {
+                        console.log('✅ YouTube чат подключен')
+                    },
+                    onDisconnected: () => {
+                        console.log('❌ YouTube чат отключен')
+                    }
+                }
+
+                const client = await connectYouTubeClient(
+                    { videoId: youtubeVideoId, accessToken: youtubeAccessToken },
+                    callbacks
+                )
+
+                if (client) {
+                    clientRef.current.youtube = client
+                }
+            } catch (error) {
+                console.error('Ошибка подключения к YouTube:', error)
+            }
+        }
+    }
+
     useEffect(() => {
-        handleConnect()
+        if (twitchConnectionStatus) handleTwitchConnect()
+        if (youtubeConnectionStatus) handleYouTubeConnect()
         setTheme(targetTheme)
-    }, [])
+    }, [twitchConnectionStatus, youtubeConnectionStatus, targetTheme])
 
     return (
         <div className={s.wrapper}>

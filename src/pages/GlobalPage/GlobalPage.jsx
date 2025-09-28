@@ -22,6 +22,7 @@ export const GlobalPage = () => {
                         <Route path='/live-chat' element={<LiveChatPage />} />
                         <Route path='/settings' element={<SettingsPage />} />
                         <Route path='/tts' element={<TTSPage />} />
+
                         <Route path="/oauth2callback" element={<OAuth2Callback />} />
                     </Routes>
                 </div>

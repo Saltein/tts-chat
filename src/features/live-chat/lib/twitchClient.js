@@ -13,7 +13,7 @@ export function connectTwitchChat({ token, botNick, channel }) {
             username: botNick,
             password: token.startsWith("oauth:") ? token : `oauth:${token}`,
         },
-        channels: [channel],
+        channels: [channel?.chatChannelName],
     })
 
     client.connect()
