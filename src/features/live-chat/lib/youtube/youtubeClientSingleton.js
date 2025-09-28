@@ -1,9 +1,8 @@
-// youtubeClientSingleton.js
-
 import { connectYouTubeChat, getLiveChatIdFromVideo } from './youtubeClient';
 
 let client = null;
 let currentOptions = null;
+let currentCallbacks = null;
 
 /**
  * Singleton controller for YouTube Live Chat client
@@ -12,20 +11,13 @@ export function getYouTubeClient() {
     return client;
 }
 
-export async function connectYouTubeClient(options) {
-    // If we already have a client with the same options, return it
-    if (client && currentOptions &&
-        currentOptions.liveChatId === options.liveChatId &&
-        currentOptions.accessToken === options.accessToken) {
-        return client;
-    }
-
-    // Disconnect existing client if any
+export async function connectYouTubeClient(options, callbacks = {}) {
+    // Если уже есть подключенный клиент, отключаем его
     if (client) {
         disconnectYouTubeClient();
     }
 
-    // Get liveChatId from videoId if needed
+    // Получаем liveChatId из videoId если нужно
     let liveChatId = options.liveChatId;
     if (!liveChatId && options.videoId) {
         liveChatId = await getLiveChatIdFromVideo({
@@ -33,33 +25,62 @@ export async function connectYouTubeClient(options) {
         });
 
         if (!liveChatId) {
-            console.error("❌ Could not retrieve liveChatId from video");
+            console.error("❌ Не удалось получить liveChatId из video");
+            if (callbacks.onDisconnected) {
+                callbacks.onDisconnected();
+            }
             return null;
         }
     }
 
     if (!liveChatId) {
-        console.error("❌ No liveChatId provided and no videoId to retrieve it from");
+        console.error("❌ Не указан liveChatId и нет videoId для его получения");
+        if (callbacks.onDisconnected) {
+            callbacks.onDisconnected();
+        }
         return null;
     }
 
-    // Create new client
+    if (!options.accessToken) {
+        console.error("❌ Отсутствует accessToken для YouTube");
+        if (callbacks.onDisconnected) {
+            callbacks.onDisconnected();
+        }
+        return null;
+    }
+
+    // Создаем нового клиента
     const clientOptions = {
         ...options,
         liveChatId: liveChatId
     };
 
-    client = connectYouTubeChat(clientOptions);
-    currentOptions = clientOptions;
+    try {
+        client = connectYouTubeChat(clientOptions, callbacks);
+        currentOptions = clientOptions;
+        currentCallbacks = callbacks;
 
-    return client;
+        return client;
+    } catch (error) {
+        console.error("❌ Ошибка создания YouTube клиента:", error);
+        if (callbacks.onDisconnected) {
+            callbacks.onDisconnected();
+        }
+        return null;
+    }
 }
 
 export function disconnectYouTubeClient() {
     if (client) {
+        console.log("🔌 Отключение YouTube клиента...");
         client.disconnect();
         client = null;
         currentOptions = null;
+
+        if (currentCallbacks && currentCallbacks.onDisconnected) {
+            currentCallbacks.onDisconnected();
+        }
+        currentCallbacks = null;
     }
 }
 
@@ -68,12 +89,12 @@ export function isYouTubeClientConnected() {
 }
 
 /**
- * Send message through YouTube client (requires OAuth token)
+ * Отправить сообщение через YouTube клиент (требуется OAuth токен)
  */
 export function sendYouTubeMessage(messageText) {
     if (client && client.sendMessage) {
         return client.sendMessage(messageText);
     }
-    console.error("❌ No YouTube client available or client doesn't support sending messages");
+    console.error("❌ YouTube клиент недоступен или не поддерживает отправку сообщений");
     return false;
 }

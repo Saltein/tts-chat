@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import s from "./ConnectionSwitch.module.scss"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -15,18 +15,14 @@ import {
 } from "../../../../entities/connection/model/slice"
 import { connectTwitchClient, disconnectTwitchClient } from "../../../../features/live-chat/lib/twitchClientSingleton"
 import { connectVkPlayClient } from "../../../../features/live-chat/lib/vk/vkClientSingleton"
-import { connectYouTubeClient } from "../../../../features/live-chat/lib/youtube/youtubeClientSingleton"
+import { connectYouTubeClient, disconnectYouTubeClient, getYouTubeClient } from "../../../../features/live-chat/lib/youtube/youtubeClientSingleton"
 
 export const ConnectionSwitch = ({ serviceName = "", isActive = true }) => {
     const dispatch = useDispatch()
 
     const twitchBotName = process.env.REACT_APP_TWITCH_BOT_NAME
     const twitchBotToken = process.env.REACT_APP_TWITCH_BOT_TOKEN
-
-    // ТОКЕН находится в DevTools -> Network -> Socket -> Messages -> самая первая строчка     ... хз как его найти по другому пока что
     const vkAccessToken = process.env.REACT_APP_TEST_VK_TOKEN
-
-    // ID канала тоже хер пойми как достать кроме как через DevTools -> Network -> Socket
     const vkChannelId = '12983374'
 
     const twitchConnectionStatus = useSelector(selectTwitchConnectionStatus)
@@ -38,19 +34,47 @@ export const ConnectionSwitch = ({ serviceName = "", isActive = true }) => {
 
     const clientRef = useRef(null)
 
-    const handleConnect = () => {
+    // Эффект для синхронизации состояния переключателя с реальным статусом подключения
+    useEffect(() => {
+        if (serviceName === "YouTube") {
+            const youtubeClient = getYouTubeClient();
+            const isYoutubeConnected = youtubeClient && youtubeClient.isConnected;
+
+            if (isYoutubeConnected !== isSwitchOn) {
+                setIsSwitchOn(isYoutubeConnected);
+                setIsSwitchLoading(false);
+            }
+        }
+    }, [serviceName, isSwitchOn]);
+
+    const handleConnect = async () => {
         if (isSwitchOn) {
-            disconnectTwitchClient()
-            setIsSwitchOn(false)
-            dispatch(setTwitchConnectionStatus(false))
-            setIsSwitchLoading(false)
+            // Отключение
+            if (serviceName === "Twitch") {
+                disconnectTwitchClient();
+                setIsSwitchOn(false);
+                dispatch(setTwitchConnectionStatus(false));
+                setIsSwitchLoading(false);
+            }
+            else if (serviceName === "VK Видео Live") {
+                // Для VK нужно добавить функцию отключения в vkClientSingleton
+                setIsSwitchOn(false);
+                dispatch(setVkConnectionStatus(false));
+                setIsSwitchLoading(false);
+            }
+            else if (serviceName === "YouTube") {
+                setIsSwitchLoading(true);
+                disconnectYouTubeClient();
+                setIsSwitchOn(false);
+                dispatch(setYoutubeConnectionStatus(false));
+                setIsSwitchLoading(false);
+            }
         } else {
             // Включение
             if (serviceName === "Twitch") {
-                setIsSwitchLoading(true)
-                dispatch(setTwitchConnectionStatus(true))
+                setIsSwitchLoading(true);
+                dispatch(setTwitchConnectionStatus(true));
 
-                // Подключение к Twitch
                 const client = connectTwitchClient({
                     token: twitchBotToken,
                     botNick: twitchBotName,
@@ -58,45 +82,37 @@ export const ConnectionSwitch = ({ serviceName = "", isActive = true }) => {
                 })
 
                 if (client) {
-                    clientRef.current = client
-
+                    clientRef.current = client;
 
                     client.on("message", (channel, tags, message, self) => {
-                        // console.log(`[${tags["display-name"]}]: ${message}`)
-                        // console.log('channel: ', channel)
-                        console.log('tags: ', tags)
-                        console.log('message: ', message)
-                        // console.log('self: ', self)
+                        console.log('tags: ', tags);
+                        console.log('message: ', message);
                         dispatch(setNewTwitchMessage({
                             channel: channel,
                             tags: tags,
                             message: message,
                             self: self,
-                        }))
-                    })
+                        }));
+                    });
 
-                    // Когда подключение успешно → включаем свитч
                     client.on("connected", () => {
-                        setIsSwitchOn(true)
-                        setIsSwitchLoading(false)
-                    })
+                        setIsSwitchOn(true);
+                        setIsSwitchLoading(false);
+                    });
 
-                    // Если вдруг отключились → выключаем свитч
                     client.on("disconnected", () => {
-                        setIsSwitchOn(false)
-                        dispatch(setTwitchConnectionStatus(false))
-                        setIsSwitchLoading(false)
-                    })
+                        setIsSwitchOn(false);
+                        dispatch(setTwitchConnectionStatus(false));
+                        setIsSwitchLoading(false);
+                    });
                 } else {
-                    setIsSwitchLoading(false)
+                    setIsSwitchLoading(false);
                 }
             }
-            // В компоненте ConnectionSwitch - часть VK
             else if (serviceName === "VK Видео Live") {
                 setIsSwitchLoading(true);
                 dispatch(setVkConnectionStatus(true));
 
-                // Колбэки выносим в отдельный объект
                 const callbacks = {
                     onChatMessage: (msg) => {
                         console.log("💬 VK Play сообщение:", msg);
@@ -123,7 +139,6 @@ export const ConnectionSwitch = ({ serviceName = "", isActive = true }) => {
                     dispatch(setVkConnectionStatus(false));
                 }
             }
-
             else if (serviceName === "YouTube") {
                 setIsSwitchLoading(true);
                 dispatch(setYoutubeConnectionStatus(true));
@@ -136,34 +151,39 @@ export const ConnectionSwitch = ({ serviceName = "", isActive = true }) => {
                     onConnected: () => {
                         setIsSwitchOn(true);
                         setIsSwitchLoading(false);
+                        dispatch(setYoutubeConnectionStatus(true));
                     },
                     onDisconnected: () => {
                         setIsSwitchOn(false);
-                        dispatch(setYoutubeConnectionStatus(false));
                         setIsSwitchLoading(false);
+                        dispatch(setYoutubeConnectionStatus(false));
                     },
                 };
 
-                // Подключение к YouTube
-                console.log({
-                    accessToken: youtubeAccessToken, // ⚡ нужен ключ
-                    videoId: youtubeVideoId?.youtubeVideoId, // ⚡ из redux
-                })
-                connectYouTubeClient({
-                    accessToken: youtubeAccessToken, // ⚡ нужен ключ
-                    videoId: youtubeVideoId?.youtubeVideoId, // ⚡ из redux
-                }).then((client) => {
+                try {
+                    console.log("Подключение YouTube с параметрами:", {
+                        accessToken: youtubeAccessToken,
+                        videoId: youtubeVideoId?.youtubeVideoId,
+                    });
+
+                    const client = await connectYouTubeClient({
+                        accessToken: youtubeAccessToken,
+                        videoId: youtubeVideoId?.youtubeVideoId,
+                    }, callbacks);
+
                     if (client) {
                         clientRef.current = client;
-
-                        client.onMessage(callbacks.onChatMessage);
-                        client.onConnected(callbacks.onConnected);
-                        client.onDisconnected(callbacks.onDisconnected);
+                        console.log("✅ YouTube клиент успешно создан");
                     } else {
+                        console.error("❌ Не удалось создать YouTube клиент");
                         setIsSwitchLoading(false);
                         dispatch(setYoutubeConnectionStatus(false));
                     }
-                });
+                } catch (error) {
+                    console.error("❌ Ошибка подключения YouTube:", error);
+                    setIsSwitchLoading(false);
+                    dispatch(setYoutubeConnectionStatus(false));
+                }
             }
         }
     }

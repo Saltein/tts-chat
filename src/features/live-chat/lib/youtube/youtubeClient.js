@@ -1,18 +1,20 @@
-// youtubeClient.js
-
 /**
  * Client for connecting to YouTube Live Chat via YouTube Data API v3
  * Note: YouTube API uses polling rather than WebSocket connections.
  */
 
-export function connectYouTubeChat({ accessToken, liveChatId }) {
-    if ((!accessToken) || !liveChatId) {
-        console.error("❌ Missing required parameters: need either accessToken, and liveChatId");
+export function connectYouTubeChat({ accessToken, liveChatId }, callbacks = {}) {
+    if (!accessToken || !liveChatId) {
+        console.error("❌ Отсутствуют обязательные параметры: accessToken и liveChatId");
+        if (callbacks.onDisconnected) {
+            callbacks.onDisconnected();
+        }
         return null;
     }
 
     const client = {
         isConnected: true,
+        hasConnected: false,
         nextPageToken: null,
         pollInterval: null,
         messageListeners: [],
@@ -20,7 +22,17 @@ export function connectYouTubeChat({ accessToken, liveChatId }) {
         disconnectListeners: []
     };
 
-    // Authentication headers
+    // Добавляем колбэки если они предоставлены
+    if (callbacks.onChatMessage) {
+        client.messageListeners.push(callbacks.onChatMessage);
+    }
+    if (callbacks.onConnected) {
+        client.connectionListeners.push(callbacks.onConnected);
+    }
+    if (callbacks.onDisconnected) {
+        client.disconnectListeners.push(callbacks.onDisconnected);
+    }
+
     const authParams = `access_token=${accessToken}`;
 
     /**
@@ -39,6 +51,7 @@ export function connectYouTubeChat({ accessToken, liveChatId }) {
                 console.error("❌ YouTube API Error:", data.error);
                 if (data.error.code === 403) {
                     console.error("❌ Quota exceeded or permission denied");
+                    client.disconnect();
                 }
                 return;
             }
@@ -46,23 +59,40 @@ export function connectYouTubeChat({ accessToken, liveChatId }) {
             // Update next page token for subsequent requests
             client.nextPageToken = data.nextPageToken;
 
+            // Если это первое успешное подключение - вызываем колбэк connected
+            if (!client.hasConnected) {
+                client.hasConnected = true;
+                console.log("✅ YouTube Live Chat подключен");
+                client.connectionListeners.forEach(listener => {
+                    try {
+                        listener();
+                    } catch (error) {
+                        console.error("❌ Ошибка в onConnected колбэке:", error);
+                    }
+                });
+            }
+
             // Process messages
             if (data.items && data.items.length > 0) {
                 data.items.forEach(message => {
                     // Notify all message listeners
                     client.messageListeners.forEach(listener => {
-                        listener({
-                            message: message.snippet.displayMessage,
-                            tags: {
-                                'display-name': message.authorDetails.displayName,
-                                'color': message.authorDetails.profileImageUrl ? '#FFFFFF' : '#CCCCCC',
-                                'is-verified': message.authorDetails.isVerified,
-                                'is-owner': message.authorDetails.isChatOwner,
-                                'is-moderator': message.authorDetails.isChatModerator,
-                                'is-sponsor': message.authorDetails.isChatSponsor
-                            },
-                            raw: message
-                        });
+                        try {
+                            listener({
+                                message: message.snippet.displayMessage,
+                                tags: {
+                                    'display-name': message.authorDetails.displayName,
+                                    'color': message.authorDetails.profileImageUrl ? '#FFFFFF' : '#CCCCCC',
+                                    'is-verified': message.authorDetails.isVerified,
+                                    'is-owner': message.authorDetails.isChatOwner,
+                                    'is-moderator': message.authorDetails.isChatModerator,
+                                    'is-sponsor': message.authorDetails.isChatSponsor
+                                },
+                                raw: message
+                            });
+                        } catch (error) {
+                            console.error("❌ Ошибка в onChatMessage колбэке:", error);
+                        }
                     });
                 });
             }
@@ -86,9 +116,6 @@ export function connectYouTubeChat({ accessToken, liveChatId }) {
     client.startPolling = () => {
         console.log(`✅ Starting YouTube Live Chat polling for chat: ${liveChatId}`);
         pollMessages();
-
-        // Notify connection listeners
-        client.connectionListeners.forEach(listener => listener());
     };
 
     /**
@@ -104,7 +131,18 @@ export function connectYouTubeChat({ accessToken, liveChatId }) {
         }
 
         // Notify disconnect listeners
-        client.disconnectListeners.forEach(listener => listener());
+        client.disconnectListeners.forEach(listener => {
+            try {
+                listener();
+            } catch (error) {
+                console.error("❌ Ошибка в onDisconnected колбэке:", error);
+            }
+        });
+
+        // Clear all listeners
+        client.messageListeners = [];
+        client.connectionListeners = [];
+        client.disconnectListeners = [];
     };
 
     /**
