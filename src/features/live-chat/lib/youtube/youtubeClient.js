@@ -3,7 +3,22 @@
  * Note: YouTube API uses polling rather than WebSocket connections.
  */
 
+const googleApiKeys = process.env.REACT_APP_GOOGLE_API_KEYS.split(' ');
+let googleApiID = 0;
+
+function getCurrentKey() {
+    return googleApiKeys[googleApiID];
+}
+
+function rotateKey() {
+    googleApiID++;
+    if (googleApiID >= googleApiKeys.length) {
+        throw new Error("❌ Все Google API ключи исчерпаны");
+    }
+}
+
 export function connectYouTubeChat({ accessToken, liveChatId }, callbacks = {}) {
+
     if (!accessToken || !liveChatId) {
         console.error("❌ Отсутствуют обязательные параметры: accessToken и liveChatId");
         if (callbacks.onDisconnected) {
@@ -42,7 +57,7 @@ export function connectYouTubeChat({ accessToken, liveChatId }, callbacks = {}) 
         if (!client.isConnected) return;
 
         try {
-            const url = `https://www.googleapis.com/youtube/v3/liveChat/messages?${authParams}&liveChatId=${liveChatId}&part=id,snippet,authorDetails${client.nextPageToken ? `&pageToken=${client.nextPageToken}` : ''}`;
+            const url = `https://www.googleapis.com/youtube/v3/liveChat/messages?key=${getCurrentKey()}&liveChatId=${liveChatId}&part=id,snippet,authorDetails${client.nextPageToken ? `&pageToken=${client.nextPageToken}` : ''}`;
 
             const response = await fetch(url);
             const data = await response.json();
@@ -50,11 +65,19 @@ export function connectYouTubeChat({ accessToken, liveChatId }, callbacks = {}) 
             if (data.error) {
                 console.error("❌ YouTube API Error:", data.error);
                 if (data.error.code === 403) {
-                    console.error("❌ Quota exceeded or permission denied");
-                    client.disconnect();
+                    try {
+                        rotateKey();
+                        console.warn("🔄 Переключился на следующий API ключ:", getCurrentKey());
+                        // сразу пробуем снова с новым ключом
+                        pollMessages();
+                    } catch {
+                        client.disconnect();
+                    }
+                    return;
                 }
                 return;
             }
+
 
             // Update next page token for subsequent requests
             client.nextPageToken = data.nextPageToken;
@@ -98,7 +121,7 @@ export function connectYouTubeChat({ accessToken, liveChatId }, callbacks = {}) 
             }
 
             // Calculate next poll time (YouTube recommends following the poll delay)
-            const pollDelay = data.pollingIntervalMillis || 2000;
+            const pollDelay = data.pollingIntervalMillis || process.env.REACT_APP_GOOGLE_TIMEOUT;
 
             // Schedule next poll
             client.pollInterval = setTimeout(pollMessages, pollDelay);
@@ -106,7 +129,7 @@ export function connectYouTubeChat({ accessToken, liveChatId }, callbacks = {}) 
         } catch (error) {
             console.error("❌ Error polling YouTube messages:", error);
             // Retry after error with fallback delay
-            client.pollInterval = setTimeout(pollMessages, 2000);
+            client.pollInterval = setTimeout(pollMessages, process.env.REACT_APP_GOOGLE_TIMEOUT);
         }
     };
 
@@ -212,16 +235,30 @@ export function connectYouTubeChat({ accessToken, liveChatId }, callbacks = {}) 
  * Utility function to get liveChatId from video ID
  */
 export async function getLiveChatIdFromVideo({ videoId }) {
-    console.log({ videoId })
     if (!videoId) {
         console.error("❌ Missing videoId");
         return null;
     }
 
     try {
-        const url = `https://www.googleapis.com/youtube/v3/videos?key=${process.env.REACT_APP_GOOGLE_API_KEY}&part=liveStreamingDetails&id=${videoId}`;
+        const url = `https://www.googleapis.com/youtube/v3/videos?key=${getCurrentKey()}&part=liveStreamingDetails&id=${videoId}`;
         const response = await fetch(url);
         const data = await response.json();
+
+        if (data.error) {
+            console.error("❌ YouTube API Error:", data.error);
+            if (data.error.code === 403) {
+                try {
+                    rotateKey();
+                    console.warn("🔄 Переключился на следующий API ключ:", getCurrentKey());
+                    // пробуем ещё раз
+                    return await getLiveChatIdFromVideo({ videoId });
+                } catch {
+                    return null;
+                }
+            }
+            return null;
+        }
 
         if (data.items && data.items.length > 0) {
             const liveChatId = data.items[0].liveStreamingDetails.activeLiveChatId;
