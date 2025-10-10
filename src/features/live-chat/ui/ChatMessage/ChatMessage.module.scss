@@ -7,6 +7,8 @@
     border-radius: $border-radius-md;
     background-color: var(--color-items);
     line-height: $spacing-lg;
+    width: 100%;
+
     opacity: 1;
     transition: opacity 0.3s ease;
 

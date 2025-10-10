@@ -1,16 +1,15 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import s from './DefaultSlider.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectSpeechVolume, setSpeechVolume } from '../../../../features/tts-chat/model/slice';
 
-export const DefaultSlider = ({ width = '256px', selector, dispatcher }) => {
-    const currentValue = useSelector(selector)
+export const DefaultSlider = ({ width = '256px', height = '48px', selector, dispatcher, isCoefficient = false }) => {
+    const currentValue = useSelector(selector);
 
     const [position, setPosition] = useState(currentValue);
     const wrapperRef = useRef(null);
     const isDragging = useRef(false);
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const handleMouseDown = useCallback((e) => {
         isDragging.current = true;
@@ -33,14 +32,22 @@ export const DefaultSlider = ({ width = '256px', selector, dispatcher }) => {
 
         const rect = wrapperRef.current.getBoundingClientRect();
         const x = e.clientX - rect.left;
-        let newPosition = (x / rect.width) * 100;
 
-        newPosition = Math.round(Math.max(0, Math.min(100, newPosition)));
+        let newPosition;
+        if (isCoefficient) {
+            // Ограничение до 0-1 и округление до сотых
+            newPosition = Math.min(1, Math.max(0, x / rect.width));
+            newPosition = Math.round(newPosition * 100) / 100;
+        } else {
+            newPosition = Math.min(100, Math.max(0, (x / rect.width) * 100));
+            newPosition = Math.round(newPosition);
+        }
+
         setPosition(newPosition);
-        dispatch(dispatcher(newPosition))
-    }, []);
+        dispatch(dispatcher(newPosition));
+    }, [dispatcher, isCoefficient, dispatch]);
 
-    // EFFECTS EFFECTS EFFECTS EFFECTS EFFECTS EFFECTS
+    // Синхронизация с внешним значением
     useEffect(() => {
         setPosition(currentValue);
     }, [currentValue]);
@@ -50,15 +57,17 @@ export const DefaultSlider = ({ width = '256px', selector, dispatcher }) => {
         return () => document.removeEventListener('mousemove', handleMouseMove);
     }, [handleMouseMove]);
 
+    let criticalValue = isCoefficient ? 0.2 : 20
 
-    // STYLES STYLES STYLES STYLES STYLES STYLES STYLES
+    // Стили
     const styles = {
-        width: width ?? undefined,
-        borderLeft: position <= 20 ? `${1}px solid rgba(255, 0, 0, ${(20-position)/20})` : ''
+        width,
+        height,
+        borderLeft: position <= criticalValue ? `${1}px solid rgba(255, 0, 0, ${(criticalValue - position) / criticalValue})` : ''
     };
 
     const sliderStyles = {
-        right: `${100 - position}%`,
+        right: `${isCoefficient ? (1 - position) * 100 : 100 - position}%`,
     };
 
     return (
@@ -68,9 +77,9 @@ export const DefaultSlider = ({ width = '256px', selector, dispatcher }) => {
             style={styles}
             onMouseDown={handleMouseDown}
         >
-            <span className={s.value}>{position}</span>
+            <span className={s.value} style={{fontSize: height}}>{position}</span>
             <div className={s.slider} style={sliderStyles}>
-                <div className={s.slider_circle} />
+                <div className={s.slider_circle} style={{height}} />
             </div>
         </div>
     );

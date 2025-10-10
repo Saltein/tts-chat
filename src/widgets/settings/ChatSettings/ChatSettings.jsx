@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react'
-import { DefaultButton, DefaultInput, DefaultTitle } from '../../../shared/ui'
+import { DefaultButton, DefaultDivider, DefaultInput, DefaultSlider, DefaultTitle } from '../../../shared/ui'
 import s from './ChatSettings.module.scss'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectSpeechVolume, selectTwitchVoice } from '../../../features/tts-chat/model/slice'
 import { selectTwitchConnectionData, selectTwitchConnectionStatus, selectYoutubeAccessToken, selectYoutubeConnectionStatus, selectYoutubeVideoId } from '../../../entities/connection/model/slice'
 import { convertObjToStr } from '../../../shared/lib/convertObjToStr'
+import { selectMessageBackground, selectMessageBackgroundOpacity, setMessageBackground, setMessageBackgroundOpacity } from '../../../entities/message/model/slice'
+import { hexToRgbString, rgbStringToHex } from '../../../shared/lib/hexToRgbString'
 
 export const ChatSettings = () => {
     const [link, setLink] = useState('')
     const [copied, setCopied] = useState(false)
+
+    const dispatch = useDispatch()
+
+    const currentBackgroundColor = useSelector(selectMessageBackground)
 
     const currentTheme = localStorage.getItem('theme')
     const volume = useSelector(selectSpeechVolume) / 100
@@ -39,7 +45,7 @@ export const ChatSettings = () => {
     const baseUrl = process.env.REACT_APP_BASE_URL_WIDGET || ''
 
     useEffect(() => {
-        console.error('youtubeVideoId, youtubeAccessToken, youtubeConnectionStatus', {youtubeVideoId, youtubeAccessToken, youtubeConnectionStatus})
+        // console.error('youtubeVideoId, youtubeAccessToken, youtubeConnectionStatus', { youtubeVideoId, youtubeAccessToken, youtubeConnectionStatus })
         setLink(`${baseUrl}/widget/chat?${convertObjToStr([generalQueryParamObj, twitchQueryParamObj, youtubeQueryParamObj])}`)
     }, [baseUrl, twitchChatChannelName, volume, twitchConnectionStatus, twitchVoice, currentTheme])
 
@@ -53,6 +59,10 @@ export const ChatSettings = () => {
         }
     }
 
+    const handlePickColor = (e) => {
+        dispatch(setMessageBackground(hexToRgbString(e.target.value)))
+    }
+
     return (
         <div className={s.wrapper}>
             <DefaultTitle paddingTop={'0'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
@@ -63,6 +73,21 @@ export const ChatSettings = () => {
                 value={link}
             />
             <DefaultButton title={copied ? 'Скопировано' : 'Скопировать ссылку'} onClick={handleCopy} active={copied ? false : true} />
+
+
+            <DefaultDivider />
+
+
+            <DefaultTitle paddingTop={'0'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
+                title={'Сообщения'} titleStyles={{ fontSize: '1rem' }} />
+            <DefaultTitle paddingTop={'8px'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
+                title={'Цвет фона'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} />
+            <input className={s.colorPicker} value={rgbStringToHex(currentBackgroundColor)} type='color' onChange={handlePickColor} />
+
+
+            <DefaultTitle paddingTop={'8px'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
+                title={'Прозрачность фона'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} />
+            <DefaultSlider selector={selectMessageBackgroundOpacity} dispatcher={setMessageBackgroundOpacity} width='100%' height='32px' isCoefficient />
         </div>
     )
 }
