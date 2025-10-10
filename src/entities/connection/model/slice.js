@@ -79,7 +79,7 @@ const connectionSlice = createSlice({
             state.twitch.connectionStatus = action.payload
         },
         setNewTwitchMessage: (state, action) => {
-            const message = { ...action.payload, service: 'twitch' }
+            const message = { ...action.payload, time: Date.now(), service: 'twitch' }
             state.messages.push(message)
         },
 
@@ -96,7 +96,7 @@ const connectionSlice = createSlice({
             state.youtube.connectionStatus = action.payload
         },
         setNewYoutubeMessage: (state, action) => {
-            const message = { ...action.payload, service: 'youtube' }
+            const message = { ...action.payload, time: Date.now(), service: 'youtube' }
             state.messages.push(message)
         },
 
@@ -113,7 +113,7 @@ const connectionSlice = createSlice({
             state.vk.connectionStatus = action.payload
         },
         setNewVkMessage: (state, action) => {
-            const message = { ...action.payload, service: 'vk' }
+            const message = { ...action.payload, time: Date.now(), service: 'vk' }
             state.messages.push(message)
         },
 

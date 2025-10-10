@@ -8,6 +8,8 @@ export const LiveChat = ({ backgroundColor, isWidget }) => {
     const messages = useSelector(selectLast50Messages)
     const chatEndRef = useRef(null)
 
+    const timeBeforeDisappear = 5000
+
     const styles = {
         backgroundColor: backgroundColor ?? undefined,
         height: isWidget ? '100vh' : ''
@@ -26,13 +28,15 @@ export const LiveChat = ({ backgroundColor, isWidget }) => {
                     tags: {
                         'display-name': 'TTS Chat',
                         'color': 'var(--color-accent)'
-                    }
+                    },
+                    time: Date.now()
                 }}
+                timeBeforeDisappear={timeBeforeDisappear}
             />
             {messages.map((item, index) => (
-                <ChatMessage key={item.id || index} message={item} />
+                <ChatMessage key={item.id || index} message={item} timeBeforeDisappear={timeBeforeDisappear} />
             ))}
-            <div ref={chatEndRef} className={s.anchor}/>
+            <div ref={chatEndRef} className={s.anchor} />
         </div>
     )
 }
