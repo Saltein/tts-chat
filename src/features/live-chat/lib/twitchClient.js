@@ -2,6 +2,9 @@
 import tmi from "tmi.js"
 
 export function connectTwitchChat({ token, botNick, channel }) {
+
+    console.warn("connectTwitchChat channel", channel)
+
     if (!token || !botNick || !channel) {
         console.error("Нет данных для подключения к Twitch")
         return null

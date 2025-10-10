@@ -14,80 +14,80 @@ export const ChatWidget = () => {
     const twitchBotToken = process.env.REACT_APP_TWITCH_BOT_TOKEN
 
     const [searchParams] = useSearchParams()
-    const clientRef = useRef(null)
     const dispatch = useDispatch()
-    const { theme, setTheme } = useTheme()
+    const { setTheme } = useTheme()
 
     const voiceVolume = searchParams.get('volume') || 1
     const twitchVoice = searchParams.get('twitchVoice') || 'random'
     const targetTheme = searchParams.get('theme') || 'dark'
 
     const twitchChatChannelName = searchParams.get('twitchChatChannelName') || ''
-    const twitchConnectionStatus = searchParams.get('twitchConnectionStatus') === 'true' || false
+    const twitchConnectionStatus = searchParams.get('twitchConnectionStatus') === 'true'
 
     const youtubeVideoId = searchParams.get('youtubeVideoId') || ''
     const youtubeAccessToken = searchParams.get('youtubeAccessToken') || ''
-    const youtubeConnectionStatus = searchParams.get('youtubeConnectionStatus') === 'true' || false
+    const youtubeConnectionStatus = searchParams.get('youtubeConnectionStatus') === 'true'
 
-    console.warn('Переданные параметры: ', voiceVolume, twitchVoice, targetTheme, twitchChatChannelName, twitchConnectionStatus, youtubeVideoId, youtubeAccessToken, youtubeConnectionStatus)
+    // Разделяем рефы для Twitch и YouTube
+    const twitchClientRef = useRef(null)
+    const youtubeClientRef = useRef(null)
+
+    console.warn('Переданные параметры: ', {
+        voiceVolume,
+        twitchVoice,
+        targetTheme,
+        twitchChatChannelName,
+        twitchConnectionStatus,
+        youtubeVideoId,
+        youtubeAccessToken,
+        youtubeConnectionStatus
+    })
 
     const handleTwitchConnect = () => {
-        if (twitchConnectionStatus) {
-            console.warn('twitchBotToken в виджете', { twitchBotToken, twitchBotName, twitchChatChannelName })
-            const client = connectTwitchClient({
-                token: twitchBotToken,
-                botNick: twitchBotName,
-                channel: twitchChatChannelName,
-            })
+        if (!twitchConnectionStatus || twitchClientRef.current) return
 
-            if (client) {
-                clientRef.current = client
-                client.on("message", (channel, tags, message, self) => {
-                    dispatch(setNewTwitchMessage({
-                        channel: channel,
-                        tags: tags,
-                        message: message,
-                        self: self,
-                    }))
-                })
-            }
+        console.warn('twitchBotToken в виджете', { twitchBotToken, twitchBotName, twitchChatChannelName })
+
+        const client = connectTwitchClient({
+            token: twitchBotToken,
+            botNick: twitchBotName,
+            channel: {chatChannelName: twitchChatChannelName},
+        })
+
+        if (client) {
+            twitchClientRef.current = client
+            client.on("message", (channel, tags, message, self) => {
+                dispatch(setNewTwitchMessage({ channel, tags, message, self }))
+            })
         }
     }
 
     const handleYouTubeConnect = async () => {
-        if (youtubeConnectionStatus && youtubeVideoId && youtubeAccessToken) {
-            try {
-                const callbacks = {
-                    onChatMessage: (msg) => {
-                        dispatch(setNewYoutubeMessage(msg))
-                    },
-                    onConnected: () => {
-                        console.log('✅ YouTube чат подключен')
-                    },
-                    onDisconnected: () => {
-                        console.log('❌ YouTube чат отключен')
-                    }
-                }
+        if (!youtubeConnectionStatus || !youtubeVideoId || !youtubeAccessToken || youtubeClientRef.current) return
 
-                const client = await connectYouTubeClient(
-                    { videoId: youtubeVideoId, accessToken: youtubeAccessToken },
-                    callbacks
-                )
-
-                if (client) {
-                    clientRef.current.youtube = client
-                }
-            } catch (error) {
-                console.error('Ошибка подключения к YouTube:', error)
+        try {
+            const callbacks = {
+                onChatMessage: (msg) => dispatch(setNewYoutubeMessage(msg)),
+                onConnected: () => console.log('✅ YouTube чат подключен'),
+                onDisconnected: () => console.log('❌ YouTube чат отключен'),
             }
+
+            const client = await connectYouTubeClient(
+                { videoId: youtubeVideoId, accessToken: youtubeAccessToken },
+                callbacks
+            )
+
+            if (client) youtubeClientRef.current = client
+        } catch (error) {
+            console.error('Ошибка подключения к YouTube:', error)
         }
     }
 
     useEffect(() => {
-        if (twitchConnectionStatus) handleTwitchConnect()
-        if (youtubeConnectionStatus) handleYouTubeConnect()
+        handleTwitchConnect()
+        handleYouTubeConnect()
         setTheme(targetTheme)
-    }, [twitchConnectionStatus, youtubeConnectionStatus, targetTheme])
+    }, [])
 
     return (
         <div className={s.wrapper}>
