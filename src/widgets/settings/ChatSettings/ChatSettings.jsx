@@ -4,6 +4,7 @@ import s from './ChatSettings.module.scss'
 import { useSelector } from 'react-redux'
 import { selectSpeechVolume, selectTwitchVoice } from '../../../features/tts-chat/model/slice'
 import { selectTwitchConnectionData, selectTwitchConnectionStatus, selectYoutubeAccessToken, selectYoutubeConnectionStatus, selectYoutubeVideoId } from '../../../entities/connection/model/slice'
+import { convertObjToStr } from '../../../shared/lib/convertObjToStr'
 
 export const ChatSettings = () => {
     const [link, setLink] = useState('')
@@ -20,11 +21,26 @@ export const ChatSettings = () => {
     const youtubeAccessToken = useSelector(selectYoutubeAccessToken)
     const youtubeConnectionStatus = useSelector(selectYoutubeConnectionStatus)
 
+    const generalQueryParamObj = {
+        'theme': currentTheme,
+        'volume': volume,
+    }
+    const twitchQueryParamObj = {
+        'twitchChatChannelName': twitchChatChannelName,
+        'twitchConnectionStatus': twitchConnectionStatus,
+        'twitchVoice': twitchVoice,
+    }
+    const youtubeQueryParamObj = {
+        'youtubeVideoId': youtubeVideoId,
+        'youtubeAccessToken': youtubeAccessToken,
+        'youtubeConnectionStatus': youtubeConnectionStatus,
+    }
+
     const baseUrl = process.env.REACT_APP_BASE_URL_WIDGET || ''
 
     useEffect(() => {
         console.error('youtubeVideoId, youtubeAccessToken, youtubeConnectionStatus', {youtubeVideoId, youtubeAccessToken, youtubeConnectionStatus})
-        setLink(`${baseUrl}/widget/chat?twitchChatChannelName=${twitchChatChannelName}&volume=${volume}&twitchConnectionStatus=${twitchConnectionStatus}&twitchVoice=${twitchVoice}&theme=${currentTheme}&youtubeVideoId=${youtubeVideoId}&youtubeAccessToken=${youtubeAccessToken}&youtubeConnectionStatus=${youtubeConnectionStatus}`)
+        setLink(`${baseUrl}/widget/chat?${convertObjToStr([generalQueryParamObj, twitchQueryParamObj, youtubeQueryParamObj])}`)
     }, [baseUrl, twitchChatChannelName, volume, twitchConnectionStatus, twitchVoice, currentTheme])
 
     const handleCopy = async () => {

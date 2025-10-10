@@ -29,6 +29,8 @@ export const ChatWidget = () => {
     const youtubeAccessToken = searchParams.get('youtubeAccessToken') || ''
     const youtubeConnectionStatus = searchParams.get('youtubeConnectionStatus') === 'true' || false
 
+    console.warn('Переданные параметры: ', voiceVolume, twitchVoice, targetTheme, twitchChatChannelName, twitchConnectionStatus, youtubeVideoId, youtubeAccessToken, youtubeConnectionStatus)
+
     const handleTwitchConnect = () => {
         if (twitchConnectionStatus) {
             console.warn('twitchBotToken в виджете', { twitchBotToken, twitchBotName, twitchChatChannelName })
