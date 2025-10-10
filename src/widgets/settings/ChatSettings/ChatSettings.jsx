@@ -14,7 +14,8 @@ export const ChatSettings = () => {
 
     const dispatch = useDispatch()
 
-    const currentBackgroundColor = useSelector(selectMessageBackground)
+    const currentMessageBackgroundColor = useSelector(selectMessageBackground)
+    const currentMessageBackgroundOpacity = useSelector(selectMessageBackgroundOpacity)
 
     const currentTheme = localStorage.getItem('theme')
     const volume = useSelector(selectSpeechVolume) / 100
@@ -31,6 +32,10 @@ export const ChatSettings = () => {
         'theme': currentTheme,
         'volume': volume,
     }
+    const chatCustomizationQueryParamObj = {
+        'messageBackgroundColor': currentMessageBackgroundColor,
+        'messageBackgroundOpacity': currentMessageBackgroundOpacity,
+    }
     const twitchQueryParamObj = {
         'twitchChatChannelName': twitchChatChannelName,
         'twitchConnectionStatus': twitchConnectionStatus,
@@ -43,11 +48,12 @@ export const ChatSettings = () => {
     }
 
     const baseUrl = process.env.REACT_APP_BASE_URL_WIDGET || ''
+    const queryParamList = [generalQueryParamObj, chatCustomizationQueryParamObj, twitchQueryParamObj, youtubeQueryParamObj]
 
     useEffect(() => {
         // console.error('youtubeVideoId, youtubeAccessToken, youtubeConnectionStatus', { youtubeVideoId, youtubeAccessToken, youtubeConnectionStatus })
-        setLink(`${baseUrl}/widget/chat?${convertObjToStr([generalQueryParamObj, twitchQueryParamObj, youtubeQueryParamObj])}`)
-    }, [baseUrl, twitchChatChannelName, volume, twitchConnectionStatus, twitchVoice, currentTheme])
+        setLink(`${baseUrl}/widget/chat?${convertObjToStr(queryParamList)}`)
+    }, queryParamList)
 
     const handleCopy = async () => {
         try {
@@ -82,7 +88,7 @@ export const ChatSettings = () => {
                 title={'Сообщения'} titleStyles={{ fontSize: '1rem' }} />
             <DefaultTitle paddingTop={'8px'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
                 title={'Цвет фона'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} />
-            <input className={s.colorPicker} value={rgbStringToHex(currentBackgroundColor)} type='color' onChange={handlePickColor} />
+            <input className={s.colorPicker} value={rgbStringToHex(currentMessageBackgroundColor)} type='color' onChange={handlePickColor} />
 
 
             <DefaultTitle paddingTop={'8px'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
