@@ -8,7 +8,7 @@ export const LiveChat = ({ backgroundColor, isWidget }) => {
     const messages = useSelector(selectLast50Messages)
     const chatEndRef = useRef(null)
 
-    const timeBeforeDisappear = 5000
+    const timeBeforeDisappear = 30000
 
     const styles = {
         backgroundColor: backgroundColor ?? undefined,
