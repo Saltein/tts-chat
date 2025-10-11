@@ -3,9 +3,10 @@ import { createSlice } from '@reduxjs/toolkit'
 let initialState = {
     messageBackground: '',
     messageBackgroundOpacity: 1,
-    messageBorder: true, // 👈 булево, а не строка
+    messageBorder: true,
     messageTextColor: '',
-    messageLifeTime: 30000
+    messageLifeTime: 30000,
+    messageGap: '8',
 }
 
 // Загружаем параметры из localStorage
@@ -15,11 +16,10 @@ try {
         initialState = {
             messageBackground: saved.messageBackground ?? '',
             messageBackgroundOpacity: saved.messageBackgroundOpacity ?? 1,
-            messageBorder: typeof saved.messageBorder === 'boolean'
-                ? saved.messageBorder
-                : saved.messageBorder === 'true', // 👈 если вдруг сохранилась строка
+            messageBorder: saved.messageBorder ?? true,
             messageTextColor: saved.messageTextColor ?? '',
             messageLifeTime: saved.messageLifeTime ?? 30000,
+            messageGap: saved.messageGap ?? '8'
         }
     }
 } catch {
@@ -44,7 +44,7 @@ const messageCustomizationSlice = createSlice({
             saveToLocalStorage(state)
         },
         setMessageBorder: (state, action) => {
-            state.messageBorder = !!action.payload // 👈 гарантированно boolean
+            state.messageBorder = action.payload
             saveToLocalStorage(state)
         },
         setMessageTextColor: (state, action) => {
@@ -55,6 +55,10 @@ const messageCustomizationSlice = createSlice({
             state.messageLifeTime = action.payload
             saveToLocalStorage(state)
         },
+        setMessageGap: (state, action) => {
+            state.messageGap = action.payload
+            saveToLocalStorage(state)
+        }
     }
 })
 
@@ -64,6 +68,7 @@ export const {
     setMessageBorder,
     setMessageTextColor,
     setMessageLifeTime,
+    setMessageGap,
 } = messageCustomizationSlice.actions
 
 export default messageCustomizationSlice.reducer
@@ -74,3 +79,4 @@ export const selectMessageBackgroundOpacity = (state) => state.messageCustomizat
 export const selectMessageBorder = (state) => state.messageCustomization.messageBorder
 export const selectMessageTextColor = (state) => state.messageCustomization.messageTextColor
 export const selectMessageLifeTime = (state) => state.messageCustomization.messageLifeTime
+export const selectMessageGap = (state) => state.messageCustomization.messageGap

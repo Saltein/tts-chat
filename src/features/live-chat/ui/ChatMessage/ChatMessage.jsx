@@ -42,8 +42,6 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
     }
     const messageBackgroundOpacity = useSelector(selectMessageBackgroundOpacity) // число от 0 до 1
 
-    console.log("messageBorder === false", messageBorder === false)
-
     const wrapperStyles = {
         backgroundColor: `rgba(${messageBackground}, ${messageBackgroundOpacity})`,
         border: messageBorder === false ? `1px solid #00000000` : undefined
@@ -64,10 +62,6 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
             clearTimeout(removeTimeout)
         }
     }, [timeBeforeDisappear])
-
-    useEffect(() => {
-        console.log('wrapperStyles', wrapperStyles)
-    }, wrapperStyles)
 
     if (!visible) return null
 

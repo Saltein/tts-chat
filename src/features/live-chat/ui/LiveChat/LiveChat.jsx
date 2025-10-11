@@ -3,17 +3,19 @@ import { useSelector } from 'react-redux'
 import s from './LiveChat.module.scss'
 import { selectLast50Messages } from '../../../../entities/connection/model/slice'
 import { ChatMessage } from '../ChatMessage/ChatMessage'
-import { selectMessageLifeTime } from '../../../../entities/message/model/slice'
+import { selectMessageGap, selectMessageLifeTime } from '../../../../entities/message/model/slice'
 
 export const LiveChat = ({ backgroundColor, isWidget }) => {
     const messages = useSelector(selectLast50Messages)
+    const messageGap = useSelector(selectMessageGap)
     const chatEndRef = useRef(null)
 
     const timeBeforeDisappear = useSelector(selectMessageLifeTime)
 
     const styles = {
         backgroundColor: backgroundColor ?? undefined,
-        height: isWidget ? '100vh' : ''
+        height: isWidget ? '100vh' : '',
+        gap: messageGap + 'px' ?? undefined,
     }
 
     useEffect(() => {

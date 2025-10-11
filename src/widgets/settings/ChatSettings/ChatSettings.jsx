@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectSpeechVolume, selectTwitchVoice } from '../../../features/tts-chat/model/slice'
 import { selectTwitchConnectionData, selectTwitchConnectionStatus, selectYoutubeAccessToken, selectYoutubeConnectionStatus, selectYoutubeVideoId } from '../../../entities/connection/model/slice'
 import { convertObjToStr } from '../../../shared/lib/convertObjToStr'
-import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageBorder, selectMessageLifeTime, selectMessageTextColor, setMessageBackground, setMessageBackgroundOpacity, setMessageBorder, setMessageLifeTime, setMessageTextColor } from '../../../entities/message/model/slice'
+import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageBorder, selectMessageGap, selectMessageLifeTime, selectMessageTextColor, setMessageBackground, setMessageBackgroundOpacity, setMessageBorder, setMessageGap, setMessageLifeTime, setMessageTextColor } from '../../../entities/message/model/slice'
 import { hexToRgbString, rgbStringToHex } from '../../../shared/lib/hexToRgbString'
 
 export const ChatSettings = () => {
@@ -13,7 +13,8 @@ export const ChatSettings = () => {
     const [copied, setCopied] = useState(false)
 
     const [lifetime, setLifetime] = useState(useSelector(selectMessageLifeTime))
-    const [messageBorderLocal, setMessageBorderLocal] = useState(true)
+    const [messageBorderLocal, setMessageBorderLocal] = useState(useSelector(selectMessageBorder))
+    const [messageGapLocal, setMessageGapLocal] = useState(useSelector(selectMessageGap))
 
     const dispatch = useDispatch()
 
@@ -62,7 +63,6 @@ export const ChatSettings = () => {
     }, queryParamList)
 
     useEffect(() => {
-        console.log('messageBorderLocal', messageBorderLocal)
         dispatch(setMessageBorder(messageBorderLocal))
     }, [messageBorderLocal])
 
@@ -88,6 +88,10 @@ export const ChatSettings = () => {
         dispatch(setMessageLifeTime(lifetime))
     }
 
+    const handleChangeGap = () => {
+        dispatch(setMessageGap(messageGapLocal))
+    }
+
     return (
         <div className={s.wrapper}>
             <DefaultTitle paddingTop={'0'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
@@ -106,45 +110,69 @@ export const ChatSettings = () => {
             <DefaultTitle paddingTop={'0'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
                 title={'Сообщения'} titleStyles={{ fontSize: '1rem' }} />
 
-            <div className={s.borderContainer}>
+            <div className={`${s.borderContainer} ${s.container}`}>
                 <DefaultTitle paddingTop={'0'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
                     title={'Обводка'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} />
                 <DefaultSwitch state={messageBorderLocal} onSwitch={setMessageBorderLocal} />
             </div>
 
-            <div className={s.colorContainer}>
+            <div className={`${s.colorContainer} ${s.container}`}>
                 <div className={s.colorPickBlock}>
-                    <DefaultTitle paddingTop={'8px'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
+                    <DefaultTitle paddingTop={'0'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
                         title={'Цвет фона'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
                     <input className={s.colorPicker} value={rgbStringToHex(currentMessageBackgroundColor)} type='color' onChange={handlePickBackgroundColor} />
                 </div>
                 <div className={s.colorPickBlock}>
-                    <DefaultTitle paddingTop={'8px'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
+                    <DefaultTitle paddingTop={'0'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
                         title={'Цвет текста'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
                     <input className={s.colorPicker} value={rgbStringToHex(currentMessageTextColor)} type='color' onChange={handlePickTextColor} />
                 </div>
             </div>
 
-            <DefaultTitle paddingTop={'8px'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
-                title={'Прозрачность фона'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
-            <DefaultSlider selector={selectMessageBackgroundOpacity} dispatcher={setMessageBackgroundOpacity} width='100%' height='32px' isCoefficient />
+            <div className={s.container}>
+                <DefaultTitle paddingTop={'0'} paddingBottom={'8px'} paddingLeft={'0'} paddingRight={'0'}
+                    title={'Прозрачность фона'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
+                <DefaultSlider selector={selectMessageBackgroundOpacity} dispatcher={setMessageBackgroundOpacity} width='100%' height='32px' isCoefficient />
+            </div>
 
-            <DefaultTitle paddingTop={'8px'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
-                title={'Исчезнут через'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
-            <div className={s.lifetimeContainer}>
-                <DefaultInput placeholder='Время в секундах' height={'32px'} value={lifetime / 1000} align={'center'} width={'48px'} onChange={(e) => {
-                    const value = e.target.value
-                    // Если поле пустое, устанавливаем 0
-                    if (value === '') {
-                        setLifetime(0)
-                        return
-                    }
-                    // Проверяем, что ввод - валидное число и не превышает 3 символа
-                    if (value.length <= 3 && !isNaN(value) && !isNaN(parseFloat(value)) && isFinite(value)) {
-                        setLifetime(parseFloat(value) * 1000)
-                    }
-                }} />
-                <DefaultButton height='32px' title={'Применить'} flex={1} onClick={handleChangeLifeTime} />
+            <div className={`${s.container}`}>
+                <DefaultTitle paddingTop={'0'} paddingBottom={'8px'} paddingLeft={'0'} paddingRight={'0'}
+                    title={'Исчезнут через (с)'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
+                <div className={s.lifetimeContainer}>
+                    <DefaultInput placeholder='Время в секундах' height={'32px'} value={lifetime / 1000} align={'center'} width={'72px'} onChange={(e) => {
+                        const value = e.target.value
+                        // Если поле пустое, устанавливаем 0
+                        if (value === '') {
+                            setLifetime(0)
+                            return
+                        }
+                        // Проверяем, что ввод - валидное число и не превышает 3 символа
+                        if (value.length <= 3 && !isNaN(value) && !isNaN(parseFloat(value)) && isFinite(value)) {
+                            setLifetime(parseFloat(value) * 1000)
+                        }
+                    }} />
+                    <DefaultButton height='32px' title={'Применить'} flex={1} onClick={handleChangeLifeTime} />
+                </div>
+            </div>
+
+            <div className={s.container}>
+                <DefaultTitle paddingTop={'0'} paddingBottom={'8px'} paddingLeft={'0'} paddingRight={'0'}
+                    title={'Расстояние между (px)'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
+                <div className={s.lifetimeContainer}>
+                    <DefaultInput placeholder='Расстояние в пикселях' height={'32px'} value={messageGapLocal} align={'center'} width={'72px'} onChange={(e) => {
+                        const value = e.target.value
+                        // Если поле пустое, устанавливаем 0
+                        if (value === '') {
+                            setMessageGapLocal(0)
+                            return
+                        }
+                        // Проверяем, что ввод - валидное число и не превышает 2 символа
+                        if (value.length <= 2 && !isNaN(value) && !isNaN(parseFloat(value)) && isFinite(value)) {
+                            setMessageGapLocal(parseFloat(value))
+                        }
+                    }} />
+                    <DefaultButton height='32px' title={'Применить'} flex={1} onClick={handleChangeGap} />
+                </div>
             </div>
         </div>
     )
