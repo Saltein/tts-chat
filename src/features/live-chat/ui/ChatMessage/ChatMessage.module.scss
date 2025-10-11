@@ -25,4 +25,9 @@
     padding: $spacing-xxs $spacing-xs;
     background-color: var(--color-surface);
     margin-right: $spacing-xxs;
+    box-shadow: $shadow-sm;
+}
+
+.message {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);;
 }
