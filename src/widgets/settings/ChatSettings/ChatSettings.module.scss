@@ -11,7 +11,7 @@
     height: 32px;
     border: none;
     background-color: transparent;
-    // border-radius: 16px;
+    cursor: pointer;
 }
 
 .colorPicker::-webkit-color-swatch {
@@ -22,6 +22,22 @@
 }
 
 .colorPicker::-webkit-color-swatch-wrapper {
-    padding: 0;
-    
+    padding: 0;   
+}
+
+.colorContainer {
+    display: flex;
+    gap: $spacing-sm;
+}
+
+.colorPickBlock {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xxs;
+    flex: 1;
+}
+
+.lifetimeContainer {
+    display: flex;
+    gap: $spacing-xs;
 }

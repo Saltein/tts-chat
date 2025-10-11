@@ -3,6 +3,10 @@ import { createSelector, createSlice } from '@reduxjs/toolkit'
 let initialState = {
     messageBackground: '',
     messageBackgroundOpacity: 1,
+
+    messageTextColor: '',
+
+    messageLifeTime: 30000
 }
 
 // Загружаем параметры из localStorage
@@ -16,6 +20,10 @@ if (saved) {
     initialState = {
         messageBackground: saved.messageBackground || '',
         messageBackgroundOpacity: saved.messageBackgroundOpacity || 1,
+
+        messageTextColor: saved.messageTextColor || '',
+
+        messageLifeTime: saved.messageLifeTime || 30000
     }
 }
 
@@ -34,9 +42,16 @@ const messageCustomizationSlice = createSlice({
             state.messageBackground = action.payload
             saveToLocalStorage(state)
         },
-
         setMessageBackgroundOpacity: (state, action) => {
             state.messageBackgroundOpacity = action.payload
+            saveToLocalStorage(state)
+        },
+        setMessageTextColor: (state, action) => {
+            state.messageTextColor = action.payload
+            saveToLocalStorage(state)
+        },
+        setMessageLifeTime: (state, action) => {
+            state.messageLifeTime = action.payload
             saveToLocalStorage(state)
         },
     }
@@ -45,6 +60,8 @@ const messageCustomizationSlice = createSlice({
 export const {
     setMessageBackground,
     setMessageBackgroundOpacity,
+    setMessageTextColor,
+    setMessageLifeTime,
 } = messageCustomizationSlice.actions
 
 export default messageCustomizationSlice.reducer
@@ -53,3 +70,5 @@ export default messageCustomizationSlice.reducer
 // Селекторы
 export const selectMessageBackground = (state) => state.messageCustomization.messageBackground
 export const selectMessageBackgroundOpacity = (state) => state.messageCustomization.messageBackgroundOpacity
+export const selectMessageTextColor = (state) => state.messageCustomization.messageTextColor
+export const selectMessageLifeTime = (state) => state.messageCustomization.messageLifeTime

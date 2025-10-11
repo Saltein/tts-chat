@@ -5,17 +5,20 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectSpeechVolume, selectTwitchVoice } from '../../../features/tts-chat/model/slice'
 import { selectTwitchConnectionData, selectTwitchConnectionStatus, selectYoutubeAccessToken, selectYoutubeConnectionStatus, selectYoutubeVideoId } from '../../../entities/connection/model/slice'
 import { convertObjToStr } from '../../../shared/lib/convertObjToStr'
-import { selectMessageBackground, selectMessageBackgroundOpacity, setMessageBackground, setMessageBackgroundOpacity } from '../../../entities/message/model/slice'
+import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageLifeTime, selectMessageTextColor, setMessageBackground, setMessageBackgroundOpacity, setMessageLifeTime, setMessageTextColor } from '../../../entities/message/model/slice'
 import { hexToRgbString, rgbStringToHex } from '../../../shared/lib/hexToRgbString'
 
 export const ChatSettings = () => {
     const [link, setLink] = useState('')
     const [copied, setCopied] = useState(false)
 
+    const [lifetime, setLifetime] = useState(useSelector(selectMessageLifeTime))
+
     const dispatch = useDispatch()
 
     const currentMessageBackgroundColor = useSelector(selectMessageBackground)
     const currentMessageBackgroundOpacity = useSelector(selectMessageBackgroundOpacity)
+    const currentMessageTextColor = useSelector(selectMessageTextColor)
 
     const currentTheme = localStorage.getItem('theme')
     const volume = useSelector(selectSpeechVolume) / 100
@@ -65,8 +68,16 @@ export const ChatSettings = () => {
         }
     }
 
-    const handlePickColor = (e) => {
+    const handlePickBackgroundColor = (e) => {
         dispatch(setMessageBackground(hexToRgbString(e.target.value)))
+    }
+
+    const handlePickTextColor = (e) => {
+        dispatch(setMessageTextColor(hexToRgbString(e.target.value)))
+    }
+
+    const handleChangeLifeTime = () => {
+        dispatch(setMessageLifeTime(lifetime))
     }
 
     return (
@@ -83,17 +94,43 @@ export const ChatSettings = () => {
 
             <DefaultDivider />
 
-
             <DefaultTitle paddingTop={'0'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
                 title={'Сообщения'} titleStyles={{ fontSize: '1rem' }} />
-            <DefaultTitle paddingTop={'8px'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
-                title={'Цвет фона'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} />
-            <input className={s.colorPicker} value={rgbStringToHex(currentMessageBackgroundColor)} type='color' onChange={handlePickColor} />
+            <div className={s.colorContainer}>
+                <div className={s.colorPickBlock}>
+                    <DefaultTitle paddingTop={'8px'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
+                        title={'Цвет фона'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
+                    <input className={s.colorPicker} value={rgbStringToHex(currentMessageBackgroundColor)} type='color' onChange={handlePickBackgroundColor} />
+                </div>
+                <div className={s.colorPickBlock}>
+                    <DefaultTitle paddingTop={'8px'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
+                        title={'Цвет текста'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
+                    <input className={s.colorPicker} value={rgbStringToHex(currentMessageTextColor)} type='color' onChange={handlePickTextColor} />
+                </div>
+            </div>
 
 
             <DefaultTitle paddingTop={'8px'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
-                title={'Прозрачность фона'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} />
+                title={'Прозрачность фона'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
             <DefaultSlider selector={selectMessageBackgroundOpacity} dispatcher={setMessageBackgroundOpacity} width='100%' height='32px' isCoefficient />
+
+            <DefaultTitle paddingTop={'8px'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
+                title={'Исчезнет через'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
+            <div className={s.lifetimeContainer}>
+                <DefaultInput placeholder='Время в секундах' height={'32px'} value={lifetime / 1000} align={'center'} width={'48px'} onChange={(e) => {
+                    const value = e.target.value
+                    // Если поле пустое, устанавливаем 0
+                    if (value === '') {
+                        setLifetime(0)
+                        return
+                    }
+                    // Проверяем, что ввод - валидное число и не превышает 3 символа
+                    if (value.length <= 3 && !isNaN(value) && !isNaN(parseFloat(value)) && isFinite(value)) {
+                        setLifetime(parseFloat(value) * 1000)
+                    }
+                }} />
+                <DefaultButton height='32px' title={'Применить'} flex={1} onClick={handleChangeLifeTime} />
+            </div>
         </div>
     )
 }

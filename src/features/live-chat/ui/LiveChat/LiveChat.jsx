@@ -3,12 +3,13 @@ import { useSelector } from 'react-redux'
 import s from './LiveChat.module.scss'
 import { selectLast50Messages } from '../../../../entities/connection/model/slice'
 import { ChatMessage } from '../ChatMessage/ChatMessage'
+import { selectMessageLifeTime } from '../../../../entities/message/model/slice'
 
 export const LiveChat = ({ backgroundColor, isWidget }) => {
     const messages = useSelector(selectLast50Messages)
     const chatEndRef = useRef(null)
 
-    const timeBeforeDisappear = 30000
+    const timeBeforeDisappear = useSelector(selectMessageLifeTime)
 
     const styles = {
         backgroundColor: backgroundColor ?? undefined,

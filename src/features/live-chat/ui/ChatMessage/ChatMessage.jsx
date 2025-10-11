@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
 import s from './ChatMessage.module.scss'
-import { useSelector } from 'react-redux'
-import { selectMessageBackground, selectMessageBackgroundOpacity } from '../../../../entities/message/model/slice'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageTextColor, setMessageBackground, setMessageTextColor } from '../../../../entities/message/model/slice'
 import { useTheme } from '../../../../shared/context/theme/ThemeContext'
+import { hexToRgbString, rgbStringToHex } from '../../../../shared/lib/hexToRgbString'
 
 export const ChatMessage = ({ message, timeBeforeDisappear }) => {
     const [visible, setVisible] = useState(true)
     const [isFading, setIsFading] = useState(false)
+
+    const dispatch = useDispatch()
 
     const theme = useTheme().theme
 
@@ -14,18 +17,35 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
         color: message.tags["color"]
     }
 
+    let messageTextColor = useSelector(selectMessageTextColor)
+    if (messageTextColor === '') {
+        if (theme === 'dark') {
+            messageTextColor = hexToRgbString('#f3f4f6')
+            dispatch(setMessageTextColor(messageTextColor))
+        } else {
+            messageTextColor = hexToRgbString('#111827')
+            dispatch(setMessageTextColor(messageTextColor))
+        }
+    }
+
     let messageBackground = useSelector(selectMessageBackground) // строка вида "255, 0, 0"
     if (messageBackground === '') {
         if (theme === 'dark') {
             messageBackground = '42, 42, 42'
+            dispatch(setMessageBackground(messageBackground))
         } else {
             messageBackground = '252, 252, 252'
+            dispatch(setMessageBackground(messageBackground))
         }
     }
     const messageBackgroundOpacity = useSelector(selectMessageBackgroundOpacity) // число от 0 до 1
 
     const wrapperStyles = {
         backgroundColor: `rgba(${messageBackground}, ${messageBackgroundOpacity})`
+    }
+
+    const textStyles = {
+        color: rgbStringToHex(messageTextColor)
     }
 
     useEffect(() => {
@@ -47,7 +67,7 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
             <span className={s.name} style={nameStyles}>
                 {message.tags["display-name"]}
             </span>
-            <span className={s.message}>
+            <span className={s.message} style={textStyles}>
                 {message.message}
             </span>
         </div>

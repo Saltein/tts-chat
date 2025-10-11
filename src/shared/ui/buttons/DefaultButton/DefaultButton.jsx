@@ -16,7 +16,7 @@ export const DefaultButton = ({
         width: width ?? undefined,
         backgroundColor: active ? color : undefined,
         borderRadius: borderRadius ?? undefined,
-        flex: flex ?? undefined
+        flex,
     }
 
     return (
