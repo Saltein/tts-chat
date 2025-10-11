@@ -22,7 +22,8 @@
     "reselect": "^5.1.1",
     "tmi.js": "^1.8.5",
     "vklive-message-client": "^5.3.2",
-    "web-vitals": "^2.1.0"
+    "web-vitals": "^2.1.0",
+    "yarn": "^1.22.22"
   },
   "scripts": {
     "start": "react-scripts start",
