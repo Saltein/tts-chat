@@ -1,37 +1,34 @@
-import { createSelector, createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
 let initialState = {
     messageBackground: '',
     messageBackgroundOpacity: 1,
-    messageBorder: true,
+    messageBorder: true, // 👈 булево, а не строка
     messageTextColor: '',
-
     messageLifeTime: 30000
 }
 
 // Загружаем параметры из localStorage
-let saved
 try {
-    saved = JSON.parse(localStorage.getItem('chatCustomization'))
-} catch {
-    saved = null
-}
-if (saved) {
-    initialState = {
-        messageBackground: saved.messageBackground || '',
-        messageBackgroundOpacity: saved.messageBackgroundOpacity || 1,
-        messageBorder: saved.messageBorder || true,
-        messageTextColor: saved.messageTextColor || '',
-
-        messageLifeTime: saved.messageLifeTime || 30000
+    const saved = JSON.parse(localStorage.getItem('chatCustomization'))
+    if (saved) {
+        initialState = {
+            messageBackground: saved.messageBackground ?? '',
+            messageBackgroundOpacity: saved.messageBackgroundOpacity ?? 1,
+            messageBorder: typeof saved.messageBorder === 'boolean'
+                ? saved.messageBorder
+                : saved.messageBorder === 'true', // 👈 если вдруг сохранилась строка
+            messageTextColor: saved.messageTextColor ?? '',
+            messageLifeTime: saved.messageLifeTime ?? 30000,
+        }
     }
+} catch {
+    // просто игнорируем ошибку
 }
 
 // Сохраняем localStorage
 const saveToLocalStorage = (state) => {
-    localStorage.setItem('chatCustomization', JSON.stringify({
-        ...state
-    }))
+    localStorage.setItem('chatCustomization', JSON.stringify(state))
 }
 
 const messageCustomizationSlice = createSlice({
@@ -47,7 +44,7 @@ const messageCustomizationSlice = createSlice({
             saveToLocalStorage(state)
         },
         setMessageBorder: (state, action) => {
-            state.messageBorder = action.payload
+            state.messageBorder = !!action.payload // 👈 гарантированно boolean
             saveToLocalStorage(state)
         },
         setMessageTextColor: (state, action) => {
@@ -70,7 +67,6 @@ export const {
 } = messageCustomizationSlice.actions
 
 export default messageCustomizationSlice.reducer
-
 
 // Селекторы
 export const selectMessageBackground = (state) => state.messageCustomization.messageBackground

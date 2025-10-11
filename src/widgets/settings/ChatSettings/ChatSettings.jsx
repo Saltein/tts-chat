@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectSpeechVolume, selectTwitchVoice } from '../../../features/tts-chat/model/slice'
 import { selectTwitchConnectionData, selectTwitchConnectionStatus, selectYoutubeAccessToken, selectYoutubeConnectionStatus, selectYoutubeVideoId } from '../../../entities/connection/model/slice'
 import { convertObjToStr } from '../../../shared/lib/convertObjToStr'
-import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageLifeTime, selectMessageTextColor, setMessageBackground, setMessageBackgroundOpacity, setMessageBorder, setMessageLifeTime, setMessageTextColor } from '../../../entities/message/model/slice'
+import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageBorder, selectMessageLifeTime, selectMessageTextColor, setMessageBackground, setMessageBackgroundOpacity, setMessageBorder, setMessageLifeTime, setMessageTextColor } from '../../../entities/message/model/slice'
 import { hexToRgbString, rgbStringToHex } from '../../../shared/lib/hexToRgbString'
 
 export const ChatSettings = () => {
@@ -41,6 +41,7 @@ export const ChatSettings = () => {
         'messageBackgroundOpacity': currentMessageBackgroundOpacity,
         'messageTextColor': currentMessageTextColor,
         'messageLifeTime': lifetime,
+        'messageBorder': String(messageBorderLocal),
     }
     const twitchQueryParamObj = {
         'twitchChatChannelName': twitchChatChannelName,
@@ -57,11 +58,11 @@ export const ChatSettings = () => {
     const queryParamList = [generalQueryParamObj, chatCustomizationQueryParamObj, twitchQueryParamObj, youtubeQueryParamObj]
 
     useEffect(() => {
-        // console.error('youtubeVideoId, youtubeAccessToken, youtubeConnectionStatus', { youtubeVideoId, youtubeAccessToken, youtubeConnectionStatus })
         setLink(`${baseUrl}/widget/chat?${convertObjToStr(queryParamList)}`)
     }, queryParamList)
 
     useEffect(() => {
+        console.log('messageBorderLocal', messageBorderLocal)
         dispatch(setMessageBorder(messageBorderLocal))
     }, [messageBorderLocal])
 
