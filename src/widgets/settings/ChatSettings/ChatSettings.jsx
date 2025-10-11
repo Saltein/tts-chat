@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import { DefaultButton, DefaultDivider, DefaultInput, DefaultSlider, DefaultTitle } from '../../../shared/ui'
+import { DefaultButton, DefaultDivider, DefaultInput, DefaultSlider, DefaultSwitch, DefaultTitle } from '../../../shared/ui'
 import s from './ChatSettings.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectSpeechVolume, selectTwitchVoice } from '../../../features/tts-chat/model/slice'
 import { selectTwitchConnectionData, selectTwitchConnectionStatus, selectYoutubeAccessToken, selectYoutubeConnectionStatus, selectYoutubeVideoId } from '../../../entities/connection/model/slice'
 import { convertObjToStr } from '../../../shared/lib/convertObjToStr'
-import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageLifeTime, selectMessageTextColor, setMessageBackground, setMessageBackgroundOpacity, setMessageLifeTime, setMessageTextColor } from '../../../entities/message/model/slice'
+import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageLifeTime, selectMessageTextColor, setMessageBackground, setMessageBackgroundOpacity, setMessageBorder, setMessageLifeTime, setMessageTextColor } from '../../../entities/message/model/slice'
 import { hexToRgbString, rgbStringToHex } from '../../../shared/lib/hexToRgbString'
 
 export const ChatSettings = () => {
@@ -13,6 +13,7 @@ export const ChatSettings = () => {
     const [copied, setCopied] = useState(false)
 
     const [lifetime, setLifetime] = useState(useSelector(selectMessageLifeTime))
+    const [messageBorderLocal, setMessageBorderLocal] = useState(true)
 
     const dispatch = useDispatch()
 
@@ -38,6 +39,8 @@ export const ChatSettings = () => {
     const chatCustomizationQueryParamObj = {
         'messageBackgroundColor': currentMessageBackgroundColor,
         'messageBackgroundOpacity': currentMessageBackgroundOpacity,
+        'messageTextColor': currentMessageTextColor,
+        'messageLifeTime': lifetime,
     }
     const twitchQueryParamObj = {
         'twitchChatChannelName': twitchChatChannelName,
@@ -57,6 +60,10 @@ export const ChatSettings = () => {
         // console.error('youtubeVideoId, youtubeAccessToken, youtubeConnectionStatus', { youtubeVideoId, youtubeAccessToken, youtubeConnectionStatus })
         setLink(`${baseUrl}/widget/chat?${convertObjToStr(queryParamList)}`)
     }, queryParamList)
+
+    useEffect(() => {
+        dispatch(setMessageBorder(messageBorderLocal))
+    }, [messageBorderLocal])
 
     const handleCopy = async () => {
         try {
@@ -86,16 +93,24 @@ export const ChatSettings = () => {
                 title={'URL виджета'} titleStyles={{ fontSize: '1rem' }} />
             <DefaultInput
                 width={'100%'}
-                info={'Скопируйте и вставьте эту ссылку в браузерный плагин стримингового ПО или запустите её через браузер.'}
+                info={'Добавь источник "Браузер" в OBS и вставь туда эту ссылку.'}
                 value={link}
+                height={'32px'}
             />
-            <DefaultButton title={copied ? 'Скопировано' : 'Скопировать ссылку'} onClick={handleCopy} active={copied ? false : true} />
+            <DefaultButton title={copied ? 'Скопировано' : 'Скопировать ссылку'} onClick={handleCopy} active={copied ? false : true} height='32px' />
 
 
             <DefaultDivider />
 
             <DefaultTitle paddingTop={'0'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
                 title={'Сообщения'} titleStyles={{ fontSize: '1rem' }} />
+
+            <div className={s.borderContainer}>
+                <DefaultTitle paddingTop={'0'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
+                    title={'Обводка'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} />
+                <DefaultSwitch state={messageBorderLocal} onSwitch={setMessageBorderLocal} />
+            </div>
+
             <div className={s.colorContainer}>
                 <div className={s.colorPickBlock}>
                     <DefaultTitle paddingTop={'8px'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
@@ -109,13 +124,12 @@ export const ChatSettings = () => {
                 </div>
             </div>
 
-
             <DefaultTitle paddingTop={'8px'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
                 title={'Прозрачность фона'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
             <DefaultSlider selector={selectMessageBackgroundOpacity} dispatcher={setMessageBackgroundOpacity} width='100%' height='32px' isCoefficient />
 
             <DefaultTitle paddingTop={'8px'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
-                title={'Исчезнет через'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
+                title={'Исчезнут через'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
             <div className={s.lifetimeContainer}>
                 <DefaultInput placeholder='Время в секундах' height={'32px'} value={lifetime / 1000} align={'center'} width={'48px'} onChange={(e) => {
                     const value = e.target.value

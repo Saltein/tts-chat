@@ -3,7 +3,7 @@ import { createSelector, createSlice } from '@reduxjs/toolkit'
 let initialState = {
     messageBackground: '',
     messageBackgroundOpacity: 1,
-
+    messageBorder: true,
     messageTextColor: '',
 
     messageLifeTime: 30000
@@ -20,7 +20,7 @@ if (saved) {
     initialState = {
         messageBackground: saved.messageBackground || '',
         messageBackgroundOpacity: saved.messageBackgroundOpacity || 1,
-
+        messageBorder: saved.messageBorder || true,
         messageTextColor: saved.messageTextColor || '',
 
         messageLifeTime: saved.messageLifeTime || 30000
@@ -46,6 +46,10 @@ const messageCustomizationSlice = createSlice({
             state.messageBackgroundOpacity = action.payload
             saveToLocalStorage(state)
         },
+        setMessageBorder: (state, action) => {
+            state.messageBorder = action.payload
+            saveToLocalStorage(state)
+        },
         setMessageTextColor: (state, action) => {
             state.messageTextColor = action.payload
             saveToLocalStorage(state)
@@ -60,6 +64,7 @@ const messageCustomizationSlice = createSlice({
 export const {
     setMessageBackground,
     setMessageBackgroundOpacity,
+    setMessageBorder,
     setMessageTextColor,
     setMessageLifeTime,
 } = messageCustomizationSlice.actions
@@ -70,5 +75,6 @@ export default messageCustomizationSlice.reducer
 // Селекторы
 export const selectMessageBackground = (state) => state.messageCustomization.messageBackground
 export const selectMessageBackgroundOpacity = (state) => state.messageCustomization.messageBackgroundOpacity
+export const selectMessageBorder = (state) => state.messageCustomization.messageBorder
 export const selectMessageTextColor = (state) => state.messageCustomization.messageTextColor
 export const selectMessageLifeTime = (state) => state.messageCustomization.messageLifeTime

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import s from './ChatMessage.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageTextColor, setMessageBackground, setMessageTextColor } from '../../../../entities/message/model/slice'
+import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageBorder, selectMessageTextColor, setMessageBackground, setMessageTextColor } from '../../../../entities/message/model/slice'
 import { useTheme } from '../../../../shared/context/theme/ThemeContext'
 import { hexToRgbString, rgbStringToHex } from '../../../../shared/lib/hexToRgbString'
 
@@ -16,6 +16,8 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
     const nameStyles = {
         color: message.tags["color"]
     }
+
+    const messageBorder = useSelector(selectMessageBorder)
 
     let messageTextColor = useSelector(selectMessageTextColor)
     if (messageTextColor === '') {
@@ -41,7 +43,8 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
     const messageBackgroundOpacity = useSelector(selectMessageBackgroundOpacity) // число от 0 до 1
 
     const wrapperStyles = {
-        backgroundColor: `rgba(${messageBackground}, ${messageBackgroundOpacity})`
+        backgroundColor: `rgba(${messageBackground}, ${messageBackgroundOpacity})`,
+        border: messageBorder ? undefined : 'none'
     }
 
     const textStyles = {
