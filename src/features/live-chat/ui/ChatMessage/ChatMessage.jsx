@@ -5,6 +5,11 @@ import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageB
 import { useTheme } from '../../../../shared/context/theme/ThemeContext'
 import { hexToRgbString, rgbStringToHex } from '../../../../shared/lib/hexToRgbString'
 
+import { ReactComponent as TwitchIcon } from '../../../../shared/assets/icons/twitch-logo.svg'
+import { ReactComponent as YoutubeIcon } from '../../../../shared/assets/icons/youtube-logo.svg'
+import { ReactComponent as VkVideoIcon } from '../../../../shared/assets/icons/vk-video-logo.svg'
+import { ReactComponent as TTSChatIcon } from '../../../../shared/assets/icons/ttschat-logo.svg'
+
 export const ChatMessage = ({ message, timeBeforeDisappear }) => {
     const [visible, setVisible] = useState(true)
     const [isFading, setIsFading] = useState(false)
@@ -65,9 +70,21 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
 
     if (!visible) return null
 
+    let Icon
+    if (message?.service === 'twitch') {
+        Icon = TwitchIcon
+    } else if (message?.service === 'youtube') {
+        Icon = YoutubeIcon
+    } else if (message?.service === 'vk') {
+        Icon = VkVideoIcon
+    } else if (message?.service === 'ttschat') {
+        Icon = TTSChatIcon
+    }
+
     return (
         <div className={`${s.wrapper} ${isFading ? s.fadeOut : ''}`} style={wrapperStyles}>
             <span className={s.name} style={nameStyles}>
+                <Icon className={s.icon} color={"var(--color-text)"} />
                 {message.tags["display-name"]}
             </span>
             <span className={s.message} style={textStyles}>

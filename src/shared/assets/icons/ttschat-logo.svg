@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- Фон -->
+  <rect x="0" y="0" width="512" height="512" rx="96" ry="96" fill="currentColor" />
+
+  <!-- Текст -->
+  <text x="50%" y="55%" text-anchor="middle" dominant-baseline="middle"
+        font-family="Rubik, sans-serif"
+        font-weight="800"
+        font-size="250"
+        letter-spacing="-6"
+        fill="#777777">
+    tts
+  </text>
+</svg>

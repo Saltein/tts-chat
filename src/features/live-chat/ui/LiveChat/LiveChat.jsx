@@ -32,13 +32,17 @@ export const LiveChat = ({ backgroundColor, isWidget }) => {
                         'display-name': 'TTS Chat',
                         'color': 'var(--color-accent)'
                     },
-                    time: Date.now()
+                    time: Date.now(),
+                    service: 'ttschat',
                 }}
                 timeBeforeDisappear={timeBeforeDisappear}
             />
-            {messages.map((item, index) => (
-                <ChatMessage key={item.id || index} message={item} timeBeforeDisappear={timeBeforeDisappear} />
-            ))}
+            {messages.map((item, index) => {
+                console.warn('message', item.service)   
+                return (
+                    <ChatMessage key={item.id || index} message={item} timeBeforeDisappear={timeBeforeDisappear} />
+                )
+            })}
             <div ref={chatEndRef} className={s.anchor} />
         </div>
     )

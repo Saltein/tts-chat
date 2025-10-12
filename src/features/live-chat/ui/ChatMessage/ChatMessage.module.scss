@@ -31,3 +31,12 @@
 .message {
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);;
 }
+
+.icon {
+    position: relative;
+    top: 2.5px;
+    right: 2.5px;
+    height: 16px;
+    width: 16px;
+    margin-right: $spacing-xxs;
+}
