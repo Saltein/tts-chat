@@ -9,6 +9,7 @@ import { ReactComponent as TwitchIcon } from '../../../../shared/assets/icons/tw
 import { ReactComponent as YoutubeIcon } from '../../../../shared/assets/icons/youtube-logo.svg'
 import { ReactComponent as VkVideoIcon } from '../../../../shared/assets/icons/vk-video-logo.svg'
 import { ReactComponent as TTSChatIcon } from '../../../../shared/assets/icons/ttschat-logo.svg'
+import { generateColorFromUsername } from '../../../../shared/lib/generateColorFromUserneme'
 
 export const ChatMessage = ({ message, timeBeforeDisappear }) => {
     const [visible, setVisible] = useState(true)
@@ -19,7 +20,7 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
     const theme = useTheme().theme
 
     const nameStyles = {
-        color: message.tags["color"]
+        color: message.tags["color"] !== '#FFFFFF' ? message.tags["color"] : generateColorFromUsername(message?.tags['display-name'])
     }
 
     const messageBorder = useSelector(selectMessageBorder)

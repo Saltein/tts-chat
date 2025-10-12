@@ -26,6 +26,7 @@
     background-color: var(--color-surface);
     margin-right: $spacing-xxs;
     box-shadow: $shadow-sm;
+    white-space: nowrap;
 }
 
 .message {

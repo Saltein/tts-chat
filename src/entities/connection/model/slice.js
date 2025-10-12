@@ -81,6 +81,9 @@ const connectionSlice = createSlice({
         setNewTwitchMessage: (state, action) => {
             const message = { ...action.payload, time: Date.now(), service: 'twitch' }
             state.messages.push(message)
+            if (state.messages.length > 500) {
+                state.messages = state.messages.slice(-500) // держим максимум 500 сообщений
+            }
         },
 
         // YouTube
@@ -98,6 +101,9 @@ const connectionSlice = createSlice({
         setNewYoutubeMessage: (state, action) => {
             const message = { ...action.payload, time: Date.now(), service: 'youtube' }
             state.messages.push(message)
+            if (state.messages.length > 500) {
+                state.messages = state.messages.slice(-500)
+            }
         },
 
         // VK
@@ -115,6 +121,9 @@ const connectionSlice = createSlice({
         setNewVkMessage: (state, action) => {
             const message = { ...action.payload, time: Date.now(), service: 'vk' }
             state.messages.push(message)
+            if (state.messages.length > 500) {
+                state.messages = state.messages.slice(-500)
+            }
         },
 
         resetConnection: () => initialState

@@ -38,9 +38,8 @@ export const LiveChat = ({ backgroundColor, isWidget }) => {
                 timeBeforeDisappear={timeBeforeDisappear}
             />
             {messages.map((item, index) => {
-                console.warn('message', item.service)   
                 return (
-                    <ChatMessage key={item.id || index} message={item} timeBeforeDisappear={timeBeforeDisappear} />
+                    <ChatMessage key={item.time + item.message} message={item} timeBeforeDisappear={timeBeforeDisappear} />
                 )
             })}
             <div ref={chatEndRef} className={s.anchor} />
