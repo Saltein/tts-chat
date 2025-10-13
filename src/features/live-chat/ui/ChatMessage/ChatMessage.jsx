@@ -9,7 +9,9 @@ import { ReactComponent as TwitchIcon } from '../../../../shared/assets/icons/tw
 import { ReactComponent as YoutubeIcon } from '../../../../shared/assets/icons/youtube-logo.svg'
 import { ReactComponent as VkVideoIcon } from '../../../../shared/assets/icons/vk-video-logo.svg'
 import { ReactComponent as TTSChatIcon } from '../../../../shared/assets/icons/ttschat-logo.svg'
-import { generateColorFromUsername } from '../../../../shared/lib/generateColorFromUserneme'
+import { ReactComponent as WrenchIcon } from '../../../../shared/assets/icons/wrench.svg'
+
+import { generateColorFromUsername } from '../../../../shared/lib/generateColorFromUsername'
 
 export const ChatMessage = ({ message, timeBeforeDisappear }) => {
     const [visible, setVisible] = useState(true)
@@ -19,8 +21,21 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
 
     const theme = useTheme().theme
 
+    const isModerator = message.tags?.badges?.moderator || message.tags?.['is-moderator'] || null
+
+    let nameColor
+    if (isModerator === '1' || isModerator === true) {
+        nameColor = 'var(--color-moderator)'
+    }
+    else if (message.tags["color"] !== '#FFFFFF') {
+        nameColor = message.tags["color"]
+    } else {
+        nameColor = generateColorFromUsername(message?.tags['display-name'])
+    }
+
     const nameStyles = {
-        color: message.tags["color"] !== '#FFFFFF' ? message.tags["color"] : generateColorFromUsername(message?.tags['display-name'])
+        color: nameColor,
+        borderColor: isModerator === '1' || isModerator === true ? 'var(--color-moderator)' : undefined
     }
 
     const messageBorder = useSelector(selectMessageBorder)
@@ -88,6 +103,7 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
             <span className={s.name} style={nameStyles}>
                 {serviceIcon && <Icon className={s.icon} color={"var(--color-text)"} />}
                 {message.tags["display-name"]}
+                {isModerator === '1' || isModerator === true && <WrenchIcon className={s.wrenchIcon} fill="var(--color-moderator)" />}
             </span>
             <span className={s.message} style={textStyles}>
                 {message.message}

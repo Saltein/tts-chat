@@ -30,7 +30,8 @@
 }
 
 .message {
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+    ;
 }
 
 .icon {
@@ -40,4 +41,12 @@
     height: 16px;
     width: 16px;
     margin-right: $spacing-xxs;
+}
+
+.wrenchIcon {
+    position: relative;
+    top: 1.5px;
+    height: 14px;
+    width: 14px;
+    margin-left: $spacing-xxs;
 }
