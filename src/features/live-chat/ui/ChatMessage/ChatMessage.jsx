@@ -18,24 +18,31 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
     const [isFading, setIsFading] = useState(false)
 
     const dispatch = useDispatch()
-
     const theme = useTheme().theme
 
     const isModerator = message.tags?.badges?.moderator || message.tags?.['is-moderator'] || null
+    const isSponsor = message.tags?.badges?.subscriber || message.tags?.['is-sponsor'] || null
 
     let nameColor
-    if (isModerator === '1' || isModerator === true) {
-        nameColor = 'var(--color-moderator)'
-    }
-    else if (message.tags["color"] !== '#FFFFFF') {
+    let borderColor
+    if (message.tags["color"] !== '#FFFFFF') {
         nameColor = message.tags["color"]
     } else {
         nameColor = generateColorFromUsername(message?.tags['display-name'])
     }
+    if (isSponsor) {
+        borderColor = 'var(--color-sponsor)'
+        if (message.service === 'youtube') nameColor = 'var(--color-sponsor)'
+    }
+    if (isModerator === '1' || isModerator === true) {
+        nameColor = 'var(--color-moderator)'
+        borderColor = 'var(--color-moderator)'
+    }
+
 
     const nameStyles = {
         color: nameColor,
-        borderColor: isModerator === '1' || isModerator === true ? 'var(--color-moderator)' : undefined
+        borderColor: isModerator || isSponsor ? borderColor : undefined
     }
 
     const messageBorder = useSelector(selectMessageBorder)
@@ -103,7 +110,7 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
             <span className={s.name} style={nameStyles}>
                 {serviceIcon && <Icon className={s.icon} color={"var(--color-text)"} />}
                 {message.tags["display-name"]}
-                {isModerator === '1' || isModerator === true && <WrenchIcon className={s.wrenchIcon} fill="var(--color-moderator)" />}
+                {isModerator && <WrenchIcon className={s.wrenchIcon} fill="var(--color-moderator)" />}
             </span>
             <span className={s.message} style={textStyles}>
                 {message.message}
