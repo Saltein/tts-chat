@@ -44,6 +44,7 @@ export const ChatSettings = () => {
         'messageTextColor': currentMessageTextColor,
         'messageLifeTime': lifetime,
         'messageBorder': String(messageBorderLocal),
+        'serviceIcon': String(serviceIconLocal),
     }
     const twitchQueryParamObj = {
         'twitchChatChannelName': twitchChatChannelName,

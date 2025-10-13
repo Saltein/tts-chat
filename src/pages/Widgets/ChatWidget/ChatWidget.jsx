@@ -8,7 +8,7 @@ import { setNewTwitchMessage, setNewYoutubeMessage } from '../../../entities/con
 import { TTSChat } from '../../../features/tts-chat/TTSChat/TTSChat'
 import { useTheme } from '../../../shared/context/theme/ThemeContext'
 import { connectYouTubeClient } from '../../../features/live-chat/lib/youtube/youtubeClientSingleton'
-import { setMessageBackground, setMessageBackgroundOpacity, setMessageBorder, setMessageLifeTime, setMessageTextColor } from '../../../entities/message/model/slice'
+import { setMessageBackground, setMessageBackgroundOpacity, setMessageBorder, setMessageLifeTime, setMessageTextColor, setServiceIcon } from '../../../entities/message/model/slice'
 
 export const ChatWidget = () => {
     const twitchBotName = process.env.REACT_APP_TWITCH_BOT_NAME
@@ -27,6 +27,7 @@ export const ChatWidget = () => {
     const messageTextColor = searchParams.get('messageTextColor')
     const messageLifeTime = searchParams.get('messageLifeTime')
     const messageBorder = searchParams.get('messageBorder') === 'false' ? false : true
+    const serviceIcon = searchParams.get('serviceIcon') === 'false' ? false : true
 
     const twitchChatChannelName = searchParams.get('twitchChatChannelName') || ''
     const twitchConnectionStatus = searchParams.get('twitchConnectionStatus') === 'true'
@@ -44,6 +45,7 @@ export const ChatWidget = () => {
     dispatch(setMessageTextColor(messageTextColor))
     dispatch(setMessageLifeTime(messageLifeTime))
     dispatch(setMessageBorder(messageBorder))
+    dispatch(setServiceIcon(serviceIcon))
 
     const handleTwitchConnect = () => {
         if (!twitchConnectionStatus || twitchClientRef.current) return
