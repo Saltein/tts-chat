@@ -7,6 +7,7 @@ let initialState = {
     messageTextColor: '',
     messageLifeTime: 30000,
     messageGap: '8',
+    serviceIcon: true,
 }
 
 // Загружаем параметры из localStorage
@@ -19,7 +20,8 @@ try {
             messageBorder: saved.messageBorder ?? true,
             messageTextColor: saved.messageTextColor ?? '',
             messageLifeTime: saved.messageLifeTime ?? 30000,
-            messageGap: saved.messageGap ?? '8'
+            messageGap: saved.messageGap ?? '8',
+            serviceIcon: saved.serviceIcon ?? true,
         }
     }
 } catch {
@@ -58,6 +60,10 @@ const messageCustomizationSlice = createSlice({
         setMessageGap: (state, action) => {
             state.messageGap = action.payload
             saveToLocalStorage(state)
+        },
+        setServiceIcon: (state, action) => {
+            state.serviceIcon = action.payload
+            saveToLocalStorage(state)
         }
     }
 })
@@ -69,6 +75,7 @@ export const {
     setMessageTextColor,
     setMessageLifeTime,
     setMessageGap,
+    setServiceIcon,
 } = messageCustomizationSlice.actions
 
 export default messageCustomizationSlice.reducer
@@ -80,3 +87,4 @@ export const selectMessageBorder = (state) => state.messageCustomization.message
 export const selectMessageTextColor = (state) => state.messageCustomization.messageTextColor
 export const selectMessageLifeTime = (state) => state.messageCustomization.messageLifeTime
 export const selectMessageGap = (state) => state.messageCustomization.messageGap
+export const selectServiceIcon = (state) => state.messageCustomization.serviceIcon

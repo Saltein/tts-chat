@@ -31,7 +31,7 @@
     padding: $spacing-xs;
 }
 
-.borderContainer {
+.borderContainer, .serviceIconContainer {
     display: flex;
     align-items: center;
     justify-content: space-between;

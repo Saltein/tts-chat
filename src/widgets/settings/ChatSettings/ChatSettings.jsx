@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectSpeechVolume, selectTwitchVoice } from '../../../features/tts-chat/model/slice'
 import { selectTwitchConnectionData, selectTwitchConnectionStatus, selectYoutubeAccessToken, selectYoutubeConnectionStatus, selectYoutubeVideoId } from '../../../entities/connection/model/slice'
 import { convertObjToStr } from '../../../shared/lib/convertObjToStr'
-import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageBorder, selectMessageGap, selectMessageLifeTime, selectMessageTextColor, setMessageBackground, setMessageBackgroundOpacity, setMessageBorder, setMessageGap, setMessageLifeTime, setMessageTextColor } from '../../../entities/message/model/slice'
+import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageBorder, selectMessageGap, selectMessageLifeTime, selectMessageTextColor, selectServiceIcon, setMessageBackground, setMessageBackgroundOpacity, setMessageBorder, setMessageGap, setMessageLifeTime, setMessageTextColor, setServiceIcon } from '../../../entities/message/model/slice'
 import { hexToRgbString, rgbStringToHex } from '../../../shared/lib/hexToRgbString'
 
 export const ChatSettings = () => {
@@ -14,6 +14,7 @@ export const ChatSettings = () => {
 
     const [lifetime, setLifetime] = useState(useSelector(selectMessageLifeTime))
     const [messageBorderLocal, setMessageBorderLocal] = useState(useSelector(selectMessageBorder))
+    const [serviceIconLocal, setServiceIconLocal] = useState(useSelector(selectServiceIcon))
     const [messageGapLocal, setMessageGapLocal] = useState(useSelector(selectMessageGap))
 
     const dispatch = useDispatch()
@@ -66,6 +67,10 @@ export const ChatSettings = () => {
         dispatch(setMessageBorder(messageBorderLocal))
     }, [messageBorderLocal])
 
+    useEffect(() => {
+        dispatch(setServiceIcon(serviceIconLocal))
+    }, [serviceIconLocal])
+
     const handleCopy = async () => {
         try {
             await navigator.clipboard.writeText(link)
@@ -107,6 +112,7 @@ export const ChatSettings = () => {
 
             <DefaultDivider />
 
+
             <DefaultTitle paddingTop={'0'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
                 title={'Сообщения'} titleStyles={{ fontSize: '1rem' }} />
 
@@ -114,6 +120,12 @@ export const ChatSettings = () => {
                 <DefaultTitle paddingTop={'0'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
                     title={'Обводка'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} />
                 <DefaultSwitch state={messageBorderLocal} onSwitch={setMessageBorderLocal} />
+            </div>
+
+            <div className={`${s.serviceIconContainer} ${s.container}`}>
+                <DefaultTitle paddingTop={'0'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
+                    title={'Значок сервиса'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} />
+                <DefaultSwitch state={serviceIconLocal} onSwitch={setServiceIconLocal} />
             </div>
 
             <div className={`${s.colorContainer} ${s.container}`}>

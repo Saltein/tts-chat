@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import s from './ChatMessage.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageBorder, selectMessageTextColor, setMessageBackground, setMessageTextColor } from '../../../../entities/message/model/slice'
+import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageBorder, selectMessageTextColor, selectServiceIcon, setMessageBackground, setMessageTextColor } from '../../../../entities/message/model/slice'
 import { useTheme } from '../../../../shared/context/theme/ThemeContext'
 import { hexToRgbString, rgbStringToHex } from '../../../../shared/lib/hexToRgbString'
 
@@ -24,6 +24,7 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
     }
 
     const messageBorder = useSelector(selectMessageBorder)
+    const serviceIcon = useSelector(selectServiceIcon)
 
     let messageTextColor = useSelector(selectMessageTextColor)
     if (messageTextColor === '') {
@@ -85,7 +86,7 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
     return (
         <div className={`${s.wrapper} ${isFading ? s.fadeOut : ''}`} style={wrapperStyles}>
             <span className={s.name} style={nameStyles}>
-                <Icon className={s.icon} color={"var(--color-text)"} />
+                {serviceIcon && <Icon className={s.icon} color={"var(--color-text)"} />}
                 {message.tags["display-name"]}
             </span>
             <span className={s.message} style={textStyles}>
