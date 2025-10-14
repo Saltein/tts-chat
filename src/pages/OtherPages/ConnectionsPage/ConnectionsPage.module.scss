@@ -10,3 +10,9 @@
 .href {
     color: var(--color-primary);
 }
+
+.lobby {
+    display: flex;
+    gap: $spacing-md;
+    margin-left: auto;
+}

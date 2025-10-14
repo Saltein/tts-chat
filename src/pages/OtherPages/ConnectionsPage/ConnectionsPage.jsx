@@ -6,6 +6,8 @@ import { ReactComponent as YoutubeIcon } from '../../../shared/assets/icons/yout
 import { ReactComponent as VkVideoIcon } from '../../../shared/assets/icons/vk-video-logo.svg'
 import { selectYoutubeAccessToken, setTwitchChatChannelName, setYoutubeVideoId } from '../../../entities/connection/model/slice'
 import { useSelector } from 'react-redux'
+import { DefaultDivider } from '../../../shared/ui'
+import { LobbyBlock } from '../../../features/ws-lobby/ui/LobbyBlock/LobbyBlock'
 
 export const ConnectionsPage = () => {
     const youtubeAccessToken = useSelector(selectYoutubeAccessToken)
@@ -94,6 +96,11 @@ export const ConnectionsPage = () => {
                             return false
                         }} />
                     <ConnectionCard IconComponent={VkVideoIcon} inputs={vkInputs} title={'VK Видео Live'} dispatcher={''} isActive={false} />
+
+                    <div className={s.lobby}>
+                        <DefaultDivider direction='vertical' />
+                        <LobbyBlock />
+                    </div>
                 </div>
             </DefaultWidgetShape>
         </div>
