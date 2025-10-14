@@ -126,6 +126,11 @@ const connectionSlice = createSlice({
             }
         },
 
+
+        setMessages: (state, action) => {
+            state.messages = action.payload
+        },
+
         resetConnection: () => initialState
     },
 })
@@ -142,6 +147,7 @@ export const {
     setVkAccessToken,
     setVkConnectionStatus,
     setNewVkMessage,
+    setMessages,
     resetConnection,
 } = connectionSlice.actions
 

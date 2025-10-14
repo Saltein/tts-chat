@@ -1,7 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { connectSocket, subscribe, sendSocket, getSocket } from '../../lib/socketService';
+import { connectSocket, subscribe, sendSocket } from '../../lib/socketService';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectConnectionStatus, selectInputCode, selectMode, selectRoomCode, setConnectionStatus, setInputCode, setMode, setRoomCode } from '../../model/slice';
+import {
+    selectConnectionStatus,
+    selectInputCode,
+    selectMode,
+    selectRoomCode,
+    setConnectionStatus,
+    setInputCode,
+    setMode,
+    setRoomCode
+} from '../../model/slice';
+import { selectLast50Messages, setMessages } from '../../../../entities/connection/model/slice';
 
 const WebSocketRoom = () => {
     const [mode, setModeLocal] = useState(useSelector(selectMode));
@@ -12,18 +22,25 @@ const WebSocketRoom = () => {
     const [clientsCount, setClientsCount] = useState(0);
     const [error, setError] = useState('');
 
-    const dispatch = useDispatch()
+    const messages = useSelector(selectLast50Messages);
+    const dispatch = useDispatch();
 
     const modeRef = useRef(mode);
     useEffect(() => { modeRef.current = mode; }, [mode]);
 
-    // Подключаем WebSocket один раз
+    // ✅ Подключаем WebSocket один раз (и он теперь глобальный)
     useEffect(() => {
         const socket = connectSocket();
         setConnectionStatus(socket.readyState === WebSocket.OPEN ? 'connected' : 'connecting');
 
+        // подписка теперь просто для локальных логов
         const unsubscribe = subscribe((data) => {
-            handleMessage(data);
+            console.log('📩 Получено сообщение (локально):', data);
+            if (data.type === 'data') setReceivedData(data.payload);
+            if (data.type === 'client_connected' || data.type === 'client_disconnected')
+                setClientsCount(data.clients_count);
+            if (data.type === 'room_closed' || data.type === 'error')
+                setError(data.message || 'Комната закрыта');
         });
 
         return () => {
@@ -31,50 +48,6 @@ const WebSocketRoom = () => {
             unsubscribe();
         };
     }, []);
-
-    const handleMessage = (data) => {
-        console.log('📩 Получено сообщение:', data);
-
-        switch (data.type) {
-            case 'room_created':
-                dispatch(setRoomCode(data.code));
-                setRoomCodeLocal(data.code)
-                dispatch(setMode('host'));
-                setModeLocal('host')
-                setError('');
-                break;
-            case 'joined':
-                dispatch(setRoomCode(data.code));
-                setRoomCodeLocal(data.code)
-                dispatch(setMode('client'));
-                setModeLocal('client')
-                setError('');
-                break;
-            case 'data':
-                setReceivedData(prev => [...prev, {
-                    id: Date.now(),
-                    timestamp: new Date().toLocaleTimeString(),
-                    data: data.payload
-                }]);
-                break;
-            case 'client_connected':
-            case 'client_disconnected':
-                setClientsCount(data.clients_count);
-                break;
-            case 'room_closed':
-                setError('Комната закрыта хостом');
-                dispatch(setConnectionStatus('disconnected'));
-                setConnectionStatusLocal('disconnected')
-                break;
-            case 'error':
-                setError(data.message);
-                dispatch(setConnectionStatus('error'));
-                setConnectionStatusLocal('error')
-                break;
-            default:
-                console.log('Неизвестный тип:', data);
-        }
-    };
 
     const createRoom = () => {
         setError('');
@@ -113,6 +86,14 @@ const WebSocketRoom = () => {
         });
     };
 
+    const sendMessagesData = () => {
+        sendData(messages);
+    };
+
+    useEffect(() => {
+        sendMessagesData();
+    }, [messages]);
+
     return (
         <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
             <h1>WebSocket Room</h1>
@@ -129,14 +110,17 @@ const WebSocketRoom = () => {
                             type="text"
                             value={inputCode}
                             onChange={(e) => {
-                                dispatch(setInputCode(e.target.value.toUpperCase()))
-                                setInputCodeLocal(e.target.value.toUpperCase())
+                                dispatch(setInputCode(e.target.value.toUpperCase()));
+                                setInputCodeLocal(e.target.value.toUpperCase());
                             }}
                             placeholder="Введите код комнаты"
                             style={{ padding: '10px', fontSize: '16px', marginRight: '10px' }}
                         />
-                        <button onClick={() => joinRoom(inputCode)} disabled={!inputCode}
-                            style={{ padding: '10px 20px', fontSize: '16px' }}>
+                        <button
+                            onClick={() => joinRoom(inputCode)}
+                            disabled={!inputCode}
+                            style={{ padding: '10px 20px', fontSize: '16px' }}
+                        >
                             Подключиться
                         </button>
                     </div>
@@ -158,22 +142,8 @@ const WebSocketRoom = () => {
             {mode === 'client' && (
                 <div>
                     <p>Комната: <strong>{roomCode}</strong></p>
-                    <p>Получено сообщений: <strong>{receivedData.length}</strong></p>
-
                     <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
-                        {receivedData.map(item => (
-                            <div key={item.id} style={{
-                                border: '1px solid #ccc',
-                                padding: '10px',
-                                margin: '5px 0',
-                                backgroundColor: '#f9f9f9'
-                            }}>
-                                <div style={{ fontSize: '12px', color: '#666' }}>
-                                    {item.timestamp}
-                                </div>
-                                <pre>{JSON.stringify(item.data, null, 2)}</pre>
-                            </div>
-                        ))}
+                        {JSON.stringify(receivedData)}
                     </div>
                 </div>
             )}
