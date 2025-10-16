@@ -142,9 +142,9 @@ const WebSocketRoom = () => {
             {mode === 'client' && (
                 <div>
                     <p>Комната: <strong>{roomCode}</strong></p>
-                    <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                    {/* <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
                         {JSON.stringify(receivedData)}
-                    </div>
+                    </div> */}
                 </div>
             )}
 
