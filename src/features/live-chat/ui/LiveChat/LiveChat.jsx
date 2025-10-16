@@ -4,6 +4,7 @@ import s from './LiveChat.module.scss'
 import { selectLast50Messages } from '../../../../entities/connection/model/slice'
 import { ChatMessage } from '../ChatMessage/ChatMessage'
 import { selectMessageGap, selectMessageLifeTime } from '../../../../entities/message/model/slice'
+import WebSocketRoom from '../../../ws-lobby/ui/LobbyBlock/WebSocketRoom'
 
 export const LiveChat = ({ backgroundColor, isWidget }) => {
     const messages = useSelector(selectLast50Messages)
@@ -25,6 +26,7 @@ export const LiveChat = ({ backgroundColor, isWidget }) => {
 
     return (
         <div className={s.wrapper} style={styles}>
+            {isWidget && <WebSocketRoom inWidget />}
             <ChatMessage
                 message={{
                     message: 'Так будут выглядеть сообщения из чата',

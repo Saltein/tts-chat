@@ -6,11 +6,17 @@ import { ReactComponent as YoutubeIcon } from '../../../shared/assets/icons/yout
 import { ReactComponent as VkVideoIcon } from '../../../shared/assets/icons/vk-video-logo.svg'
 import { selectYoutubeAccessToken, setTwitchChatChannelName, setYoutubeVideoId } from '../../../entities/connection/model/slice'
 import { useSelector } from 'react-redux'
-import { DefaultDivider } from '../../../shared/ui'
+import { DefaultButton, DefaultDivider, DefaultInput, DefaultTitle } from '../../../shared/ui'
 import { LobbyBlock } from '../../../features/ws-lobby/ui/LobbyBlock/LobbyBlock'
+import { useState } from 'react'
 
 export const ConnectionsPage = () => {
     const youtubeAccessToken = useSelector(selectYoutubeAccessToken)
+
+    const betaAccessPass = process.env.REACT_APP_BETA_ACCESS_PASSWORD
+
+    const [hasAccess, setHasAccess] = useState(false)
+    const [password, setPassword] = useState('')
 
     const twitchInputs = [
         {
@@ -83,6 +89,19 @@ export const ConnectionsPage = () => {
         },
     ]
 
+    const handleOpenBeta = () => {
+        if (password === betaAccessPass) {
+            setHasAccess(true)
+        }
+    }
+
+    const infoBetaText = (
+        <>
+            <span>Пароль доступа к функциям <b>beta</b></span>
+            <span>Его нельзя получить обычным пользователям</span>
+        </>
+    )
+
     return (
         <div className={s.wrapper}>
             <DefaultWidgetShape marginLeft={'0'} backgroundColor={'transparent'} padding={'0'} title='Подключения'>
@@ -99,7 +118,21 @@ export const ConnectionsPage = () => {
 
                     <div className={s.lobby}>
                         <DefaultDivider direction='vertical' />
-                        <LobbyBlock />
+                        {hasAccess ?
+                            <>
+                                <LobbyBlock />
+                            </>
+                            :
+                            <div className={s.password}>
+                                <DefaultTitle title={'Комната (Beta)'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'} paddingTop={'0'} />
+                                <DefaultInput placeholder='Пароль' info={infoBetaText} type='password' value={password} width={'256px'}
+                                    onChange={(e) => {
+                                        setPassword(e.target.value)
+                                    }} />
+                                <DefaultButton title={'Открыть'} onClick={handleOpenBeta} />
+                            </div>
+                        }
+
                     </div>
                 </div>
             </DefaultWidgetShape>

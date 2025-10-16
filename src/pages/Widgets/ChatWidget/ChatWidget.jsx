@@ -9,6 +9,7 @@ import { TTSChat } from '../../../features/tts-chat/TTSChat/TTSChat'
 import { useTheme } from '../../../shared/context/theme/ThemeContext'
 import { connectYouTubeClient } from '../../../features/live-chat/lib/youtube/youtubeClientSingleton'
 import { setMessageBackground, setMessageBackgroundOpacity, setMessageBorder, setMessageLifeTime, setMessageTextColor, setServiceIcon } from '../../../entities/message/model/slice'
+import WebSocketRoom from '../../../features/ws-lobby/ui/LobbyBlock/WebSocketRoom'
 
 export const ChatWidget = () => {
     const twitchBotName = process.env.REACT_APP_TWITCH_BOT_NAME

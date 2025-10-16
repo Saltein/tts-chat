@@ -16,3 +16,9 @@
     gap: $spacing-md;
     margin-left: auto;
 }
+
+.password {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+}
