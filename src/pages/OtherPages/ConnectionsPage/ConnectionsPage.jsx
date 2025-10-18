@@ -5,17 +5,20 @@ import { ReactComponent as TwitchIcon } from '../../../shared/assets/icons/twitc
 import { ReactComponent as YoutubeIcon } from '../../../shared/assets/icons/youtube-logo.svg'
 import { ReactComponent as VkVideoIcon } from '../../../shared/assets/icons/vk-video-logo.svg'
 import { selectYoutubeAccessToken, setTwitchChatChannelName, setYoutubeVideoId } from '../../../entities/connection/model/slice'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { DefaultButton, DefaultDivider, DefaultInput, DefaultTitle } from '../../../shared/ui'
 import { LobbyBlock } from '../../../features/ws-lobby/ui/LobbyBlock/LobbyBlock'
 import { useState } from 'react'
+import { selectAccessStatus, setAccessStatus } from '../../../features/ws-lobby/model/slice'
 
 export const ConnectionsPage = () => {
     const youtubeAccessToken = useSelector(selectYoutubeAccessToken)
 
+    const dispatch = useDispatch()
+
     const betaAccessPass = process.env.REACT_APP_BETA_ACCESS_PASSWORD
 
-    const [hasAccess, setHasAccess] = useState(false)
+    const [hasAccess, setHasAccess] = useState(useSelector(selectAccessStatus))
     const [password, setPassword] = useState('')
 
     const twitchInputs = [
@@ -92,13 +95,14 @@ export const ConnectionsPage = () => {
     const handleOpenBeta = () => {
         if (password === betaAccessPass) {
             setHasAccess(true)
+            dispatch(setAccessStatus(true))
         }
     }
 
     const infoBetaText = (
         <>
             <span>Пароль доступа к функциям <b>beta</b></span>
-            <span>Его нельзя получить обычным пользователям</span>
+            <span>Его знают только тестеры</span>
         </>
     )
 

@@ -124,6 +124,7 @@ const WebSocketRoom = ({ inWidget = false }) => {
     }, [isVisible, timer])
 
     if (inWidget) {
+        setMode('host')
         return (
             <ChatMessage
                 message={{

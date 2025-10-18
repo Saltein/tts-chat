@@ -5,6 +5,8 @@ let initialState = {
     roomCode: '',
     inputCode: '',
     connectionStatus: 'disconnected',
+
+    accessStatus: false // Временно, пока все не доделаю
 }
 
 const wsRoomSlice = createSlice({
@@ -22,7 +24,11 @@ const wsRoomSlice = createSlice({
         },
         setConnectionStatus: (state, action) => {
             state.connectionStatus = action.payload
-        }
+        },
+
+        setAccessStatus: (state, action) => {
+            state.accessStatus = action.payload
+        },
     }
 })
 
@@ -31,6 +37,8 @@ export const {
     setRoomCode,
     setInputCode,
     setConnectionStatus,
+
+    setAccessStatus,
 } = wsRoomSlice.actions
 
 export default wsRoomSlice.reducer
@@ -40,3 +48,5 @@ export const selectMode = (state) => state.wsRoom.mode
 export const selectRoomCode = (state) => state.wsRoom.roomCode
 export const selectInputCode = (state) => state.wsRoom.inputCode
 export const selectConnectionStatus = (state) => state.wsRoom.connectionStatus
+
+export const selectAccessStatus = (state) => state.wsRoom.accessStatus
