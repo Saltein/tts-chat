@@ -133,12 +133,12 @@ export const ChatSettings = () => {
             <div className={`${s.colorContainer} ${s.container}`}>
                 <div className={s.colorPickBlock}>
                     <DefaultTitle paddingTop={'0'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
-                        title={'Цвет фона'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
+                        title={'Цвет фона'} titleStyles={{ fontSize: '0.9rem' }} fontWeight={'400'} alignContent={'center'} />
                     <input className={s.colorPicker} value={rgbStringToHex(currentMessageBackgroundColor)} type='color' onChange={handlePickBackgroundColor} />
                 </div>
                 <div className={s.colorPickBlock}>
                     <DefaultTitle paddingTop={'0'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'}
-                        title={'Цвет текста'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
+                        title={'Цвет текста'} titleStyles={{ fontSize: '0.9rem' }} fontWeight={'400'} alignContent={'center'} />
                     <input className={s.colorPicker} value={rgbStringToHex(currentMessageTextColor)} type='color' onChange={handlePickTextColor} />
                 </div>
             </div>
