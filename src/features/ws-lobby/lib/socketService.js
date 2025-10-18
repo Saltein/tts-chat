@@ -6,7 +6,9 @@ import { setConnectionStatus, setRoomCode, setMode } from '../model/slice';
 let socket = null;
 let listeners = new Set();
 
-export const connectSocket = (url = 'ws://localhost:6789') => {
+const WS_URL = process.env.REACT_APP_BASE_URL_WEBSOCKET
+
+export const connectSocket = (url = WS_URL) => {
     if (!socket || socket.readyState === WebSocket.CLOSED) {
         socket = new WebSocket(url);
 
