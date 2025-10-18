@@ -23,9 +23,10 @@ const WebSocketRoom = ({ inWidget = false }) => {
     const timeBeforeDisappear = 10
 
     const connectionStatusRedux = useSelector(selectConnectionStatus)
+    const roomCodeRedux = useSelector(selectRoomCode)
 
     const [mode, setModeLocal] = useState(useSelector(selectMode))
-    const [roomCode, setRoomCodeLocal] = useState(useSelector(selectRoomCode))
+    const [roomCode, setRoomCodeLocal] = useState(roomCodeRedux)
     const [inputCode, setInputCodeLocal] = useState(useSelector(selectInputCode))
     const [connectionStatus, setConnectionStatusLocal] = useState(connectionStatusRedux)
     const [receivedData, setReceivedData] = useState([])
@@ -147,13 +148,11 @@ const WebSocketRoom = ({ inWidget = false }) => {
     return (
         <>
             <div className={s.wrapper}>
-                <DefaultTitle title={'Общий чат-канал (beta)'} alignContent={'center'} paddingTop={'6px'} paddingBottom={'6px'} />
-
                 {mode === 'select' &&
                     <>
-                        <DefaultButton width={'256px'} height={'32px'} title={'Создать комнату'} onClick={createRoom} />
+                        <DefaultButton width={'100%'} height={'32px'} title={'Создать комнату'} onClick={createRoom} />
                         <DefaultDivider />
-                        <DefaultInput width={'256px'} height={'32px'} placeholder={'Код комнаты'} align={'center'} value={inputCode} onChange={(e) => {
+                        <DefaultInput width={'100%'} height={'32px'} placeholder={'Код комнаты'} align={'center'} value={inputCode} onChange={(e) => {
                             setError('')
                             const newValue = e.target.value.toUpperCase()
                             if (newValue.length <= 6) {
@@ -161,12 +160,12 @@ const WebSocketRoom = ({ inWidget = false }) => {
                                 setInputCodeLocal(e.target.value.toUpperCase());
                             }
                         }} />
-                        <DefaultButton width={'256px'} height={'32px'} title={'Подключиться'} onClick={() => joinRoom(inputCode)} active={inputCode.length === 6} />
+                        <DefaultButton width={'100%'} height={'32px'} title={'Подключиться'} onClick={() => joinRoom(inputCode)} active={inputCode.length === 6} />
                     </>
                 }
                 {(mode === 'host' || mode === 'guest') &&
                     <>
-                        <SimpleWidgetShape gap={'4px'} width={'256px'}>
+                        <SimpleWidgetShape gap={'4px'} width={'100%'}>
                             <div className={s.line}>
                                 <span>Код комнаты: </span>
                                 <div style={{ display: 'flex', cursor: 'pointer', gap: '4px' }} onClick={handleCopy} >
@@ -189,7 +188,7 @@ const WebSocketRoom = ({ inWidget = false }) => {
                             }
                         </SimpleWidgetShape>
 
-                        <DefaultButton title={'Отключиться'} width={'256px'} height='32px'
+                        <DefaultButton title={'Отключиться'} width={'100%'} height='32px'
                             onClick={() => {
                                 leaveRoom()
                                 setModeLocal('select')

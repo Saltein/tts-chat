@@ -19,6 +19,8 @@
     &.animated {
         animation: appear 0.5s;
     }
+
+    interpolate-size: allow-keywords;
 }
 
 .mainBlock {

@@ -1,6 +1,6 @@
 import s from './DefaultTitle.module.scss'
 
-export const DefaultTitle = ({ title, margin, padding, paddingLeft, paddingRight, paddingTop, paddingBottom, alignContent, titleStyles = {}, fontWeight }) => {
+export const DefaultTitle = ({ title, margin, padding, paddingLeft, paddingRight, paddingTop, paddingBottom, alignContent, titleStyles = {}, fontWeight, onClick }) => {
     const styles = {
         margin: margin && margin,
         padding: padding && padding,
@@ -14,6 +14,6 @@ export const DefaultTitle = ({ title, margin, padding, paddingLeft, paddingRight
     }
 
     return (
-        <h2 className={s.title} style={styles}>{title}</h2>
+        <h2 className={s.title} style={styles} onClick={onClick}>{title}</h2>
     )
 }

@@ -2,6 +2,7 @@ import { DefaultTitle } from '../../ui'
 import s from './DefaultWidgetShape.module.scss'
 
 export const DefaultWidgetShape = ({
+    onClick,
     children,
     width,
     height,
@@ -53,6 +54,7 @@ export const DefaultWidgetShape = ({
         backgroundColor: backgroundColor && backgroundColor,
         boxShadow: shadow && `0 ${shadow}px ${shadow * 1.5}px rgba(0, 0, 0, 0.15)`,
         flex: flex ?? undefined,
+        cursor: onClick ? 'pointer' : 'default'
     }
 
     if (paddingTop || paddingBottom || paddingLeft || paddingRight) {
@@ -81,7 +83,7 @@ export const DefaultWidgetShape = ({
 
     return (
         <div className={`${s.wrapper} ${animated ? s.animated : ''}`} style={wrapperStyles}>
-            {!noTitle && <DefaultTitle title={title} titleStyles={titleStyles} />}
+            {!noTitle && <DefaultTitle title={title} titleStyles={titleStyles} onClick={onClick} />}
 
             {noBlock ?
                 <>

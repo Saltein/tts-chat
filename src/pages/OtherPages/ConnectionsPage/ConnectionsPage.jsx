@@ -5,21 +5,10 @@ import { ReactComponent as TwitchIcon } from '../../../shared/assets/icons/twitc
 import { ReactComponent as YoutubeIcon } from '../../../shared/assets/icons/youtube-logo.svg'
 import { ReactComponent as VkVideoIcon } from '../../../shared/assets/icons/vk-video-logo.svg'
 import { selectYoutubeAccessToken, setTwitchChatChannelName, setYoutubeVideoId } from '../../../entities/connection/model/slice'
-import { useDispatch, useSelector } from 'react-redux'
-import { DefaultButton, DefaultDivider, DefaultInput, DefaultTitle } from '../../../shared/ui'
-import { LobbyBlock } from '../../../features/ws-lobby/ui/LobbyBlock/LobbyBlock'
-import { useState } from 'react'
-import { selectAccessStatus, setAccessStatus } from '../../../features/ws-lobby/model/slice'
+import { useSelector } from 'react-redux'
 
 export const ConnectionsPage = () => {
     const youtubeAccessToken = useSelector(selectYoutubeAccessToken)
-
-    const dispatch = useDispatch()
-
-    const betaAccessPass = process.env.REACT_APP_BETA_ACCESS_PASSWORD
-
-    const [hasAccess, setHasAccess] = useState(useSelector(selectAccessStatus))
-    const [password, setPassword] = useState('')
 
     const twitchInputs = [
         {
@@ -92,20 +81,6 @@ export const ConnectionsPage = () => {
         },
     ]
 
-    const handleOpenBeta = () => {
-        if (password === betaAccessPass) {
-            setHasAccess(true)
-            dispatch(setAccessStatus(true))
-        }
-    }
-
-    const infoBetaText = (
-        <>
-            <span>Пароль доступа к функциям <b>beta</b></span>
-            <span>Его знают только тестеры</span>
-        </>
-    )
-
     return (
         <div className={s.wrapper}>
             <DefaultWidgetShape marginLeft={'0'} backgroundColor={'transparent'} padding={'0'} title='Подключения'>
@@ -119,25 +94,6 @@ export const ConnectionsPage = () => {
                             return false
                         }} />
                     <ConnectionCard IconComponent={VkVideoIcon} inputs={vkInputs} title={'VK Видео Live'} dispatcher={''} isActive={false} />
-
-                    <div className={s.lobby}>
-                        <DefaultDivider direction='vertical' />
-                        {hasAccess ?
-                            <>
-                                <LobbyBlock />
-                            </>
-                            :
-                            <div className={s.password}>
-                                <DefaultTitle title={'Общий чат-канал (Beta)'} alignContent={'center'} paddingTop={'6px'} paddingBottom={'6px'} />
-                                <DefaultInput placeholder='Пароль' info={infoBetaText} type='password' value={password} width={'256px'}
-                                    onChange={(e) => {
-                                        setPassword(e.target.value)
-                                    }} />
-                                <DefaultButton title={'Открыть'} onClick={handleOpenBeta} />
-                            </div>
-                        }
-
-                    </div>
                 </div>
             </DefaultWidgetShape>
         </div>

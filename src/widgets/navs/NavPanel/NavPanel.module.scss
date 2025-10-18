@@ -7,3 +7,10 @@
     padding: 0 $spacing-md 0 $spacing-md;
     border-radius: $border-radius-lg;
 }
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+    padding: $spacing-md 0;
+}
