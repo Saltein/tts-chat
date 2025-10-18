@@ -181,15 +181,12 @@ const WebSocketRoom = ({ inWidget = false }) => {
                                 <span>Роль: </span>
                                 <b>{mode}</b>
                             </div>
-                            <DefaultDivider />
-                            <div className={s.line}>
-                                <span>Статус: </span>
-                                <b>{connectionStatusRedux}</b>
-                            </div>
-                            <div className={s.line}>
-                                <span>В сети: </span>
-                                <b>{clientsCount}</b>
-                            </div>
+                            {mode === 'host' &&
+                                <div className={s.line}>
+                                    <span>В сети: </span>
+                                    <b>{clientsCount}</b>
+                                </div>
+                            }
                         </SimpleWidgetShape>
 
                         <DefaultButton title={'Отключиться'} width={'256px'} height='32px'
