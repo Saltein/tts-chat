@@ -1,5 +1,23 @@
 @import '../../../../shared/styles/variables.scss';
 
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+}
+
+.line {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.copyIcon {
+    width: 12px;
+    height: 12px;
+}
+
 .roomCodeContainer {
     background-color: var(--color-background);
 }

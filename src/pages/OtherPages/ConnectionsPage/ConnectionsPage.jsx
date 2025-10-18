@@ -128,7 +128,7 @@ export const ConnectionsPage = () => {
                             </>
                             :
                             <div className={s.password}>
-                                <DefaultTitle title={'Комната (Beta)'} paddingBottom={'0'} paddingLeft={'0'} paddingRight={'0'} paddingTop={'0'} />
+                                <DefaultTitle title={'Общий чат-канал (Beta)'} alignContent={'center'} paddingTop={'6px'} paddingBottom={'6px'} />
                                 <DefaultInput placeholder='Пароль' info={infoBetaText} type='password' value={password} width={'256px'}
                                     onChange={(e) => {
                                         setPassword(e.target.value)

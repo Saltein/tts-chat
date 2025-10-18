@@ -7,6 +7,7 @@ import { selectTwitchConnectionData, selectTwitchConnectionStatus, selectYoutube
 import { convertObjToStr } from '../../../shared/lib/convertObjToStr'
 import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageBorder, selectMessageGap, selectMessageLifeTime, selectMessageTextColor, selectServiceIcon, setMessageBackground, setMessageBackgroundOpacity, setMessageBorder, setMessageGap, setMessageLifeTime, setMessageTextColor, setServiceIcon } from '../../../entities/message/model/slice'
 import { hexToRgbString, rgbStringToHex } from '../../../shared/lib/hexToRgbString'
+import { SimpleWidgetShape } from '../../../shared/widgets/SimpleWidgetShape/SimpleWidgetShape'
 
 export const ChatSettings = () => {
     const [link, setLink] = useState('')
@@ -142,15 +143,15 @@ export const ChatSettings = () => {
                 </div>
             </div>
 
-            <div className={s.container}>
+            <SimpleWidgetShape>
                 <DefaultTitle paddingTop={'0'} paddingBottom={'8px'} paddingLeft={'0'} paddingRight={'0'}
-                    title={'Прозрачность фона'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
+                    title={'Прозрачность фона'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} />
                 <DefaultSlider selector={selectMessageBackgroundOpacity} dispatcher={setMessageBackgroundOpacity} width='100%' height='32px' isCoefficient />
-            </div>
+            </SimpleWidgetShape>
 
-            <div className={`${s.container}`}>
+            <SimpleWidgetShape>
                 <DefaultTitle paddingTop={'0'} paddingBottom={'8px'} paddingLeft={'0'} paddingRight={'0'}
-                    title={'Исчезнут через (с)'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
+                    title={'Исчезнут через (с)'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} />
                 <div className={s.lifetimeContainer}>
                     <DefaultInput placeholder='Время в секундах' height={'32px'} value={lifetime / 1000} align={'center'} width={'72px'} onChange={(e) => {
                         const value = e.target.value
@@ -166,11 +167,11 @@ export const ChatSettings = () => {
                     }} />
                     <DefaultButton height='32px' title={'Применить'} flex={1} onClick={handleChangeLifeTime} />
                 </div>
-            </div>
+            </SimpleWidgetShape>
 
-            <div className={s.container}>
+            <SimpleWidgetShape>
                 <DefaultTitle paddingTop={'0'} paddingBottom={'8px'} paddingLeft={'0'} paddingRight={'0'}
-                    title={'Расстояние между (px)'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} alignContent={'center'} />
+                    title={'Расстояние между (px)'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} />
                 <div className={s.lifetimeContainer}>
                     <DefaultInput placeholder='Расстояние в пикселях' height={'32px'} value={messageGapLocal} align={'center'} width={'72px'} onChange={(e) => {
                         const value = e.target.value
@@ -186,7 +187,7 @@ export const ChatSettings = () => {
                     }} />
                     <DefaultButton height='32px' title={'Применить'} flex={1} onClick={handleChangeGap} />
                 </div>
-            </div>
+            </SimpleWidgetShape>
         </div>
     )
 }

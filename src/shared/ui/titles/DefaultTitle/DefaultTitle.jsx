@@ -9,7 +9,7 @@ export const DefaultTitle = ({ title, margin, padding, paddingLeft, paddingRight
         paddingTop: paddingTop && paddingTop,
         paddingBottom: paddingBottom && paddingBottom,
         fontWeight: fontWeight ?? undefined,
-        alignSelf: alignContent && alignContent,
+        textAlign: alignContent && alignContent,
         ...titleStyles
     }
 

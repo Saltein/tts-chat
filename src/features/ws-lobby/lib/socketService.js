@@ -41,6 +41,35 @@ export const connectSocket = (url = 'ws://localhost:6789') => {
     return socket;
 };
 
+export const disconnectSocket = () => {
+    if (socket) {
+        console.log('🔌 Отключаем WebSocket');
+        socket.close();
+        socket = null;
+    }
+
+    listeners.clear();
+
+    // Сброс состояния
+    store.dispatch(setConnectionStatus('disconnected'));
+    store.dispatch(setRoomCode(''));
+    store.dispatch(setMode('select'));
+};
+
+export const leaveRoom = () => {
+    const socket = getSocket();
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        console.log('🚪 Выход из комнаты');
+        socket.send('leave');
+    } else {
+        console.warn('⚠️ Невозможно выйти — сокет не подключен');
+    }
+
+    store.dispatch(setRoomCode(''));
+    store.dispatch(setMode('select'));
+    store.dispatch(setConnectionStatus('connected'));
+};
+
 const handleGlobalMessage = (data) => {
     switch (data.type) {
         case 'room_created':
@@ -49,7 +78,7 @@ const handleGlobalMessage = (data) => {
             break;
         case 'joined':
             store.dispatch(setRoomCode(data.code));
-            store.dispatch(setMode('client'));
+            store.dispatch(setMode('guest'));
             break;
         case 'data':
             store.dispatch(setMessages(data.payload));
