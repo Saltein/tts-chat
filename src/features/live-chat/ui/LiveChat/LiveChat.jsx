@@ -41,7 +41,7 @@ export const LiveChat = ({ backgroundColor, isWidget }) => {
             />
             {messages.map((item, index) => {
                 return (
-                    <ChatMessage key={item.time + item.message} message={item} timeBeforeDisappear={timeBeforeDisappear} />
+                    <ChatMessage key={item.time + item.message + Math.random() * Math.random() * 1000} message={item} timeBeforeDisappear={timeBeforeDisappear} />
                 )
             })}
             <div ref={chatEndRef} className={s.anchor} />
