@@ -16,6 +16,7 @@ import {
 import { connectTwitchClient, disconnectTwitchClient } from "../../../../features/live-chat/lib/twitchClientSingleton"
 import { connectVkPlayClient } from "../../../../features/live-chat/lib/vk/vkClientSingleton"
 import { connectYouTubeClient, disconnectYouTubeClient, getYouTubeClient } from "../../../../features/live-chat/lib/youtube/youtubeClientSingleton"
+import { convertUrlToIdYoutube } from "../../../lib/convertUrlToIdYoutube"
 
 export const ConnectionSwitch = ({ serviceName = "", isActive = true }) => {
     const dispatch = useDispatch()
@@ -164,12 +165,12 @@ export const ConnectionSwitch = ({ serviceName = "", isActive = true }) => {
                 try {
                     console.log("Подключение YouTube с параметрами:", {
                         accessToken: youtubeAccessToken,
-                        videoId: youtubeVideoId?.youtubeVideoId,
+                        videoId: convertUrlToIdYoutube(youtubeVideoId?.youtubeVideoId),
                     });
 
                     const client = await connectYouTubeClient({
                         accessToken: youtubeAccessToken,
-                        videoId: youtubeVideoId?.youtubeVideoId,
+                        videoId: convertUrlToIdYoutube(youtubeVideoId?.youtubeVideoId),
                     }, callbacks);
 
                     if (client) {

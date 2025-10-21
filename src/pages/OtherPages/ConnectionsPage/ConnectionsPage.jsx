@@ -22,11 +22,13 @@ export const ConnectionsPage = () => {
     const youtubeInputs = [
         {
             name: 'youtubeVideoId',
-            placeholder: 'ID прямой трансляции YouTube',
+            placeholder: 'Ссылка на прямую трансляцию или её ID',
             info: (
                 <div>
+                    <p>Скопируй сюда ссылку на стрим на Youtube или его ID</p>
                     <p>ID можно найти в ссылке на стрим после символа "v=", например:</p>
                     <span style={{ opacity: 0.7 }}>"https://www.youtube.com/watch?v=</span><b style={{ opacity: 1 }}>dQw4w9WgXcQ</b><span>"</span>
+                    <p>Но проще вставить ссылку</p>
                 </div>
             ),
             type: 'text',

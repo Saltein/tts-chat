@@ -268,7 +268,7 @@ export async function getLiveChatIdFromVideo({ videoId }) {
             }
         }
 
-        console.error("❌ No active live chat found for this video");
+        console.error("❌ No active live chat found for this video", videoId);
         return null;
 
     } catch (error) {
