@@ -4,7 +4,14 @@ import { DefaultWidgetShape } from '../../../shared/widgets/DefaultWidgetShape/D
 import { ReactComponent as TwitchIcon } from '../../../shared/assets/icons/twitch-logo.svg'
 import { ReactComponent as YoutubeIcon } from '../../../shared/assets/icons/youtube-logo.svg'
 import { ReactComponent as VkVideoIcon } from '../../../shared/assets/icons/vk-video-logo.svg'
-import { selectYoutubeAccessToken, setTwitchChatChannelName, setYoutubeVideoId } from '../../../entities/connection/model/slice'
+import {
+    selectYoutubeAccessToken,
+    setYoutubeVideoId,
+
+    setTwitchChatChannelName,
+
+    setVkConnectionData,
+} from '../../../entities/connection/model/slice'
 import { useSelector } from 'react-redux'
 
 export const ConnectionsPage = () => {
@@ -95,7 +102,7 @@ export const ConnectionsPage = () => {
                             }
                             return false
                         }} />
-                    <ConnectionCard IconComponent={VkVideoIcon} inputs={vkInputs} title={'VK Видео Live'} dispatcher={''} isActive={false} />
+                    <ConnectionCard IconComponent={VkVideoIcon} inputs={vkInputs} title={'VK Видео Live'} dispatcher={setVkConnectionData} />
                 </div>
             </DefaultWidgetShape>
         </div>

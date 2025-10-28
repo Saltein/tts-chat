@@ -3,17 +3,28 @@ import { ConnectionSwitch, DefaultButton, DefaultInput, DefaultWarning, InfoQues
 import { DefaultModalWindow } from '../../../../shared/ui/DefaultModalWindow/DefaultModalWindow'
 import s from './ConnectionCard.module.scss'
 import { useDispatch, useSelector } from 'react-redux';
-import { selectTwitchConnectionData, selectVkAccessToken, selectYoutubeVideoId, setYoutubeAccessToken } from '../../model/slice';
+import {
+    selectTwitchConnectionData,
+    selectVkConnectionData,
+    selectYoutubeVideoId,
+    setYoutubeAccessToken
+} from '../../model/slice';
 import { GoogleLoginYouTube } from '../../../../features/auth/ui/GoogleLoginButton/GoogleLoginYoutube';
 
 export const ConnectionCard = ({
-    IconComponent, isActive = true, inputs = [], title, dispatcher,
+    IconComponent,
+    isActive = true,
+    inputs = [],
+    title,
+    dispatcher,
     onMistake = () => { },
     funcActive = (formData) => { return Object.values(formData)[0] || false }
 }) => {
     const dispatch = useDispatch()
+    
     const twitchData = useSelector(selectTwitchConnectionData)
     const youtubeData = useSelector(selectYoutubeVideoId)
+    const vkData = useSelector(selectVkConnectionData)
 
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [formData, setFormData] = useState({})
@@ -42,12 +53,14 @@ export const ConnectionCard = ({
             setFormData({ chatChannelName: channelName || '' })
         }
         else if (title === "YouTube") {
-            console.warn(youtubeData)
             // Аналогично для YouTube
             const videoId = typeof youtubeData === 'object'
                 ? youtubeData.youtubeVideoId
                 : youtubeData;
             setFormData({ youtubeVideoId: videoId || '' })
+        }
+        else if (title === "VK Видео Live") {
+            setFormData({ vkChannelId: vkData.vkChannelId, token: vkData.token})
         }
     }, [twitchData, youtubeData, title])
 

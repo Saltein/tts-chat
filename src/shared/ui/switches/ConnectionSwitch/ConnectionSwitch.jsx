@@ -4,14 +4,17 @@ import { useDispatch, useSelector } from "react-redux"
 import {
     selectTwitchConnectionData,
     selectTwitchConnectionStatus,
-    selectYoutubeAccessToken,
-    selectYoutubeVideoId,
-    setNewTwitchMessage,
-    setNewVkMessage,
-    setNewYoutubeMessage,
     setTwitchConnectionStatus,
+    setNewTwitchMessage,
+
+    selectYoutubeVideoId,
+    selectYoutubeAccessToken,
+    setYoutubeConnectionStatus,
+    setNewYoutubeMessage,
+
     setVkConnectionStatus,
-    setYoutubeConnectionStatus
+    setNewVkMessage,
+    selectVkConnectionData,
 } from "../../../../entities/connection/model/slice"
 import { connectTwitchClient, disconnectTwitchClient } from "../../../../features/live-chat/lib/twitchClientSingleton"
 import { connectVkPlayClient } from "../../../../features/live-chat/lib/vk/vkClientSingleton"
@@ -23,15 +26,15 @@ export const ConnectionSwitch = ({ serviceName = "", isActive = true }) => {
 
     const twitchBotName = process.env.REACT_APP_TWITCH_BOT_NAME
     const twitchBotToken = process.env.REACT_APP_TWITCH_BOT_TOKEN
-    const vkAccessToken = process.env.REACT_APP_TEST_VK_TOKEN
-    const vkChannelId = '12983374'
-
     const twitchConnectionStatus = useSelector(selectTwitchConnectionStatus)
-    const [isSwitchOn, setIsSwitchOn] = useState(serviceName === 'Twitch' && twitchConnectionStatus)
-    const [isSwitchLoading, setIsSwitchLoading] = useState(false)
     const chatChannelName = useSelector(selectTwitchConnectionData)
+
+    const vkConnectionData = useSelector(selectVkConnectionData)
+
     const youtubeVideoId = useSelector(selectYoutubeVideoId)
     const youtubeAccessToken = useSelector(selectYoutubeAccessToken)
+    const [isSwitchOn, setIsSwitchOn] = useState(serviceName === 'Twitch' && twitchConnectionStatus)
+    const [isSwitchLoading, setIsSwitchLoading] = useState(false)
 
     const clientRef = useRef(null)
 
@@ -51,7 +54,7 @@ export const ConnectionSwitch = ({ serviceName = "", isActive = true }) => {
     const handleConnect = async () => {
         if (isSwitchOn) {
             // Отключение
-            if (serviceName === "Twitch") {
+            if (serviceName === "Twitch") { // Twitch Twitch Twitch Twitch Twitch Twitch Twitch Twitch Twitch Twitch Twitch Twitch Twitch Twitch Twitch Twitch Twitch Twitch Twitch Twitch Twitch
                 disconnectTwitchClient();
                 setIsSwitchOn(false);
                 dispatch(setTwitchConnectionStatus(false));
@@ -111,29 +114,29 @@ export const ConnectionSwitch = ({ serviceName = "", isActive = true }) => {
                     setIsSwitchLoading(false);
                 }
             }
-            else if (serviceName === "VK Видео Live") {
-                setIsSwitchLoading(true);
-                dispatch(setVkConnectionStatus(true));
+            else if (serviceName === "VK Видео Live") { // VK Видео Live VK Видео Live VK Видео Live VK Видео Live VK Видео Live VK Видео Live VK Видео Live VK Видео Live VK Видео Live
+                setIsSwitchLoading(true)
+                dispatch(setVkConnectionStatus(true))
 
                 const callbacks = {
                     onChatMessage: (msg) => {
-                        console.log("💬 VK Play сообщение:", msg);
-                        dispatch(setNewVkMessage(msg));
+                        console.log("💬 VK Play сообщение:", msg)
+                        dispatch(setNewVkMessage(msg))
                     },
                     onConnected: () => {
-                        setIsSwitchOn(true);
-                        setIsSwitchLoading(false);
+                        setIsSwitchOn(true)
+                        setIsSwitchLoading(false)
                     },
                     onDisconnected: () => {
-                        setIsSwitchOn(false);
-                        dispatch(setVkConnectionStatus(false));
-                        setIsSwitchLoading(false);
+                        setIsSwitchOn(false)
+                        dispatch(setVkConnectionStatus(false))
+                        setIsSwitchLoading(false)
                     }
                 };
 
                 const client = connectVkPlayClient({
-                    channelId: vkChannelId,
-                    token: vkAccessToken,
+                    channelId: vkConnectionData?.vkChannelId,
+                    token: vkConnectionData?.token,
                 }, callbacks);
 
                 if (!client) {
@@ -141,7 +144,7 @@ export const ConnectionSwitch = ({ serviceName = "", isActive = true }) => {
                     dispatch(setVkConnectionStatus(false));
                 }
             }
-            else if (serviceName === "YouTube") {
+            else if (serviceName === "YouTube") { // YouTube YouTube YouTube YouTube YouTube YouTube YouTube YouTube YouTube YouTube YouTube YouTube YouTube YouTube YouTube YouTube
                 setIsSwitchLoading(true);
                 dispatch(setYoutubeConnectionStatus(true));
 

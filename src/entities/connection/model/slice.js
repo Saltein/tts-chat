@@ -11,8 +11,7 @@ const initialState = {
         connectionStatus: false,
     },
     vk: {
-        vkChannelId: '',
-        vkAccessToken: '',
+        vkConnectionData: {},
         connectionStatus: false,
     },
     messages: [] // общий массив сообщений
@@ -46,6 +45,21 @@ if (savedYoutube) {
         youtubeVideoId: savedYoutube.youtubeVideoId || '',
         youtubeAccessToken: savedYoutube.youtubeAccessToken || '',
         connectionStatus: savedYoutube.connectionStatus || false,
+    }
+}
+
+// Загружаем Vk из localStorage
+let savedVk
+try {
+    savedVk = JSON.parse(localStorage.getItem('vkConnection'))
+} catch {
+    savedVk = null
+}
+
+if (savedVk) {
+    initialState.vk = {
+        vkConnectionData: savedVk.vkConnectionData || {},
+        connectionStatus: savedVk.connectionStatus || false,
     }
 }
 
@@ -107,12 +121,8 @@ const connectionSlice = createSlice({
         },
 
         // VK
-        setVkChannelId: (state, action) => {
-            state.vk.vkChannelId = action.payload
-            saveVkToLocalStorage(state.vk)
-        },
-        setVkAccessToken: (state, action) => {
-            state.vk.vkAccessToken = action.payload
+        setVkConnectionData: (state, action) => {
+            state.vk.vkConnectionData = action.payload
             saveVkToLocalStorage(state.vk)
         },
         setVkConnectionStatus: (state, action) => {
@@ -131,7 +141,7 @@ const connectionSlice = createSlice({
             state.messages = action.payload
         },
 
-        resetConnection: () => initialState
+        resetConnection: () => ({ ...initialState })
     },
 })
 
@@ -139,14 +149,16 @@ export const {
     setTwitchChatChannelName,
     setTwitchConnectionStatus,
     setNewTwitchMessage,
+
     setYoutubeVideoId,
     setYoutubeAccessToken,
     setYoutubeConnectionStatus,
     setNewYoutubeMessage,
-    setVkChannelId,
-    setVkAccessToken,
+
+    setVkConnectionData,
     setVkConnectionStatus,
     setNewVkMessage,
+
     setMessages,
     resetConnection,
 } = connectionSlice.actions
@@ -161,8 +173,7 @@ export const selectYoutubeVideoId = (state) => state.connection.youtube.youtubeV
 export const selectYoutubeAccessToken = (state) => state.connection.youtube.youtubeAccessToken
 export const selectYoutubeConnectionStatus = (state) => state.connection.youtube.connectionStatus
 
-export const selectVkChannelId = (state) => state.connection.vk.vkChannelId
-export const selectVkAccessToken = (state) => state.connection.vk.vkAccessToken
+export const selectVkConnectionData = (state) => state.connection.vk.vkConnectionData
 export const selectVkConnectionStatus = (state) => state.connection.vk.connectionStatus
 
 

@@ -20,8 +20,17 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
     const dispatch = useDispatch()
     const theme = useTheme().theme
 
-    const isModerator = message.tags?.badges?.moderator || message.tags?.['is-moderator'] || null
-    const isSponsor = message.tags?.badges?.subscriber || message.tags?.['is-sponsor'] || null
+    const isModerator = 
+    message.tags?.badges?.moderator || 
+    message.tags?.['is-moderator'] || 
+    message?.raw?.push?.pub?.data?.data?.user?.isChannelModerator || 
+    message?.raw?.push?.pub?.data?.data?.user?.isChatModerator || 
+    null
+
+    const isSponsor = 
+    message.tags?.badges?.subscriber || 
+    message.tags?.['is-sponsor'] || 
+    null
 
     let nameColor
     let borderColor
