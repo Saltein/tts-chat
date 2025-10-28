@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import s from './ChatMessage.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageBorder, selectMessageTextColor, selectServiceIcon, setMessageBackground, setMessageTextColor } from '../../../../entities/message/model/slice'
+import { selectFontSize, selectMessageBackground, selectMessageBackgroundOpacity, selectMessageBorder, selectMessageTextColor, selectServiceIcon, setMessageBackground, setMessageTextColor } from '../../../../entities/message/model/slice'
 import { useTheme } from '../../../../shared/context/theme/ThemeContext'
 import { hexToRgbString, rgbStringToHex } from '../../../../shared/lib/hexToRgbString'
 
@@ -20,20 +20,25 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
     const dispatch = useDispatch()
     const theme = useTheme().theme
 
-    const isModerator = 
-    message.tags?.badges?.moderator || 
-    message.tags?.['is-moderator'] || 
-    message?.raw?.push?.pub?.data?.data?.user?.isChannelModerator || 
-    message?.raw?.push?.pub?.data?.data?.user?.isChatModerator || 
-    null
+    const messageBorder = useSelector(selectMessageBorder)
+    const serviceIcon = useSelector(selectServiceIcon)
+    const messageBackgroundOpacity = useSelector(selectMessageBackgroundOpacity) // число от 0 до 1
+    const fontSize = useSelector(selectFontSize)
 
-    const isSponsor = 
-    message.tags?.badges?.subscriber || 
-    message.tags?.['is-sponsor'] || 
-    null
+    const isModerator =
+        message.tags?.badges?.moderator ||
+        message.tags?.['is-moderator'] ||
+        message?.raw?.push?.pub?.data?.data?.user?.isChannelModerator ||
+        message?.raw?.push?.pub?.data?.data?.user?.isChatModerator ||
+        null
 
-    const isOwner = 
-    message?.raw?.push?.pub?.data?.data?.user?.isOwner
+    const isSponsor =
+        message.tags?.badges?.subscriber ||
+        message.tags?.['is-sponsor'] ||
+        null
+
+    const isOwner =
+        message?.raw?.push?.pub?.data?.data?.user?.isOwner
 
     let nameColor
     let borderColor
@@ -50,15 +55,6 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
         nameColor = 'var(--color-moderator)'
         borderColor = 'var(--color-moderator)'
     }
-
-
-    const nameStyles = {
-        color: nameColor,
-        borderColor: isModerator || isSponsor ? borderColor : undefined
-    }
-
-    const messageBorder = useSelector(selectMessageBorder)
-    const serviceIcon = useSelector(selectServiceIcon)
 
     let messageTextColor = useSelector(selectMessageTextColor)
     if (messageTextColor === '') {
@@ -81,15 +77,21 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
             dispatch(setMessageBackground(messageBackground))
         }
     }
-    const messageBackgroundOpacity = useSelector(selectMessageBackgroundOpacity) // число от 0 до 1
 
     const wrapperStyles = {
         backgroundColor: `rgba(${messageBackground}, ${messageBackgroundOpacity})`,
         border: messageBorder === false ? `1px solid #00000000` : undefined
     }
 
+    const nameStyles = {
+        color: nameColor,
+        borderColor: isModerator || isSponsor ? borderColor : undefined,
+    }
+
     const textStyles = {
-        color: rgbStringToHex(messageTextColor)
+        color: rgbStringToHex(messageTextColor),
+        fontSize: fontSize + 'px',
+        top: `${fontSize / 16 * 6 - 9}px`
     }
 
     useEffect(() => {
@@ -119,11 +121,11 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
 
     return (
         <div className={`${s.wrapper} ${isFading ? s.fadeOut : ''}`} style={wrapperStyles}>
-            <span className={s.name} style={nameStyles}>
+            <div className={s.name} style={nameStyles}>
                 {serviceIcon && <Icon className={s.icon} color={"var(--color-text)"} />}
                 {message.tags["display-name"]}
                 {isModerator && <WrenchIcon className={s.wrenchIcon} fill="var(--color-moderator)" />}
-            </span>
+            </div>
             <span className={s.message} style={textStyles}>
                 {message.message}
             </span>

@@ -1,9 +1,8 @@
 @import '../../../../shared/styles/variables.scss';
 
 .wrapper {
-    display: block;
     border: 1px solid var(--color-border);
-    padding: $spacing-xs;
+    padding: $spacing-xxs;
     border-radius: $border-radius-lg;
     background-color: var(--color-items);
     line-height: $spacing-lg;
@@ -18,8 +17,11 @@
 }
 
 .name {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    height: 32px;
     position: relative;
-    left: -$spacing-xxs;
     border: 1px solid var(--color-border);
     border-radius: $border-radius-md;
     padding: $spacing-xxs $spacing-xs;
@@ -30,14 +32,13 @@
 }
 
 .message {
+    position: relative;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
-    ;
 }
 
 .icon {
     position: relative;
-    top: 2.5px;
-    right: 2.5px;
+    left: -1px;
     height: 16px;
     width: 16px;
     margin-right: $spacing-xxs;

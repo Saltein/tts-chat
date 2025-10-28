@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectSpeechVolume, selectTwitchVoice } from '../../../features/tts-chat/model/slice'
 import { selectTwitchConnectionData, selectTwitchConnectionStatus, selectVkConnectionData, selectVkConnectionStatus, selectYoutubeAccessToken, selectYoutubeConnectionStatus, selectYoutubeVideoId } from '../../../entities/connection/model/slice'
 import { convertObjToStr } from '../../../shared/lib/convertObjToStr'
-import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageBorder, selectMessageGap, selectMessageLifeTime, selectMessageTextColor, selectServiceIcon, setMessageBackground, setMessageBackgroundOpacity, setMessageBorder, setMessageGap, setMessageLifeTime, setMessageTextColor, setServiceIcon } from '../../../entities/message/model/slice'
+import { selectFontSize, selectMessageBackground, selectMessageBackgroundOpacity, selectMessageBorder, selectMessageGap, selectMessageLifeTime, selectMessageTextColor, selectServiceIcon, setFontSize, setMessageBackground, setMessageBackgroundOpacity, setMessageBorder, setMessageGap, setMessageLifeTime, setMessageTextColor, setServiceIcon } from '../../../entities/message/model/slice'
 import { hexToRgbString, rgbStringToHex } from '../../../shared/lib/hexToRgbString'
 import { SimpleWidgetShape } from '../../../shared/widgets/SimpleWidgetShape/SimpleWidgetShape'
 
@@ -150,6 +150,12 @@ export const ChatSettings = () => {
                     <input className={s.colorPicker} value={rgbStringToHex(currentMessageTextColor)} type='color' onChange={handlePickTextColor} />
                 </div>
             </div>
+
+            <SimpleWidgetShape>
+                <DefaultTitle paddingTop={'0'} paddingBottom={'8px'} paddingLeft={'0'} paddingRight={'0'}
+                    title={'Размер шрифта'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} />
+                <DefaultSlider selector={selectFontSize} dispatcher={setFontSize} width='100%' height='32px' postfix='px'/>
+            </SimpleWidgetShape>
 
             <SimpleWidgetShape>
                 <DefaultTitle paddingTop={'0'} paddingBottom={'8px'} paddingLeft={'0'} paddingRight={'0'}

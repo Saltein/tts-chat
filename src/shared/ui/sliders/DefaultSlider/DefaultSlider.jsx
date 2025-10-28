@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import s from './DefaultSlider.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 
-export const DefaultSlider = ({ width = '256px', height = '48px', selector, dispatcher, isCoefficient = false }) => {
+export const DefaultSlider = ({ width = '256px', height = '48px', selector, dispatcher, isCoefficient = false, postfix = '' }) => {
     const currentValue = useSelector(selector);
 
     const [position, setPosition] = useState(currentValue);
@@ -77,7 +77,7 @@ export const DefaultSlider = ({ width = '256px', height = '48px', selector, disp
             style={styles}
             onMouseDown={handleMouseDown}
         >
-            <span className={s.value} style={{fontSize: height}}>{position}</span>
+            <span className={s.value} style={{fontSize: height}}>{position + postfix}</span>
             <div className={s.slider} style={sliderStyles}>
                 <div className={s.slider_circle} style={{height}} />
             </div>
