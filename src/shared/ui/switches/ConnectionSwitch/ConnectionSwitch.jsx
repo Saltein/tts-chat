@@ -15,6 +15,8 @@ import {
     setVkConnectionStatus,
     setNewVkMessage,
     selectVkConnectionData,
+    selectYoutubeConnectionStatus,
+    selectVkConnectionStatus,
 } from "../../../../entities/connection/model/slice"
 import { connectTwitchClient, disconnectTwitchClient } from "../../../../features/live-chat/lib/twitchClientSingleton"
 import { connectVkPlayClient } from "../../../../features/live-chat/lib/vk/vkClientSingleton"
@@ -30,10 +32,19 @@ export const ConnectionSwitch = ({ serviceName = "", isActive = true }) => {
     const chatChannelName = useSelector(selectTwitchConnectionData)
 
     const vkConnectionData = useSelector(selectVkConnectionData)
+    const vkConnectionStatus = useSelector(selectVkConnectionStatus)
 
     const youtubeVideoId = useSelector(selectYoutubeVideoId)
     const youtubeAccessToken = useSelector(selectYoutubeAccessToken)
-    const [isSwitchOn, setIsSwitchOn] = useState(serviceName === 'Twitch' && twitchConnectionStatus)
+    const youtubeConnectionStatus = useSelector(selectYoutubeConnectionStatus)
+
+    const getConnectionStatus = () => {
+        if (serviceName === 'Twitch') return twitchConnectionStatus
+        else if (serviceName === 'YouTube') return youtubeConnectionStatus
+        else if (serviceName === 'VK Видео Live') return vkConnectionStatus
+    }
+
+    const [isSwitchOn, setIsSwitchOn] = useState(getConnectionStatus())
     const [isSwitchLoading, setIsSwitchLoading] = useState(false)
 
     const clientRef = useRef(null)

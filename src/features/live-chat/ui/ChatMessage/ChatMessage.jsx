@@ -32,6 +32,9 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
     message.tags?.['is-sponsor'] || 
     null
 
+    const isOwner = 
+    message?.raw?.push?.pub?.data?.data?.user?.isOwner
+
     let nameColor
     let borderColor
     if (message.tags["color"] !== '#FFFFFF') {
