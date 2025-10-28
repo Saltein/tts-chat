@@ -3,7 +3,7 @@ import { DefaultButton, DefaultDivider, DefaultInput, DefaultSlider, DefaultSwit
 import s from './ChatSettings.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectSpeechVolume, selectTwitchVoice } from '../../../features/tts-chat/model/slice'
-import { selectTwitchConnectionData, selectTwitchConnectionStatus, selectYoutubeAccessToken, selectYoutubeConnectionStatus, selectYoutubeVideoId } from '../../../entities/connection/model/slice'
+import { selectTwitchConnectionData, selectTwitchConnectionStatus, selectVkConnectionData, selectVkConnectionStatus, selectYoutubeAccessToken, selectYoutubeConnectionStatus, selectYoutubeVideoId } from '../../../entities/connection/model/slice'
 import { convertObjToStr } from '../../../shared/lib/convertObjToStr'
 import { selectMessageBackground, selectMessageBackgroundOpacity, selectMessageBorder, selectMessageGap, selectMessageLifeTime, selectMessageTextColor, selectServiceIcon, setMessageBackground, setMessageBackgroundOpacity, setMessageBorder, setMessageGap, setMessageLifeTime, setMessageTextColor, setServiceIcon } from '../../../entities/message/model/slice'
 import { hexToRgbString, rgbStringToHex } from '../../../shared/lib/hexToRgbString'
@@ -35,6 +35,9 @@ export const ChatSettings = () => {
     const youtubeAccessToken = useSelector(selectYoutubeAccessToken)
     const youtubeConnectionStatus = useSelector(selectYoutubeConnectionStatus)
 
+    const vkConnectionData = useSelector(selectVkConnectionData)
+    const vkConnectionStatus = useSelector(selectVkConnectionStatus)
+
     const generalQueryParamObj = {
         'theme': currentTheme,
         'volume': volume,
@@ -57,9 +60,14 @@ export const ChatSettings = () => {
         'youtubeAccessToken': youtubeAccessToken,
         'youtubeConnectionStatus': youtubeConnectionStatus,
     }
+    const vkQueryParamObj = {
+        'vkChannelId': vkConnectionData?.vkChannelId,
+        'vkAccessToken': vkConnectionData?.token,
+        'vkConnectionStatus': vkConnectionStatus,
+    }
 
     const baseUrl = process.env.REACT_APP_BASE_URL_WIDGET || ''
-    const queryParamList = [generalQueryParamObj, chatCustomizationQueryParamObj, twitchQueryParamObj, youtubeQueryParamObj]
+    const queryParamList = [generalQueryParamObj, chatCustomizationQueryParamObj, twitchQueryParamObj, youtubeQueryParamObj, vkQueryParamObj]
 
     useEffect(() => {
         setLink(`${baseUrl}/widget/chat?${convertObjToStr(queryParamList)}`)

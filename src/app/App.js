@@ -15,7 +15,7 @@ function App() {
   const text = (
     <div>
       <h3>Подпишись</h3>
-      <p>Не пропусти стримы</p>
+      <p>Не пропускай стримы</p>
       <h2>@SALTEIN</h2>
     </div>
   )

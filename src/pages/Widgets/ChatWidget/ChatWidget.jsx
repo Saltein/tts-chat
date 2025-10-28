@@ -4,12 +4,13 @@ import s from './ChatWidget.module.scss'
 import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { connectTwitchClient } from '../../../features/live-chat/lib/twitchClientSingleton'
-import { setNewTwitchMessage, setNewYoutubeMessage } from '../../../entities/connection/model/slice'
+import { setNewTwitchMessage, setNewVkMessage, setNewYoutubeMessage } from '../../../entities/connection/model/slice'
 import { TTSChat } from '../../../features/tts-chat/TTSChat/TTSChat'
 import { useTheme } from '../../../shared/context/theme/ThemeContext'
 import { connectYouTubeClient } from '../../../features/live-chat/lib/youtube/youtubeClientSingleton'
 import { setMessageBackground, setMessageBackgroundOpacity, setMessageBorder, setMessageLifeTime, setMessageTextColor, setServiceIcon } from '../../../entities/message/model/slice'
 import WebSocketRoom from '../../../features/ws-lobby/ui/LobbyBlock/WebSocketRoom'
+import { connectVkPlayClient } from '../../../features/live-chat/lib/vk/vkClientSingleton'
 
 export const ChatWidget = () => {
     const twitchBotName = process.env.REACT_APP_TWITCH_BOT_NAME
@@ -37,9 +38,14 @@ export const ChatWidget = () => {
     const youtubeAccessToken = searchParams.get('youtubeAccessToken') || ''
     const youtubeConnectionStatus = searchParams.get('youtubeConnectionStatus') === 'true'
 
+    const vkAccessToken = searchParams.get('vkAccessToken') || ''
+    const vkChannelId = searchParams.get('vkChannelId') || ''
+    const vkConnectionStatus = searchParams.get('vkConnectionStatus') || false
+
     // Разделяем рефы для Twitch и YouTube
     const twitchClientRef = useRef(null)
     const youtubeClientRef = useRef(null)
+    const vkClientRef = useRef(null)
 
     dispatch(setMessageBackground(messageBackgroundColor))
     dispatch(setMessageBackgroundOpacity(messageBackgroundOpacity))
@@ -86,9 +92,32 @@ export const ChatWidget = () => {
         }
     }
 
+    const handleVkConnect = () => {
+        if (!vkConnectionStatus || !vkAccessToken || !vkChannelId || vkClientRef.current) return
+
+        try {
+            const callbacks = {
+                onChatMessage: (msg) => {
+                    console.log("💬 VK Play сообщение:", msg)
+                    dispatch(setNewVkMessage(msg))
+                },
+            }
+
+            const client = connectVkPlayClient({
+                channelId: vkChannelId,
+                token: vkAccessToken,
+            }, callbacks)
+
+            if (client) vkClientRef.current = client
+        } catch (error) {
+            console.error('Ошибка подключения к Vk:', error)
+        }
+    }
+
     useEffect(() => {
         handleTwitchConnect()
         handleYouTubeConnect()
+        handleVkConnect()
         setTheme(targetTheme)
     }, [])
 
