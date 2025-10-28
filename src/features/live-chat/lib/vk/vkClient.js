@@ -84,7 +84,6 @@ export function connectVkPlayChat({ channelId, token }) {
                 const user = chatMsg.author?.displayName || 'Unknown';
                 const text = JSON.parse(chatMsg.data[0].content)[0] || '';
 
-                console.warn(JSON.parse(chatMsg.data[0].content)[0])
                 console.log(`💬 VK Play сообщение: [${user}]: ${text}`);
                 ws.onChatMessage && ws.onChatMessage({
                     message: text,
