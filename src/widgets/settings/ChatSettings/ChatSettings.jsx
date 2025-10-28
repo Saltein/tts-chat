@@ -154,7 +154,7 @@ export const ChatSettings = () => {
             <SimpleWidgetShape>
                 <DefaultTitle paddingTop={'0'} paddingBottom={'8px'} paddingLeft={'0'} paddingRight={'0'}
                     title={'Размер шрифта'} titleStyles={{ fontSize: '1rem' }} fontWeight={'400'} />
-                <DefaultSlider selector={selectFontSize} dispatcher={setFontSize} width='100%' height='32px' postfix='px'/>
+                <DefaultSlider selector={selectFontSize} dispatcher={setFontSize} width='100%' height='32px' postfix='px' min={12} max={32}/>
             </SimpleWidgetShape>
 
             <SimpleWidgetShape>
