@@ -8,7 +8,7 @@ import { setNewTwitchMessage, setNewVkMessage, setNewYoutubeMessage } from '../.
 import { TTSChat } from '../../../features/tts-chat/TTSChat/TTSChat'
 import { useTheme } from '../../../shared/context/theme/ThemeContext'
 import { connectYouTubeClient } from '../../../features/live-chat/lib/youtube/youtubeClientSingleton'
-import { setMessageBackground, setMessageBackgroundOpacity, setMessageBorder, setMessageLifeTime, setMessageTextColor, setServiceIcon } from '../../../entities/message/model/slice'
+import { setFontSize, setMessageBackground, setMessageBackgroundOpacity, setMessageBorder, setMessageLifeTime, setMessageTextColor, setServiceIcon } from '../../../entities/message/model/slice'
 import WebSocketRoom from '../../../features/ws-lobby/ui/LobbyBlock/WebSocketRoom'
 import { connectVkPlayClient } from '../../../features/live-chat/lib/vk/vkClientSingleton'
 
@@ -30,6 +30,7 @@ export const ChatWidget = () => {
     const messageLifeTime = searchParams.get('messageLifeTime')
     const messageBorder = searchParams.get('messageBorder') === 'false' ? false : true
     const serviceIcon = searchParams.get('serviceIcon') === 'false' ? false : true
+    const fontSize = searchParams.get('fontSize')
 
     const twitchChatChannelName = searchParams.get('twitchChatChannelName') || ''
     const twitchConnectionStatus = searchParams.get('twitchConnectionStatus') === 'true'
@@ -53,6 +54,7 @@ export const ChatWidget = () => {
     dispatch(setMessageLifeTime(messageLifeTime))
     dispatch(setMessageBorder(messageBorder))
     dispatch(setServiceIcon(serviceIcon))
+    dispatch(setFontSize(fontSize))
 
     const handleTwitchConnect = () => {
         if (!twitchConnectionStatus || twitchClientRef.current) return

@@ -23,6 +23,7 @@ export const ChatSettings = () => {
     const currentMessageBackgroundColor = useSelector(selectMessageBackground)
     const currentMessageBackgroundOpacity = useSelector(selectMessageBackgroundOpacity)
     const currentMessageTextColor = useSelector(selectMessageTextColor)
+    const currentFontSize = useSelector(selectFontSize)
 
     const currentTheme = localStorage.getItem('theme')
     const volume = useSelector(selectSpeechVolume) / 100
@@ -49,6 +50,7 @@ export const ChatSettings = () => {
         'messageLifeTime': lifetime,
         'messageBorder': String(messageBorderLocal),
         'serviceIcon': String(serviceIconLocal),
+        'fontSize': String(currentFontSize)
     }
     const twitchQueryParamObj = {
         'twitchChatChannelName': twitchChatChannelName,

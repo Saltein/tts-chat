@@ -86,12 +86,19 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
     const nameStyles = {
         color: nameColor,
         borderColor: isModerator || isSponsor ? borderColor : undefined,
+        fontSize: fontSize + 'px',
     }
 
     const textStyles = {
         color: rgbStringToHex(messageTextColor),
         fontSize: fontSize + 'px',
-        top: `${fontSize / 16 * 6 - 9}px`
+        top: `${(fontSize - 12) / 16 * -2 - 2}px`,
+    }
+
+    const iconStyles = {
+        height: `${fontSize}px`,
+        width: `${fontSize}px`,
+        left: `${- ((fontSize - 16) / 2) - 1}px`
     }
 
     useEffect(() => {
@@ -122,7 +129,7 @@ export const ChatMessage = ({ message, timeBeforeDisappear }) => {
     return (
         <div className={`${s.wrapper} ${isFading ? s.fadeOut : ''}`} style={wrapperStyles}>
             <div className={s.name} style={nameStyles}>
-                {serviceIcon && <Icon className={s.icon} color={"var(--color-text)"} />}
+                {serviceIcon && <Icon className={s.icon} color={"var(--color-text)"} style={iconStyles} />}
                 {message.tags["display-name"]}
                 {isModerator && <WrenchIcon className={s.wrenchIcon} fill="var(--color-moderator)" />}
             </div>
