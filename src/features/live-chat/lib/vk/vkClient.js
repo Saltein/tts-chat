@@ -7,7 +7,11 @@ export function connectVkPlayChat({ channelId, token }) {
         return null;
     }
 
-    const ws = new WebSocket('wss://pubsub.live.vkvideo.ru/connection/websocket?cf_protocol_version=v2');
+
+    // было так 
+//  const ws = new WebSocket('wss://pubsub.live.vkvideo.ru/connection/websocket?cf_protocol_version=v2');
+    const ws = new WebSocket('wss://ttschat.ru/vkws');
+
     let isAuthenticated = false;
     let lastPingTime = null;
 
