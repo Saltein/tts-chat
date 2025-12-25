@@ -19,6 +19,7 @@ export const GlobalPage = () => {
                 <div className={s.pagePart}>
                     <Routes>
                         <Route path='/connections' element={<ConnectionsPage />} />
+                        <Route path='' element={<ConnectionsPage />} />
                         <Route path='/live-chat' element={<LiveChatPage />} />
                         <Route path='/settings' element={<SettingsPage />} />
                         <Route path='/tts' element={<TTSPage />} />

@@ -102,7 +102,7 @@ export const ConnectionsPage = () => {
                             }
                             return false
                         }} />
-                    <ConnectionCard IconComponent={VkVideoIcon} inputs={vkInputs} title={'VK Видео Live'} dispatcher={setVkConnectionData} />
+                    <ConnectionCard IconComponent={VkVideoIcon} inputs={vkInputs} title={'VK Видео Live'} dispatcher={setVkConnectionData} isActive={false}/>
                 </div>
             </DefaultWidgetShape>
         </div>

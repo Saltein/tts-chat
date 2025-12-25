@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { GlobalPage } from '../pages/GlobalPage/GlobalPage'
 import s from './App.module.scss'
 import { ChatWidget } from '../pages/Widgets/ChatWidget/ChatWidget'
